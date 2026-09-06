@@ -3,2034 +3,1772 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#08080b">
+<meta name="theme-color" content="#08080a">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-<title>VYBE</title>
+<title>Alteo</title>
 
 <style>
-*{
- box-sizing:border-box;
- -webkit-tap-highlight-color:transparent;
+:root{
+  --bg:#08080a;
+  --panel:#101014;
+  --panel2:#15151b;
+  --panel3:#1c1c23;
+  --text:#f7f7f8;
+  --muted:#92929b;
+  --line:rgba(255,255,255,.09);
+  --accent:#ffffff;
+  --danger:#ff4d67;
+  --radius:24px;
+  --nav:76px;
 }
 
-:root{
- --bg:#08080b;
- --surface:#111116;
- --surface2:#17171d;
- --surface3:#202027;
- --border:#292930;
- --text:#fafafa;
- --muted:#94949f;
- --purple:#8b5cf6;
- --pink:#d946ef;
- --red:#ff5c70;
- --green:#35d39a;
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
 }
 
 html,body{
- margin:0;
- min-height:100%;
- background:var(--bg);
- color:var(--text);
- font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",sans-serif;
+  margin:0;
+  min-height:100%;
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,Arial,sans-serif;
 }
 
 body{
- overflow-x:hidden;
+  overflow-x:hidden;
 }
 
-button,input,textarea{
- font:inherit;
+button,
+input,
+textarea{
+  font:inherit;
 }
 
 button{
- border:0;
- cursor:pointer;
+  border:0;
+  cursor:pointer;
+}
+
+svg{
+  width:22px;
+  height:22px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.8;
+  stroke-linecap:round;
+  stroke-linejoin:round;
 }
 
 .hidden{
- display:none!important;
+  display:none!important;
 }
 
-/* BACKGROUND */
+/* LOADING */
 
-body:before,
-body:after{
- content:"";
- position:fixed;
- z-index:-2;
- width:420px;
- height:420px;
- border-radius:50%;
- filter:blur(100px);
- opacity:.16;
- pointer-events:none;
+#loader{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  background:#08080a;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:.45s ease;
 }
 
-body:before{
- background:#7c3aed;
- top:-180px;
- left:-180px;
- animation:floatA 12s ease-in-out infinite alternate;
+.loader-inner{
+  text-align:center;
 }
 
-body:after{
- background:#d946ef;
- right:-180px;
- bottom:-180px;
- animation:floatB 15s ease-in-out infinite alternate;
+.logo{
+  width:62px;
+  height:62px;
+  border-radius:20px;
+  background:#fff;
+  color:#08080a;
+  display:grid;
+  place-items:center;
+  font-size:25px;
+  font-weight:900;
+  margin:auto;
+  box-shadow:0 15px 50px rgba(255,255,255,.1);
 }
 
-@keyframes floatA{
- from{transform:translate(0,0)}
- to{transform:translate(100px,90px)}
+.loader-ring{
+  width:26px;
+  height:26px;
+  border:2px solid rgba(255,255,255,.12);
+  border-top-color:#fff;
+  border-radius:50%;
+  margin:25px auto 0;
+  animation:spin .8s linear infinite;
 }
 
-@keyframes floatB{
- from{transform:translate(0,0)}
- to{transform:translate(-90px,-80px)}
+@keyframes spin{
+  to{transform:rotate(360deg)}
 }
 
 /* AUTH */
 
-.auth{
- min-height:100vh;
- min-height:100svh;
- display:flex;
- justify-content:center;
- align-items:center;
- padding:
- max(25px,env(safe-area-inset-top))
- 20px
- max(25px,env(safe-area-inset-bottom));
+#authScreen{
+  min-height:100vh;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:25px;
+  position:relative;
+  overflow:hidden;
 }
 
-.authBox{
- width:100%;
- max-width:430px;
- animation:authIn .65s cubic-bezier(.16,1,.3,1);
+.auth-glow{
+  position:absolute;
+  width:450px;
+  height:450px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.07),transparent 65%);
+  filter:blur(20px);
+  pointer-events:none;
+}
+
+.auth-card{
+  width:min(430px,100%);
+  background:rgba(16,16,20,.88);
+  border:1px solid var(--line);
+  border-radius:30px;
+  padding:32px;
+  position:relative;
+  z-index:1;
+  box-shadow:0 35px 100px rgba(0,0,0,.45);
+  backdrop-filter:blur(30px);
+  animation:authIn .6s cubic-bezier(.2,.8,.2,1);
 }
 
 @keyframes authIn{
- from{
-  opacity:0;
-  transform:translateY(30px) scale(.97);
- }
- to{
-  opacity:1;
-  transform:none;
- }
+  from{
+    opacity:0;
+    transform:translateY(25px) scale(.97);
+  }
+  to{
+    opacity:1;
+    transform:none;
+  }
 }
 
-.logo{
- text-align:center;
- font-size:39px;
- font-weight:950;
- letter-spacing:-2.8px;
- margin-bottom:8px;
+.auth-brand{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  margin-bottom:30px;
 }
 
-.logo span{
- background:linear-gradient(90deg,#a78bfa,#e879f9);
- -webkit-background-clip:text;
- color:transparent;
+.auth-brand .logo{
+  width:48px;
+  height:48px;
+  border-radius:15px;
+  font-size:19px;
+  margin:0;
 }
 
-.logoSub{
- text-align:center;
- color:var(--muted);
- font-size:14px;
- margin-bottom:29px;
+.auth-brand-name{
+  font-size:24px;
+  font-weight:800;
+  letter-spacing:-.7px;
 }
 
-.authCard{
- background:rgba(17,17,22,.84);
- border:1px solid var(--border);
- border-radius:29px;
- padding:25px;
- box-shadow:
- 0 35px 100px rgba(0,0,0,.45),
- inset 0 1px rgba(255,255,255,.025);
- backdrop-filter:blur(25px);
+.auth-title{
+  font-size:30px;
+  letter-spacing:-1px;
+  margin:0 0 8px;
 }
 
-.authTitle{
- margin:0 0 7px;
- font-size:27px;
- letter-spacing:-1.2px;
+.auth-subtitle{
+  color:var(--muted);
+  margin:0 0 25px;
+  line-height:1.5;
 }
 
-.authDescription{
- color:var(--muted);
- margin:0 0 23px;
- font-size:14px;
- line-height:1.45;
+.auth-form{
+  display:flex;
+  flex-direction:column;
+  gap:13px;
 }
 
-.field{
- margin-bottom:14px;
-}
-
-label{
- display:block;
- color:#c6c6ce;
- font-size:12px;
- font-weight:750;
- margin-bottom:7px;
-}
-
-.input,
-.textarea{
- width:100%;
- border:1px solid var(--border);
- outline:0;
- background:#0b0b0e;
- color:#fff;
- border-radius:15px;
- padding:15px;
- transition:.2s;
+.input-wrap{
+  position:relative;
 }
 
 .input{
- height:53px;
+  width:100%;
+  background:#18181d;
+  color:#fff;
+  border:1px solid transparent;
+  outline:0;
+  padding:15px 16px;
+  border-radius:15px;
+  transition:.2s;
 }
 
-.textarea{
- min-height:100px;
- resize:none;
+.input:focus{
+  border-color:rgba(255,255,255,.25);
+  background:#1b1b21;
+  box-shadow:0 0 0 4px rgba(255,255,255,.035);
 }
 
-.input:focus,
-.textarea:focus{
- border-color:#7752d4;
- box-shadow:0 0 0 4px rgba(139,92,246,.09);
+.primary-btn{
+  width:100%;
+  background:#fff;
+  color:#08080a;
+  padding:15px;
+  border-radius:15px;
+  font-weight:750;
+  transition:.2s;
 }
 
-.primary{
- width:100%;
- height:54px;
- border-radius:16px;
- color:#fff;
- font-weight:850;
- background:linear-gradient(135deg,#7c3aed,#c026d3);
- box-shadow:0 13px 35px rgba(124,58,237,.22);
- transition:.2s;
- position:relative;
- overflow:hidden;
+.primary-btn:hover{
+  transform:translateY(-1px);
 }
 
-.primary:after{
- content:"";
- position:absolute;
- top:0;
- left:-100%;
- width:60%;
- height:100%;
- background:linear-gradient(90deg,transparent,rgba(255,255,255,.17),transparent);
- transform:skewX(-20deg);
- transition:.6s;
+.primary-btn:active{
+  transform:scale(.98);
 }
 
-.primary:hover:after{
- left:130%;
+.google-btn{
+  width:100%;
+  background:#18181d;
+  color:#fff;
+  border:1px solid var(--line);
+  padding:14px;
+  border-radius:15px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  font-weight:650;
+  transition:.2s;
 }
 
-.primary:active{
- transform:scale(.975);
+.google-btn:hover{
+  background:#202027;
 }
 
-.google{
- width:100%;
- height:53px;
- border-radius:16px;
- background:#fff;
- color:#111;
- display:flex;
- align-items:center;
- justify-content:center;
- gap:10px;
- font-weight:800;
- transition:.2s;
-}
-
-.google:active{
- transform:scale(.975);
-}
-
-.google svg{
- width:19px;
- height:19px;
+.google-icon{
+  width:19px;
+  height:19px;
+  font-weight:800;
+  display:grid;
+  place-items:center;
 }
 
 .divider{
- display:flex;
- align-items:center;
- gap:12px;
- margin:19px 0;
- color:#666670;
- font-size:11px;
- font-weight:700;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  color:#65656d;
+  font-size:12px;
+  margin:18px 0;
 }
 
 .divider:before,
 .divider:after{
- content:"";
- height:1px;
- flex:1;
- background:var(--border);
+  content:"";
+  height:1px;
+  background:var(--line);
+  flex:1;
 }
 
-.switch{
- text-align:center;
- color:var(--muted);
- margin-top:21px;
- font-size:13px;
+.auth-switch{
+  color:var(--muted);
+  text-align:center;
+  font-size:14px;
+  margin:20px 0 0;
 }
 
-.link{
- color:#b7a0ff;
- background:none;
- font-weight:800;
+.auth-switch button{
+  background:none;
+  color:#fff;
+  font-weight:700;
+  padding:0;
 }
 
-.error{
- color:#ff7787;
- font-size:12px;
- margin-top:7px;
- display:none;
-}
-
-.error.show{
- display:block;
-}
-
-.success{
- color:var(--green);
- font-size:12px;
- margin-top:7px;
-}
-
-.terms{
- color:#5f5f68;
- font-size:10px;
- text-align:center;
- line-height:1.5;
- margin:17px 12px 0;
+.auth-error{
+  display:none;
+  background:rgba(255,77,103,.1);
+  border:1px solid rgba(255,77,103,.18);
+  color:#ff8799;
+  padding:12px 14px;
+  border-radius:13px;
+  font-size:13px;
+  line-height:1.4;
 }
 
 /* APP */
 
-.app{
- max-width:590px;
- width:100%;
- margin:auto;
- padding:
- max(12px,env(safe-area-inset-top))
- 18px
- calc(105px + env(safe-area-inset-bottom));
+#app{
+  display:none;
+  min-height:100vh;
+}
+
+.app-layout{
+  min-height:100vh;
+  display:flex;
+}
+
+.sidebar{
+  width:260px;
+  height:100vh;
+  position:fixed;
+  left:0;
+  top:0;
+  padding:25px 16px;
+  border-right:1px solid var(--line);
+  background:rgba(8,8,10,.9);
+  backdrop-filter:blur(25px);
+  z-index:50;
+}
+
+.side-brand{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:5px 10px 35px;
+}
+
+.side-logo{
+  width:38px;
+  height:38px;
+  border-radius:12px;
+  background:#fff;
+  color:#000;
+  display:grid;
+  place-items:center;
+  font-weight:900;
+}
+
+.side-name{
+  font-weight:800;
+  font-size:20px;
+}
+
+.nav{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.nav-btn{
+  color:#8d8d96;
+  background:transparent;
+  width:100%;
+  padding:13px 14px;
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  gap:13px;
+  font-weight:650;
+  text-align:left;
+  transition:.2s;
+}
+
+.nav-btn:hover{
+  color:#fff;
+  background:#141419;
+}
+
+.nav-btn.active{
+  color:#fff;
+  background:#19191f;
+}
+
+.sidebar-profile{
+  position:absolute;
+  left:16px;
+  right:16px;
+  bottom:18px;
+  padding:10px;
+  border-radius:16px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  cursor:pointer;
+}
+
+.sidebar-profile:hover{
+  background:#141419;
+}
+
+.avatar{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:#222228;
+  overflow:hidden;
+  flex:none;
+  display:grid;
+  place-items:center;
+  color:#aaa;
+  font-weight:750;
+}
+
+.avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.side-user{
+  min-width:0;
+}
+
+.side-display{
+  font-size:13px;
+  font-weight:700;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.side-username{
+  color:#707078;
+  font-size:12px;
+  margin-top:2px;
+}
+
+/* MAIN */
+
+.main{
+  margin-left:260px;
+  width:calc(100% - 260px);
+  min-height:100vh;
+}
+
+.content{
+  width:min(760px,100%);
+  margin:auto;
+  padding:28px 22px 100px;
 }
 
 .topbar{
- display:flex;
- align-items:center;
- justify-content:space-between;
- padding:9px 1px 13px;
+  height:55px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:22px;
 }
 
-.brand{
- display:flex;
- align-items:center;
- gap:9px;
- font-size:23px;
- font-weight:950;
- letter-spacing:-1.2px;
+.page-title{
+  font-size:28px;
+  font-weight:800;
+  letter-spacing:-1px;
 }
 
-.mark{
- width:30px;
- height:30px;
- border-radius:9px;
- background:linear-gradient(135deg,#8b5cf6,#d946ef);
- position:relative;
- box-shadow:0 8px 25px rgba(139,92,246,.2);
+.mobile-logo{
+  display:none;
 }
 
-.mark:before,
-.mark:after{
- content:"";
- position:absolute;
- background:white;
- border-radius:3px;
- transform:rotate(45deg);
-}
-
-.mark:before{
- width:12px;
- height:4px;
- left:9px;
- top:13px;
-}
-
-.mark:after{
- width:4px;
- height:12px;
- left:13px;
- top:9px;
-}
-
-.topIcon{
- width:43px;
- height:43px;
- display:grid;
- place-items:center;
- border-radius:14px;
- background:var(--surface);
- border:1px solid var(--border);
- color:white;
- transition:.18s;
-}
-
-.topIcon svg{
- width:20px;
- height:20px;
-}
-
-.topIcon:active{
- transform:scale(.92) rotate(-4deg);
-}
-
-.page{
- display:none;
- animation:page .35s cubic-bezier(.16,1,.3,1);
-}
-
-.page.active{
- display:block;
-}
-
-@keyframes page{
- from{
-  opacity:0;
-  transform:translateY(12px);
- }
- to{
-  opacity:1;
-  transform:none;
- }
-}
-
-/* HOME */
-
-.hero{
- padding:25px 2px 17px;
-}
-
-.hero h1{
- margin:0 0 11px;
- font-size:44px;
- line-height:.97;
- letter-spacing:-3px;
- font-weight:950;
-}
-
-.hero p{
- margin:0;
- color:var(--muted);
- font-size:15px;
-}
-
-.vibeCard{
- position:relative;
- overflow:hidden;
- min-height:355px;
- padding:27px;
- border-radius:32px;
- background:
- radial-gradient(circle at 80% 15%,rgba(255,255,255,.24),transparent 20%),
- linear-gradient(140deg,#6d28d9,#c026d3);
- box-shadow:0 30px 85px rgba(124,58,237,.22);
- animation:cardFloat 5s ease-in-out infinite;
-}
-
-@keyframes cardFloat{
- 0%,100%{transform:translateY(0)}
- 50%{transform:translateY(-4px)}
-}
-
-.vibeCard:before{
- content:"";
- position:absolute;
- width:300px;
- height:300px;
- right:-150px;
- top:-145px;
- border:1px solid rgba(255,255,255,.18);
- border-radius:50%;
-}
-
-.vibeCard:after{
- content:"";
- position:absolute;
- width:250px;
- height:250px;
- left:-180px;
- bottom:-160px;
- border:1px solid rgba(255,255,255,.12);
- border-radius:50%;
-}
-
-.cardTop{
- display:flex;
- justify-content:space-between;
- font-size:10px;
- font-weight:850;
- letter-spacing:1.5px;
- opacity:.7;
-}
-
-.symbol{
- width:76px;
- height:76px;
- position:relative;
- margin-top:43px;
-}
-
-.symbol:before{
- content:"";
- position:absolute;
- width:63px;
- height:63px;
- left:7px;
- top:7px;
- border:5px solid white;
- border-radius:20px;
- transform:rotate(45deg);
-}
-
-.symbol:after{
- content:"";
- position:absolute;
- width:23px;
- height:23px;
- left:27px;
- top:27px;
- background:white;
- border-radius:7px;
-}
-
-.vibeName{
- position:relative;
- z-index:2;
- margin-top:11px;
- font-size:39px;
- letter-spacing:-2.5px;
- font-weight:950;
-}
-
-.vibeDesc{
- position:relative;
- z-index:2;
- margin-top:4px;
- max-width:250px;
- opacity:.82;
- font-size:14px;
-}
-
-.score{
- position:absolute;
- right:25px;
- bottom:25px;
- z-index:4;
- text-align:right;
-}
-
-.score b{
- display:block;
- font-size:35px;
- line-height:1;
-}
-
-.score small{
- font-size:8px;
- letter-spacing:1.3px;
- opacity:.65;
-}
-
-.secondary{
- width:100%;
- height:52px;
- border-radius:16px;
- background:var(--surface);
- border:1px solid var(--border);
- color:white;
- font-weight:750;
- margin-top:10px;
- transition:.18s;
-}
-
-.secondary:active{
- transform:scale(.975);
-}
-
-.section{
- display:flex;
- justify-content:space-between;
- align-items:center;
- margin:29px 2px 12px;
-}
-
-.section h2{
- margin:0;
- font-size:19px;
- letter-spacing:-.5px;
-}
-
-.section span{
- color:var(--muted);
- font-size:12px;
-}
+/* FEED */
 
-.stats{
- display:grid;
- grid-template-columns:repeat(3,1fr);
- gap:9px;
+.composer{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:16px;
+  margin-bottom:18px;
 }
 
-.stat{
- min-height:91px;
- border-radius:20px;
- padding:16px 12px;
- background:var(--surface);
- border:1px solid var(--border);
- color:#fff;
- text-align:left;
- transition:.2s;
+.composer-top{
+  display:flex;
+  gap:12px;
 }
 
-.stat:active{
- transform:scale(.97);
+.composer textarea{
+  flex:1;
+  min-height:55px;
+  resize:none;
+  background:transparent;
+  border:0;
+  outline:0;
+  color:#fff;
+  padding:10px 0;
+  font-size:15px;
 }
 
-.stat b{
- font-size:23px;
+.composer textarea::placeholder{
+  color:#6e6e77;
 }
 
-.stat small{
- display:block;
- color:var(--muted);
- margin-top:4px;
- font-size:11px;
+.composer-bottom{
+  border-top:1px solid var(--line);
+  margin-top:10px;
+  padding-top:12px;
+  display:flex;
+  justify-content:flex-end;
 }
 
-.streak{
- display:flex;
- align-items:center;
- gap:14px;
- padding:17px;
- background:var(--surface);
- border:1px solid var(--border);
- border-radius:22px;
+.post-btn{
+  background:#fff;
+  color:#000;
+  padding:9px 17px;
+  border-radius:12px;
+  font-size:13px;
+  font-weight:750;
 }
 
-.streakIcon{
- width:49px;
- height:49px;
- border-radius:15px;
- display:grid;
- place-items:center;
- background:#241b32;
- color:#b99cff;
+.post{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:17px;
+  margin-bottom:15px;
+  animation:postIn .35s ease;
 }
 
-.streakIcon svg{
- width:24px;
- height:24px;
+@keyframes postIn{
+  from{
+    opacity:0;
+    transform:translateY(10px);
+  }
+  to{
+    opacity:1;
+    transform:none;
+  }
 }
 
-.challenge{
- padding:19px;
- background:var(--surface);
- border:1px solid var(--border);
- border-radius:22px;
+.post-head{
+  display:flex;
+  align-items:center;
+  gap:11px;
 }
 
-.challengeTitle{
- font-weight:850;
- font-size:17px;
+.post-user{
+  min-width:0;
 }
 
-.challenge p{
- color:var(--muted);
- font-size:14px;
- line-height:1.45;
+.post-display{
+  font-weight:750;
+  font-size:14px;
 }
 
-.progress{
- height:7px;
- background:#292930;
- border-radius:99px;
- overflow:hidden;
+.post-username{
+  color:#777780;
+  font-size:12px;
+  margin-top:2px;
 }
 
-.progress i{
- display:block;
- height:100%;
- width:63%;
- border-radius:99px;
- background:linear-gradient(90deg,#8b5cf6,#d946ef);
- transition:.45s;
+.post-time{
+  color:#66666e;
+  font-size:12px;
+  margin-left:auto;
 }
 
-/* QUIZ */
-
-.quizTop{
- padding-top:22px;
-}
-
-.quizProgress{
- height:5px;
- background:#24242a;
- border-radius:99px;
- overflow:hidden;
-}
-
-.quizProgress i{
- display:block;
- height:100%;
- width:20%;
- background:linear-gradient(90deg,#8b5cf6,#d946ef);
- transition:.35s;
-}
-
-.quizCount{
- color:var(--muted);
- font-size:12px;
- margin-top:9px;
+.post-content{
+  font-size:15px;
+  line-height:1.6;
+  white-space:pre-wrap;
+  word-break:break-word;
+  margin:15px 2px 13px;
 }
 
-.question{
- margin:36px 0 20px;
- font-size:31px;
- line-height:1.08;
- font-weight:930;
- letter-spacing:-1.7px;
+.post-actions{
+  display:flex;
+  gap:5px;
+  border-top:1px solid var(--line);
+  padding-top:11px;
 }
 
-.option{
- width:100%;
- min-height:58px;
- margin:6px 0;
- padding:16px;
- text-align:left;
- border-radius:17px;
- background:var(--surface);
- border:1px solid var(--border);
- color:#fff;
- font-weight:700;
- transition:.18s;
+.post-action{
+  background:transparent;
+  color:#777780;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:7px 9px;
+  border-radius:10px;
+  font-size:12px;
 }
 
-.option:hover{
- border-color:#7651d2;
- transform:translateY(-1px);
+.post-action:hover{
+  background:#19191f;
+  color:#fff;
 }
 
-.option:active{
- transform:scale(.98);
+.post-action.liked{
+  color:#fff;
 }
 
-/* RESULT */
+/* SEARCH */
 
-.result{
- text-align:center;
- padding-top:30px;
+.search-box{
+  position:relative;
+  margin-bottom:18px;
 }
 
-.resultSymbol{
- width:100px;
- height:100px;
- margin:0 auto 24px;
- position:relative;
+.search-box svg{
+  position:absolute;
+  left:15px;
+  top:50%;
+  transform:translateY(-50%);
+  color:#707078;
 }
 
-.resultSymbol:before{
- content:"";
- position:absolute;
- width:78px;
- height:78px;
- left:11px;
- top:11px;
- border:6px solid #a78bfa;
- border-radius:25px;
- transform:rotate(45deg);
+.search-input{
+  width:100%;
+  background:var(--panel);
+  border:1px solid var(--line);
+  outline:0;
+  color:#fff;
+  border-radius:17px;
+  padding:15px 15px 15px 46px;
 }
 
-.resultSymbol:after{
- content:"";
- position:absolute;
- width:28px;
- height:28px;
- left:36px;
- top:36px;
- background:#a78bfa;
- border-radius:8px;
+.search-results{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
 }
 
-.resultLabel{
- color:var(--muted);
- font-size:10px;
- letter-spacing:2px;
- font-weight:850;
+.user-result{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:13px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  cursor:pointer;
+  transition:.2s;
 }
 
-.result h1{
- margin:8px 0;
- font-size:43px;
- letter-spacing:-2.5px;
+.user-result:hover{
+  background:#16161b;
 }
-
-.result p{
- color:var(--muted);
- line-height:1.5;
- max-width:400px;
- margin:auto;
-}
-
-.meter{
- text-align:left;
- margin:24px 0;
-}
-
-.meterRow{
- display:flex;
- justify-content:space-between;
- margin-bottom:7px;
- font-size:13px;
-}
-
-/* DISCOVER */
 
-.discoverCard{
- margin-top:12px;
- padding:21px;
- border-radius:23px;
- background:var(--surface);
- border:1px solid var(--border);
+.result-info{
+  min-width:0;
 }
 
-.discoverTitle{
- font-weight:850;
+.result-name{
+  font-weight:750;
+  font-size:14px;
 }
 
-.discoverBig{
- margin:17px 0 5px;
- font-size:25px;
- font-weight:930;
- letter-spacing:-1px;
+.result-username{
+  color:#777780;
+  font-size:12px;
+  margin-top:3px;
 }
 
-.discoverMuted{
- color:var(--muted);
- font-size:13px;
+.empty{
+  text-align:center;
+  color:#686870;
+  padding:50px 20px;
+  font-size:14px;
 }
 
 /* PROFILE */
 
-.profile{
- text-align:center;
- padding-top:27px;
+.profile-card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:26px;
+  overflow:hidden;
 }
 
-.avatar{
- width:98px;
- height:98px;
- border-radius:31px;
- margin:auto;
- background:linear-gradient(135deg,#7c3aed,#d946ef);
- display:grid;
- place-items:center;
- overflow:hidden;
- font-size:36px;
- font-weight:900;
- box-shadow:0 20px 55px rgba(139,92,246,.22);
+.profile-cover{
+  height:145px;
+  background:
+    radial-gradient(circle at 20% 20%,rgba(255,255,255,.12),transparent 35%),
+    radial-gradient(circle at 80% 80%,rgba(255,255,255,.07),transparent 35%),
+    #17171c;
 }
 
-.avatar img{
- width:100%;
- height:100%;
- object-fit:cover;
+.profile-main{
+  padding:0 22px 22px;
 }
 
-.profile h1{
- margin:14px 0 3px;
- font-size:29px;
- letter-spacing:-1.1px;
+.profile-avatar-wrap{
+  margin-top:-42px;
+  position:relative;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
 }
 
-.profileHandle{
- color:#a78bfa!important;
- font-size:13px;
+.profile-avatar{
+  width:84px;
+  height:84px;
+  border:4px solid var(--panel);
+  border-radius:50%;
 }
 
-.profileBio{
- color:var(--muted);
- max-width:390px;
- margin:9px auto 0!important;
- line-height:1.45;
- font-size:13px;
+.edit-profile-btn{
+  background:#fff;
+  color:#000;
+  padding:9px 15px;
+  border-radius:12px;
+  font-size:13px;
+  font-weight:750;
 }
 
-/* NAV */
-
-.nav{
- position:fixed;
- z-index:20;
- bottom:max(11px,env(safe-area-inset-bottom));
- left:50%;
- transform:translateX(-50%);
- width:min(550px,calc(100% - 24px));
- padding:7px;
- display:grid;
- grid-template-columns:repeat(4,1fr);
- gap:5px;
- border:1px solid #303036;
- border-radius:24px;
- background:rgba(18,18,21,.88);
- backdrop-filter:blur(25px);
- -webkit-backdrop-filter:blur(25px);
- box-shadow:0 18px 55px rgba(0,0,0,.45);
+.profile-name{
+  font-size:23px;
+  font-weight:800;
+  margin-top:14px;
+  letter-spacing:-.5px;
 }
 
-.nav button{
- padding:8px 4px;
- border-radius:18px;
- background:transparent;
- color:#777780;
- font-size:10px;
- font-weight:750;
- transition:.2s;
+.profile-handle{
+  color:#777780;
+  font-size:14px;
+  margin-top:3px;
 }
 
-.nav button svg{
- display:block;
- width:21px;
- height:21px;
- margin:0 auto 3px;
+.profile-bio{
+  color:#c4c4c9;
+  font-size:14px;
+  line-height:1.55;
+  margin-top:14px;
+  white-space:pre-wrap;
 }
 
-.nav button.active{
- color:white;
- background:#29292f;
+.profile-stats{
+  display:flex;
+  gap:30px;
+  margin-top:20px;
+}
+
+.stat strong{
+  display:block;
+  font-size:16px;
+}
+
+.stat span{
+  display:block;
+  color:#6f6f77;
+  font-size:12px;
+  margin-top:3px;
 }
 
 /* MODAL */
 
+.modal-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.68);
+  backdrop-filter:blur(12px);
+  z-index:200;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  animation:fadeIn .2s ease;
+}
+
 .modal{
- position:fixed;
- inset:0;
- z-index:100;
- display:none;
- justify-content:center;
- align-items:flex-end;
- background:rgba(0,0,0,.67);
- backdrop-filter:blur(12px);
+  width:min(480px,100%);
+  max-height:90vh;
+  overflow:auto;
+  background:#111115;
+  border:1px solid var(--line);
+  border-radius:27px;
+  padding:24px;
+  box-shadow:0 35px 100px rgba(0,0,0,.55);
+  animation:modalIn .3s cubic-bezier(.2,.8,.2,1);
 }
 
-.modal.show{
- display:flex;
+@keyframes fadeIn{
+  from{opacity:0}
+  to{opacity:1}
 }
 
-.sheet{
- width:100%;
- max-width:590px;
- padding:24px 20px calc(23px + env(safe-area-inset-bottom));
- border-radius:29px 29px 0 0;
- background:#151518;
- border:1px solid #303036;
- animation:sheet .3s cubic-bezier(.16,1,.3,1);
- max-height:90vh;
- overflow:auto;
+@keyframes modalIn{
+  from{
+    opacity:0;
+    transform:translateY(20px) scale(.96);
+  }
+  to{
+    opacity:1;
+    transform:none;
+  }
 }
 
-@keyframes sheet{
- from{transform:translateY(100%)}
- to{transform:none}
+.modal-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:22px;
 }
 
-.sheet h2{
- margin:0 0 8px;
- font-size:23px;
+.modal-title{
+  font-size:21px;
+  font-weight:800;
 }
 
-.sheetText{
- color:var(--muted);
- font-size:13px;
- line-height:1.5;
+.icon-btn{
+  width:38px;
+  height:38px;
+  border-radius:12px;
+  background:#1b1b21;
+  color:#aaa;
+  display:grid;
+  place-items:center;
 }
 
-.photoUpload{
- display:flex;
- align-items:center;
- gap:14px;
- margin:19px 0;
+.icon-btn:hover{
+  color:#fff;
+  background:#222229;
 }
 
-.photoPreview{
- width:67px;
- height:67px;
- border-radius:21px;
- overflow:hidden;
- background:linear-gradient(135deg,#7c3aed,#d946ef);
- display:grid;
- place-items:center;
- font-weight:900;
- font-size:24px;
+.profile-edit-avatar{
+  display:flex;
+  justify-content:center;
+  margin:5px 0 22px;
 }
 
-.photoPreview img{
- width:100%;
- height:100%;
- object-fit:cover;
+.edit-avatar{
+  width:90px;
+  height:90px;
+  border-radius:50%;
+  background:#202027;
+  overflow:hidden;
+  position:relative;
+  cursor:pointer;
+  border:2px solid rgba(255,255,255,.1);
 }
 
-.uploadBtn{
- background:var(--surface3);
- border:1px solid var(--border);
- color:white;
- border-radius:13px;
- padding:11px 14px;
- font-size:12px;
- font-weight:750;
+.edit-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.edit-avatar-overlay{
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  background:rgba(0,0,0,.45);
+  opacity:0;
+  transition:.2s;
+}
+
+.edit-avatar:hover .edit-avatar-overlay{
+  opacity:1;
+}
+
+.field{
+  margin-bottom:15px;
+}
+
+.field label{
+  display:block;
+  color:#9999a2;
+  font-size:12px;
+  margin:0 0 7px 3px;
+}
+
+.field input,
+.field textarea{
+  width:100%;
+  background:#19191f;
+  color:#fff;
+  border:1px solid transparent;
+  outline:0;
+  border-radius:14px;
+  padding:13px;
+}
+
+.field textarea{
+  min-height:100px;
+  resize:vertical;
+}
+
+.field input:focus,
+.field textarea:focus{
+  border-color:rgba(255,255,255,.2);
+}
+
+.field-help{
+  color:#66666e;
+  font-size:11px;
+  margin-top:6px;
+  padding-left:3px;
+}
+
+.modal-error{
+  color:#ff7d91;
+  font-size:12px;
+  line-height:1.45;
+  margin:10px 2px;
+  display:none;
+}
+
+.save-btn{
+  width:100%;
+  padding:14px;
+  border-radius:14px;
+  background:#fff;
+  color:#000;
+  font-weight:750;
+  margin-top:5px;
+}
+
+/* MOBILE NAV */
+
+.mobile-nav{
+  display:none;
 }
 
 /* TOAST */
 
-.toast{
- position:fixed;
- z-index:200;
- left:50%;
- bottom:100px;
- transform:translate(-50%,20px);
- background:#f5f5f5;
- color:#111;
- padding:12px 16px;
- border-radius:14px;
- font-size:13px;
- font-weight:800;
- opacity:0;
- pointer-events:none;
- transition:.25s;
- box-shadow:0 15px 45px rgba(0,0,0,.35);
- white-space:nowrap;
+#toast{
+  position:fixed;
+  left:50%;
+  bottom:28px;
+  transform:translate(-50%,20px);
+  background:#fff;
+  color:#000;
+  padding:12px 17px;
+  border-radius:14px;
+  font-size:13px;
+  font-weight:700;
+  z-index:1000;
+  opacity:0;
+  pointer-events:none;
+  transition:.3s;
+  box-shadow:0 15px 45px rgba(0,0,0,.35);
+  max-width:calc(100% - 30px);
+  text-align:center;
 }
 
-.toast.show{
- opacity:1;
- transform:translate(-50%,0);
+#toast.show{
+  opacity:1;
+  transform:translate(-50%,0);
 }
 
-.loading{
- position:fixed;
- inset:0;
- z-index:300;
- display:flex;
- align-items:center;
- justify-content:center;
- background:#08080b;
- transition:.35s;
+/* RESPONSIVE */
+
+@media(max-width:800px){
+  .sidebar{
+    display:none;
+  }
+
+  .main{
+    margin-left:0;
+    width:100%;
+  }
+
+  .content{
+    padding:18px 15px 95px;
+  }
+
+  .mobile-nav{
+    position:fixed;
+    display:flex;
+    bottom:0;
+    left:0;
+    right:0;
+    height:70px;
+    background:rgba(10,10,12,.91);
+    backdrop-filter:blur(25px);
+    border-top:1px solid var(--line);
+    z-index:100;
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+
+  .mobile-nav button{
+    flex:1;
+    background:transparent;
+    color:#6d6d75;
+    display:grid;
+    place-items:center;
+    align-content:center;
+    gap:4px;
+  }
+
+  .mobile-nav button.active{
+    color:#fff;
+  }
+
+  .mobile-nav span{
+    font-size:10px;
+    font-weight:650;
+  }
+
+  .mobile-logo{
+    display:flex;
+    align-items:center;
+    gap:9px;
+  }
+
+  .mobile-logo-box{
+    width:35px;
+    height:35px;
+    border-radius:11px;
+    background:#fff;
+    color:#000;
+    display:grid;
+    place-items:center;
+    font-size:13px;
+    font-weight:900;
+  }
+
+  .page-title{
+    display:none;
+  }
+
+  .topbar{
+    margin-bottom:18px;
+  }
 }
 
-.loading.hide{
- opacity:0;
- pointer-events:none;
-}
+@media(max-width:480px){
+  .auth-card{
+    padding:25px 20px;
+    border-radius:24px;
+  }
 
-.spinner{
- width:32px;
- height:32px;
- border:3px solid #28282e;
- border-top-color:#a78bfa;
- border-radius:50%;
- animation:spin .7s linear infinite;
-}
+  .auth-title{
+    font-size:27px;
+  }
 
-@keyframes spin{
- to{transform:rotate(360deg)}
-}
+  .post{
+    border-radius:19px;
+    padding:14px;
+  }
 
-@media(min-width:650px){
- .app{
-  padding-top:25px;
- }
- .nav{
-  bottom:20px;
- }
+  .composer{
+    border-radius:19px;
+  }
+
+  .profile-cover{
+    height:120px;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<div id="loading" class="loading">
- <div class="spinner"></div>
-</div>
+<!-- ICONS -->
+<svg style="display:none">
+  <symbol id="i-home" viewBox="0 0 24 24">
+    <path d="M3 10.5 12 3l9 7.5"/>
+    <path d="M5 9.5V21h14V9.5"/>
+    <path d="M9 21v-7h6v7"/>
+  </symbol>
 
+  <symbol id="i-search" viewBox="0 0 24 24">
+    <circle cx="10.8" cy="10.8" r="6.8"/>
+    <path d="m16 16 5 5"/>
+  </symbol>
+
+  <symbol id="i-user" viewBox="0 0 24 24">
+    <circle cx="12" cy="8" r="4"/>
+    <path d="M4 21c.8-4.2 3.5-6.5 8-6.5s7.2 2.3 8 6.5"/>
+  </symbol>
+
+  <symbol id="i-settings" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="3"/>
+    <path d="M19.4 15a1.8 1.8 0 0 0 .36 1.98l.05.05-1.4 1.4-.05-.05a1.8 1.8 0 0 0-1.98-.36 1.8 1.8 0 0 0-1.1 1.65V20h-2v-.33a1.8 1.8 0 0 0-1.1-1.65 1.8 1.8 0 0 0-1.98.36l-.05.05-1.4-1.4.05-.05A1.8 1.8 0 0 0 9.2 15a1.8 1.8 0 0 0-1.65-1.1H7v-2h.55A1.8 1.8 0 0 0 9.2 10a1.8 1.8 0 0 0-.36-1.98l-.05-.05 1.4-1.4.05.05a1.8 1.8 0 0 0 1.98.36 1.8 1.8 0 0 0 1.1-1.65V5h2v.33a1.8 1.8 0 0 0 1.1 1.65 1.8 1.8 0 0 0 1.98-.36l.05-.05 1.4 1.4-.05.05A1.8 1.8 0 0 0 19.4 10a1.8 1.8 0 0 0 1.65 1.1H21v2h-.33A1.8 1.8 0 0 0 19.4 15Z"/>
+  </symbol>
+
+  <symbol id="i-heart" viewBox="0 0 24 24">
+    <path d="M20.8 8.7c0 5.5-8.8 10.8-8.8 10.8S3.2 14.2 3.2 8.7A4.7 4.7 0 0 1 12 6.4a4.7 4.7 0 0 1 8.8 2.3Z"/>
+  </symbol>
+
+  <symbol id="i-comment" viewBox="0 0 24 24">
+    <path d="M20 11.5a7.5 7.5 0 0 1-8 7.5 9.7 9.7 0 0 1-3.7-.7L4 20l1.6-3.5A7.1 7.1 0 0 1 4 11.5 7.5 7.5 0 0 1 12 4a7.5 7.5 0 0 1 8 7.5Z"/>
+  </symbol>
+
+  <symbol id="i-send" viewBox="0 0 24 24">
+    <path d="m21 3-7.2 18-3.6-7.2L3 10.2 21 3Z"/>
+    <path d="M10.2 13.8 21 3"/>
+  </symbol>
+
+  <symbol id="i-edit" viewBox="0 0 24 24">
+    <path d="m4 20 4.2-1 10.5-10.5a2.1 2.1 0 0 0-3-3L5.2 16 4 20Z"/>
+    <path d="m14.5 7.5 2 2"/>
+  </symbol>
+
+  <symbol id="i-x" viewBox="0 0 24 24">
+    <path d="m6 6 12 12M18 6 6 18"/>
+  </symbol>
+
+  <symbol id="i-camera" viewBox="0 0 24 24">
+    <path d="M4 7h3l1.5-2h7L17 7h3v12H4V7Z"/>
+    <circle cx="12" cy="13" r="3.5"/>
+  </symbol>
+
+  <symbol id="i-logout" viewBox="0 0 24 24">
+    <path d="M10 5H5v14h5"/>
+    <path d="M14 8l4 4-4 4"/>
+    <path d="M18 12H9"/>
+  </symbol>
+</svg>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-inner">
+    <div class="logo">A</div>
+    <div class="loader-ring"></div>
+  </div>
+</div>
 
 <!-- AUTH -->
+<section id="authScreen">
 
-<div id="auth" class="auth hidden">
+  <div class="auth-glow"></div>
 
- <div class="authBox">
+  <div class="auth-card">
 
-  <div class="logo">
-   VY<span>BE</span>
-  </div>
+    <div class="auth-brand">
+      <div class="logo">A</div>
+      <div class="auth-brand-name">Alteo</div>
+    </div>
 
-  <div class="logoSub">
-   Find your vibe. Share it.
-  </div>
-
-  <div class="authCard">
-
-   <!-- LOGIN -->
-
-   <div id="login">
-
-    <h1 class="authTitle">
-     Welcome back.
-    </h1>
-
-    <p class="authDescription">
-     Sign in to continue.
+    <h1 class="auth-title" id="authTitle">Welcome back.</h1>
+    <p class="auth-subtitle" id="authSubtitle">
+      Log in to your Alteo account.
     </p>
 
-    <div class="field">
-     <label>Email</label>
-     <input
-      id="loginEmail"
-      class="input"
-      type="email"
-      autocomplete="email"
-      placeholder="you@example.com">
-    </div>
+    <div id="authError" class="auth-error"></div>
 
-    <div class="field">
-     <label>Password</label>
-     <input
-      id="loginPassword"
-      class="input"
-      type="password"
-      autocomplete="current-password"
-      placeholder="Your password">
-    </div>
+    <form class="auth-form" id="authForm">
 
-    <div id="loginError" class="error"></div>
+      <div id="displayNameWrap" class="input-wrap hidden">
+        <input
+          id="displayNameInput"
+          class="input"
+          type="text"
+          maxlength="30"
+          placeholder="Display name"
+          autocomplete="name"
+        >
+      </div>
 
-    <button
-     class="primary"
-     onclick="loginUser()">
-     Sign in
-    </button>
+      <div id="usernameWrap" class="input-wrap hidden">
+        <input
+          id="usernameInput"
+          class="input"
+          type="text"
+          maxlength="20"
+          placeholder="Username"
+          autocomplete="username"
+        >
+      </div>
+
+      <input
+        id="emailInput"
+        class="input"
+        type="email"
+        placeholder="Email"
+        autocomplete="email"
+        required
+      >
+
+      <input
+        id="passwordInput"
+        class="input"
+        type="password"
+        placeholder="Password"
+        autocomplete="current-password"
+        required
+      >
+
+      <button class="primary-btn" id="authSubmit" type="submit">
+        Log in
+      </button>
+
+    </form>
 
     <div class="divider">OR</div>
 
-    <button
-     class="google"
-     onclick="googleSignIn()">
-
-     <svg viewBox="0 0 24 24">
-      <path fill="#4285F4" d="M21.35 12.23c0-.72-.06-1.42-.18-2.09H12v3.95h5.24a4.48 4.48 0 0 1-1.94 2.94v2.45h3.14c1.84-1.7 2.91-4.2 2.91-7.25z"/>
-      <path fill="#34A853" d="M12 21.9c2.63 0 4.84-.87 6.45-2.42l-3.14-2.45c-.87.58-1.98.92-3.31.92-2.54 0-4.69-1.72-5.46-4.03H3.3v2.53A9.74 9.74 0 0 0 12 21.9z"/>
-      <path fill="#FBBC05" d="M6.54 13.92A5.86 5.86 0 0 1 6.23 12c0-.67.11-1.32.31-1.92V7.55H3.3A9.74 9.74 0 0 0 2.25 12c0 1.57.38 3.06 1.05 4.45l3.24-2.53z"/>
-      <path fill="#EA4335" d="M12 6.05c1.43 0 2.71.49 3.72 1.45l2.79-2.79C16.83 3.06 14.63 2.1 12 2.1A9.74 9.74 0 0 0 3.3 7.55l3.24 2.53C7.31 7.77 9.46 6.05 12 6.05z"/>
-     </svg>
-
-     Continue with Google
-
+    <button class="google-btn" id="googleBtn">
+      <span class="google-icon">G</span>
+      Continue with Google
     </button>
 
-    <div class="switch">
-     Don't have an account?
-
-     <button
-      class="link"
-      onclick="showSignup()">
-      Create one
-     </button>
+    <div class="auth-switch">
+      <span id="switchText">Don't have an account?</span>
+      <button id="switchAuth">Create one</button>
     </div>
-
-   </div>
-
-
-   <!-- SIGNUP -->
-
-   <div id="signup" class="hidden">
-
-    <h1 class="authTitle">
-     Create your account.
-    </h1>
-
-    <p class="authDescription">
-     Pick your identity on VYBE.
-    </p>
-
-    <div class="field">
-     <label>Username</label>
-
-     <input
-      id="signupUsername"
-      class="input"
-      maxlength="20"
-      autocomplete="username"
-      placeholder="alteoyt">
-
-     <div
-      id="usernameStatus"
-      class="error">
-     </div>
-
-    </div>
-
-    <div class="field">
-     <label>Display name</label>
-
-     <input
-      id="signupDisplay"
-      class="input"
-      maxlength="30"
-      placeholder="ALTEO">
-    </div>
-
-    <div class="field">
-     <label>Email</label>
-
-     <input
-      id="signupEmail"
-      class="input"
-      type="email"
-      autocomplete="email"
-      placeholder="you@example.com">
-    </div>
-
-    <div class="field">
-     <label>Password</label>
-
-     <input
-      id="signupPassword"
-      class="input"
-      type="password"
-      autocomplete="new-password"
-      placeholder="At least 6 characters">
-    </div>
-
-    <div class="field">
-     <label>Bio</label>
-
-     <textarea
-      id="signupBio"
-      class="textarea"
-      maxlength="160"
-      placeholder="Tell people a little about you..."></textarea>
-    </div>
-
-    <div id="signupError" class="error"></div>
-
-    <button
-     class="primary"
-     onclick="createAccount()">
-     Create account
-    </button>
-
-    <div class="divider">OR</div>
-
-    <button
-     class="google"
-     onclick="googleSignIn(true)">
-
-     <svg viewBox="0 0 24 24">
-      <path fill="#4285F4" d="M21.35 12.23c0-.72-.06-1.42-.18-2.09H12v3.95h5.24a4.48 4.48 0 0 1-1.94 2.94v2.45h3.14c1.84-1.7 2.91-4.2 2.91-7.25z"/>
-      <path fill="#34A853" d="M12 21.9c2.63 0 4.84-.87 6.45-2.42l-3.14-2.45c-.87.58-1.98.92-3.31.92-2.54 0-4.69-1.72-5.46-4.03H3.3v2.53A9.74 9.74 0 0 0 12 21.9z"/>
-      <path fill="#FBBC05" d="M6.54 13.92A5.86 5.86 0 0 1 6.23 12c0-.67.11-1.32.31-1.92V7.55H3.3A9.74 9.74 0 0 0 2.25 12c0 1.57.38 3.06 1.05 4.45l3.24-2.53z"/>
-      <path fill="#EA4335" d="M12 6.05c1.43 0 2.71.49 3.72 1.45l2.79-2.79C16.83 3.06 14.63 2.1 12 2.1A9.74 9.74 0 0 0 3.3 7.55l3.24 2.53C7.31 7.77 9.46 6.05 12 6.05z"/>
-     </svg>
-
-     Continue with Google
-
-    </button>
-
-    <div class="switch">
-     Already have an account?
-
-     <button
-      class="link"
-      onclick="showLogin()">
-      Sign in
-     </button>
-    </div>
-
-   </div>
 
   </div>
-
-  <div class="terms">
-   Your account information is stored securely by Firebase.
-  </div>
-
- </div>
-</div>
-
+</section>
 
 <!-- APP -->
+<div id="app">
 
-<div id="app" class="hidden">
+  <div class="app-layout">
 
- <div class="app">
+    <aside class="sidebar">
 
-  <header class="topbar">
+      <div class="side-brand">
+        <div class="side-logo">A</div>
+        <div class="side-name">Alteo</div>
+      </div>
 
-   <div class="brand">
-    <span class="mark"></span>
-    VYBE
-   </div>
+      <nav class="nav">
 
-   <button
-    class="topIcon"
-    onclick="openSettings()">
+        <button class="nav-btn active" data-page="home">
+          <svg><use href="#i-home"></use></svg>
+          Home
+        </button>
 
-    <svg viewBox="0 0 24 24"
-     fill="none"
-     stroke="currentColor"
-     stroke-width="1.8">
+        <button class="nav-btn" data-page="search">
+          <svg><use href="#i-search"></use></svg>
+          Discover
+        </button>
 
-     <circle cx="12" cy="12" r="3"/>
+        <button class="nav-btn" data-page="profile">
+          <svg><use href="#i-user"></use></svg>
+          Profile
+        </button>
 
-     <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.7 1.7-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56V20h-2.4v-.09a1.7 1.7 0 0 0-1.03-1.56 1.7 1.7 0 0 0-1.88.34l-.06.06-1.7-1.7.06-.06A1.7 1.7 0 0 0 8.46 15a1.7 1.7 0 0 0-1.56-1.03H6.8v-2.4h.1A1.7 1.7 0 0 0 8.46 10a1.7 1.7 0 0 0-.34-1.88l-.06-.06 1.7-1.7.06.06A1.7 1.7 0 0 0 11.7 6.1 1.7 1.7 0 0 0 12.73 4.5V4.4h2.4v.1a1.7 1.7 0 0 0 1.03 1.56 1.7 1.7 0 0 0 1.88-.34l.06-.06 1.7 1.7-.06.06A1.7 1.7 0 0 0 19.4 9a1.7 1.7 0 0 0 1.56 1.03h.1v2.4h-.1A1.7 1.7 0 0 0 19.4 15Z"/>
-    </svg>
+        <button class="nav-btn" id="settingsBtn">
+          <svg><use href="#i-settings"></use></svg>
+          Settings
+        </button>
 
-   </button>
+      </nav>
 
-  </header>
+      <div class="sidebar-profile" id="sidebarProfile">
+        <div class="avatar" id="sideAvatar">A</div>
 
+        <div class="side-user">
+          <div class="side-display" id="sideDisplay">Loading...</div>
+          <div class="side-username" id="sideUsername">@...</div>
+        </div>
+      </div>
 
-  <!-- HOME -->
+    </aside>
 
-  <section id="home" class="page active">
+    <main class="main">
 
-   <div class="hero">
-    <h1>What's your<br>vibe today?</h1>
-    <p>Five questions. One completely different you.</p>
-   </div>
+      <div class="content">
 
-   <div class="vibeCard">
+        <header class="topbar">
 
-    <div class="cardTop">
-     <span>VYBE DAILY</span>
-     <span id="date"></span>
-    </div>
+          <div class="mobile-logo">
+            <div class="mobile-logo-box">A</div>
+            <strong>Alteo</strong>
+          </div>
 
-    <div class="symbol"></div>
+          <div class="page-title" id="pageTitle">Home</div>
 
-    <div
-     class="vibeName"
-     id="homeVibe">
-     Chaotic Good
-    </div>
+        </header>
 
-    <div
-     class="vibeDesc"
-     id="homeDesc">
-     A little random. Mostly iconic.
-    </div>
+        <!-- HOME -->
+        <section id="page-home">
 
-    <div class="score">
-     <b id="homeScore">8.7</b>
-     <small>VYBE SCORE</small>
-    </div>
+          <div class="composer">
 
-   </div>
+            <div class="composer-top">
 
-   <button
-    class="primary"
-    style="margin-top:14px"
-    onclick="startQuiz()">
-    Find my vibe
-   </button>
+              <div class="avatar" id="composerAvatar">A</div>
 
-   <button
-    class="secondary"
-    onclick="shareVibe()">
-    Share my vibe
-   </button>
+              <textarea
+                id="postInput"
+                maxlength="1000"
+                placeholder="What's happening?"
+              ></textarea>
 
+            </div>
 
-   <div class="section">
-    <h2>Your stats</h2>
-    <span>This week</span>
-   </div>
+            <div class="composer-bottom">
+              <button class="post-btn" id="createPostBtn">
+                Post
+              </button>
+            </div>
 
-   <div class="stats">
+          </div>
 
-    <div class="stat">
-     <b id="statDays">1</b>
-     <small>days active</small>
-    </div>
+          <div id="feed"></div>
 
-    <div class="stat">
-     <b id="statScore">87%</b>
-     <small>energy</small>
-    </div>
+        </section>
 
-    <div class="stat">
-     <b id="statVibes">1</b>
-     <small>vibes made</small>
-    </div>
+        <!-- SEARCH -->
+        <section id="page-search" class="hidden">
 
-   </div>
+          <div class="search-box">
 
+            <svg>
+              <use href="#i-search"></use>
+            </svg>
 
-   <div class="section">
-    <h2>Streak</h2>
-   </div>
+            <input
+              id="searchInput"
+              class="search-input"
+              placeholder="Search people..."
+              autocomplete="off"
+            >
 
-   <div class="streak">
+          </div>
 
-    <div class="streakIcon">
-     <svg viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="1.8">
+          <div id="searchResults" class="search-results">
+            <div class="empty">
+              Search for an Alteo user.
+            </div>
+          </div>
 
-      <path d="M12 21c4.4 0 7-2.8 7-6.4 0-3.2-2-5.1-4.2-7.5-.3 2-1.2 3.3-2.5 4.1.1-3.7-1.8-6.7-4.3-8.2.2 3.7-3 5.8-3 9.1C5 17.6 7.7 21 12 21Z"/>
-     </svg>
-    </div>
+        </section>
 
-    <div>
-     <b id="streak">1 day streak</b>
-     <div style="color:var(--muted);font-size:12px;margin-top:4px">
-      Keep it going tomorrow.
-     </div>
-    </div>
+        <!-- PROFILE -->
+        <section id="page-profile" class="hidden">
 
-   </div>
+          <div class="profile-card">
 
+            <div class="profile-cover"></div>
 
-   <div class="section">
-    <h2>Today's challenge</h2>
-   </div>
+            <div class="profile-main">
 
-   <div class="challenge">
+              <div class="profile-avatar-wrap">
 
-    <div class="challengeTitle">
-     Make someone laugh
-    </div>
+                <div class="avatar profile-avatar" id="profileAvatar">
+                  A
+                </div>
 
-    <p>
-     Send something genuinely funny to a friend today.
-    </p>
+                <button class="edit-profile-btn" id="editProfileBtn">
+                  Edit profile
+                </button>
 
-    <div class="progress">
-     <i id="challengeBar"></i>
-    </div>
+              </div>
 
-    <button
-     class="secondary"
-     onclick="completeChallenge()">
-     Mark complete
+              <div class="profile-name" id="profileName">
+                Loading...
+              </div>
+
+              <div class="profile-handle" id="profileUsername">
+                @...
+              </div>
+
+              <div class="profile-bio" id="profileBio"></div>
+
+              <div class="profile-stats">
+
+                <div class="stat">
+                  <strong id="postCount">0</strong>
+                  <span>Posts</span>
+                </div>
+
+                <div class="stat">
+                  <strong>0</strong>
+                  <span>Followers</span>
+                </div>
+
+                <div class="stat">
+                  <strong>0</strong>
+                  <span>Following</span>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- MOBILE NAV -->
+  <nav class="mobile-nav">
+
+    <button class="active" data-page="home">
+      <svg><use href="#i-home"></use></svg>
+      <span>Home</span>
     </button>
 
-   </div>
-
-  </section>
-
-
-  <!-- QUIZ -->
-
-  <section id="quiz" class="page">
-
-   <div class="quizTop">
-
-    <div class="quizProgress">
-     <i id="quizBar"></i>
-    </div>
-
-    <div
-     class="quizCount"
-     id="quizCount">
-     1 / 5
-    </div>
-
-   </div>
-
-   <div
-    class="question"
-    id="question">
-   </div>
-
-   <div id="options"></div>
-
-  </section>
-
-
-  <!-- RESULT -->
-
-  <section id="result" class="page">
-
-   <div class="result">
-
-    <div class="resultSymbol"></div>
-
-    <div class="resultLabel">
-     TODAY'S VYBE
-    </div>
-
-    <h1 id="resultName">
-     Chaotic Good
-    </h1>
-
-    <p id="resultDesc"></p>
-
-
-    <div class="meter">
-
-     <div class="meterRow">
-      <span>Energy</span>
-      <b id="energy">87%</b>
-     </div>
-
-     <div class="progress">
-      <i id="energyBar"></i>
-     </div>
-
-    </div>
-
-
-    <div class="meter">
-
-     <div class="meterRow">
-      <span>Chaos</span>
-      <b id="chaos">72%</b>
-     </div>
-
-     <div class="progress">
-      <i id="chaosBar"></i>
-     </div>
-
-    </div>
-
-
-    <div class="meter">
-
-     <div class="meterRow">
-      <span>Social battery</span>
-      <b id="social">64%</b>
-     </div>
-
-     <div class="progress">
-      <i id="socialBar"></i>
-     </div>
-
-    </div>
-
-
-    <button
-     class="primary"
-     onclick="shareVibe()">
-     Share this vibe
+    <button data-page="search">
+      <svg><use href="#i-search"></use></svg>
+      <span>Discover</span>
     </button>
 
-    <button
-     class="secondary"
-     onclick="go('home')">
-     Back home
+    <button data-page="profile">
+      <svg><use href="#i-user"></use></svg>
+      <span>Profile</span>
     </button>
 
-   </div>
-
-  </section>
-
-
-  <!-- DISCOVER -->
-
-  <section id="discover" class="page">
-
-   <div class="hero">
-    <h1>Discover<br>your people.</h1>
-    <p>See what's trending across VYBE.</p>
-   </div>
-
-   <div class="discoverCard">
-
-    <div class="discoverTitle">
-     Trending right now
-    </div>
-
-    <div class="discoverBig">
-     Main Character
-    </div>
-
-    <div class="discoverMuted">
-     42,831 people picked this today.
-    </div>
-
-    <button
-     class="secondary"
-     onclick="vote('Main Character')">
-     Pick this vibe
+    <button id="mobileSettings">
+      <svg><use href="#i-settings"></use></svg>
+      <span>Settings</span>
     </button>
 
-   </div>
-
-
-   <div class="section">
-    <h2>Vibe wall</h2>
-   </div>
-
-   <div class="stats">
-
-    <button
-     class="stat"
-     onclick="vote('Chaos')">
-     <b>31%</b>
-     <small>Chaos</small>
-    </button>
-
-    <button
-     class="stat"
-     onclick="vote('Chill')">
-     <b>27%</b>
-     <small>Chill</small>
-    </button>
-
-    <button
-     class="stat"
-     onclick="vote('Main Character')">
-     <b>42%</b>
-     <small>Main Character</small>
-    </button>
-
-   </div>
-
-  </section>
-
-
-  <!-- PROFILE -->
-
-  <section id="profile" class="page">
-
-   <div class="profile">
-
-    <div
-     class="avatar"
-     id="profileAvatar">
-     V
-    </div>
-
-    <h1 id="profileDisplay">
-     VYBE User
-    </h1>
-
-    <p
-     class="profileHandle"
-     id="profileUsername">
-     @username
-    </p>
-
-    <p
-     class="profileBio"
-     id="profileBio">
-    </p>
-
-   </div>
-
-
-   <div
-    class="stats"
-    style="margin-top:25px">
-
-    <div class="stat">
-     <b id="profileVibes">1</b>
-     <small>vibes</small>
-    </div>
-
-    <div class="stat">
-     <b id="profileStreak">1</b>
-     <small>streak</small>
-    </div>
-
-    <div class="stat">
-     <b id="profileEnergy">87%</b>
-     <small>energy</small>
-    </div>
-
-   </div>
-
-
-   <div class="section">
-    <h2>Account</h2>
-   </div>
-
-   <div class="challenge">
-
-    <div class="challengeTitle">
-     Profile
-    </div>
-
-    <p id="profileEmail"></p>
-
-    <button
-     class="secondary"
-     onclick="openSettings()">
-     Edit profile
-    </button>
-
-    <button
-     class="secondary"
-     onclick="logout()"
-     style="color:#ff7787">
-     Sign out
-    </button>
-
-   </div>
-
-  </section>
-
- </div>
-
-
- <!-- NAV -->
-
- <nav class="nav">
-
-  <button
-   class="active"
-   onclick="go('home',this)">
-
-   <svg viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    stroke-width="1.8">
-
-    <path d="M3.5 10.7 12 3.8l8.5 6.9V20a1 1 0 0 1-1 1h-5v-5h-5v5h-5a1 1 0 0 1-1-1v-9.3Z"/>
-   </svg>
-
-   Home
-
-  </button>
-
-
-  <button
-   onclick="go('discover',this)">
-
-   <svg viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    stroke-width="1.8">
-
-    <circle cx="11" cy="11" r="7"/>
-    <path d="m20 20-4-4"/>
-   </svg>
-
-   Discover
-
-  </button>
-
-
-  <button
-   onclick="startQuiz()">
-
-   <svg viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    stroke-width="1.8">
-
-    <circle cx="12" cy="12" r="9"/>
-    <path d="M12 8v8M8 12h8"/>
-   </svg>
-
-   Vibe
-
-  </button>
-
-
-  <button
-   onclick="go('profile',this)">
-
-   <svg viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    stroke-width="1.8">
-
-    <circle cx="12" cy="8" r="3.2"/>
-    <path d="M5.5 20c.6-3.4 3-5.4 6.5-5.4s5.9 2 6.5 5.4"/>
-   </svg>
-
-   Profile
-
-  </button>
-
- </nav>
+  </nav>
 
 </div>
 
+<!-- PROFILE MODAL -->
+<div class="modal-overlay" id="profileModal">
 
-<!-- SETTINGS -->
+  <div class="modal">
 
-<div
- id="settings"
- class="modal"
- onclick="closeSettings(event)">
+    <div class="modal-head">
 
- <div
-  class="sheet"
-  onclick="event.stopPropagation()">
+      <div class="modal-title" id="profileModalTitle">
+        Edit profile
+      </div>
 
-  <h2>Edit profile</h2>
+      <button class="icon-btn" id="closeProfileModal">
+        <svg><use href="#i-x"></use></svg>
+      </button>
 
-  <p class="sheetText">
-   Change your VYBE identity.
-  </p>
+    </div>
 
+    <div class="profile-edit-avatar">
 
-  <div class="photoUpload">
+      <label class="edit-avatar" for="photoInput">
 
-   <div
-    class="photoPreview"
-    id="photoPreview">
-    V
-   </div>
+        <div class="avatar" id="editAvatar">
+          A
+        </div>
 
-   <div>
+        <div class="edit-avatar-overlay">
+          <svg><use href="#i-camera"></use></svg>
+        </div>
 
-    <input
-     id="photoInput"
-     type="file"
-     accept="image/*"
-     hidden
-     onchange="previewPhoto(event)">
+      </label>
 
-    <button
-     class="uploadBtn"
-     onclick="document.getElementById('photoInput').click()">
-     Change profile picture
+      <input
+        id="photoInput"
+        type="file"
+        accept="image/*"
+        hidden
+      >
+
+    </div>
+
+    <div class="field">
+
+      <label>Username</label>
+
+      <input
+        id="editUsername"
+        maxlength="20"
+        placeholder="yourusername"
+        autocomplete="off"
+      >
+
+      <div class="field-help">
+        3–20 characters. Letters, numbers and underscores only.
+      </div>
+
+    </div>
+
+    <div class="field">
+
+      <label>Display name</label>
+
+      <input
+        id="editDisplayName"
+        maxlength="30"
+        placeholder="Your display name"
+      >
+
+    </div>
+
+    <div class="field">
+
+      <label>Bio</label>
+
+      <textarea
+        id="editBio"
+        maxlength="160"
+        placeholder="Tell people about yourself..."
+      ></textarea>
+
+    </div>
+
+    <div class="modal-error" id="profileError"></div>
+
+    <button class="save-btn" id="saveProfileBtn">
+      Save changes
     </button>
 
-   </div>
+    <button
+      class="google-btn"
+      id="logoutBtn"
+      style="margin-top:10px;color:#ff7084"
+    >
+      <svg><use href="#i-logout"></use></svg>
+      Log out
+    </button>
 
   </div>
-
-
-  <div class="field">
-
-   <label>Username</label>
-
-   <input
-    id="editUsername"
-    class="input"
-    maxlength="20"
-    placeholder="username">
-
-   <div
-    id="editUsernameStatus"
-    class="error">
-   </div>
-
-  </div>
-
-
-  <div class="field">
-
-   <label>Display name</label>
-
-   <input
-    id="editDisplay"
-    class="input"
-    maxlength="30"
-    placeholder="Display name">
-
-   <div
-    id="editDisplayStatus"
-    class="error">
-   </div>
-
-  </div>
-
-
-  <div class="field">
-
-   <label>Bio</label>
-
-   <textarea
-    id="editBio"
-    class="textarea"
-    maxlength="160"
-    placeholder="Your bio"></textarea>
-
-  </div>
-
-
-  <div id="settingsError" class="error"></div>
-
-
-  <button
-   class="primary"
-   onclick="saveProfile()">
-   Save changes
-  </button>
-
-  <button
-   class="secondary"
-   onclick="closeSettings()">
-   Cancel
-  </button>
-
- </div>
 
 </div>
 
-
-<div id="toast" class="toast"></div>
-
-
-<!-- FIREBASE -->
+<div id="toast"></div>
 
 <script type="module">
 
-/*
-===========================================================
-  PUT YOUR FIREBASE CONFIG HERE
-===========================================================
-*/
+/* =========================================================
+   FIREBASE
+========================================================= */
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 
 import {
- initializeApp
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  updateProfile
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
 import {
- getAuth,
- GoogleAuthProvider,
- signInWithPopup,
- signInWithEmailAndPassword,
- createUserWithEmailAndPassword,
- onAuthStateChanged,
- signOut
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-
-import {
- getFirestore,
- doc,
- getDoc,
- setDoc,
- updateDoc,
- deleteDoc,
- runTransaction,
- serverTimestamp
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
-
-import {
- getStorage,
- ref,
- uploadBytes,
- getDownloadURL
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-storage.js";
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  deleteDoc,
+  runTransaction,
+  serverTimestamp,
+  collection,
+  query,
+  orderBy,
+  limit,
+  onSnapshot,
+  where,
+  getDocs,
+  addDoc
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 
 const firebaseConfig = {
-
- apiKey:"YOUR_API_KEY",
-
- authDomain:"YOUR_PROJECT.firebaseapp.com",
-
- projectId:"YOUR_PROJECT_ID",
-
- storageBucket:"YOUR_PROJECT.firebasestorage.app",
-
- messagingSenderId:"YOUR_MESSAGING_SENDER_ID",
-
- appId:"YOUR_APP_ID"
-
+  apiKey: "AIzaSyBNXUlvTcqcU3r29WtMltATU5JynUEsNU4",
+  authDomain: "alteo-vibe.firebaseapp.com",
+  projectId: "alteo-vibe",
+  storageBucket: "alteo-vibe.firebasestorage.app",
+  messagingSenderId: "932694893550",
+  appId: "1:932694893550:web:566062dabe0cd20c32e4ff",
+  measurementId: "G-G71RGNKZDJ"
 };
 
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-const firebaseApp=
- initializeApp(firebaseConfig);
-
-const auth=
- getAuth(firebaseApp);
-
-const db=
- getFirestore(firebaseApp);
-
-const storage=
- getStorage(firebaseApp);
-
-const googleProvider=
- new GoogleAuthProvider();
+const googleProvider = new GoogleAuthProvider();
 
 
 /* =========================================================
    STATE
 ========================================================= */
 
-let currentUser=null;
-let profile=null;
-let pendingPhoto=null;
+let currentUser = null;
+let currentProfile = null;
+let selectedPhotoData = null;
+let unsubscribePosts = null;
+let authMode = "login";
+let profileSetupMode = false;
+
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const loader = document.getElementById("loader");
+const authScreen = document.getElementById("authScreen");
+const appScreen = document.getElementById("app");
+
+const authTitle = document.getElementById("authTitle");
+const authSubtitle = document.getElementById("authSubtitle");
+const authForm = document.getElementById("authForm");
+const authSubmit = document.getElementById("authSubmit");
+const authError = document.getElementById("authError");
+const switchAuth = document.getElementById("switchAuth");
+const switchText = document.getElementById("switchText");
+
+const displayNameWrap = document.getElementById("displayNameWrap");
+const usernameWrap = document.getElementById("usernameWrap");
+
+const displayNameInput = document.getElementById("displayNameInput");
+const usernameInput = document.getElementById("usernameInput");
+const emailInput = document.getElementById("emailInput");
+const passwordInput = document.getElementById("passwordInput");
+
+const googleBtn = document.getElementById("googleBtn");
+
+const sideAvatar = document.getElementById("sideAvatar");
+const composerAvatar = document.getElementById("composerAvatar");
+
+const sideDisplay = document.getElementById("sideDisplay");
+const sideUsername = document.getElementById("sideUsername");
+
+const profileModal = document.getElementById("profileModal");
+const profileModalTitle = document.getElementById("profileModalTitle");
+const closeProfileModal = document.getElementById("closeProfileModal");
+
+const editAvatar = document.getElementById("editAvatar");
+const photoInput = document.getElementById("photoInput");
+const editUsername = document.getElementById("editUsername");
+const editDisplayName = document.getElementById("editDisplayName");
+const editBio = document.getElementById("editBio");
+const profileError = document.getElementById("profileError");
+const saveProfileBtn = document.getElementById("saveProfileBtn");
+const logoutBtn = document.getElementById("logoutBtn");
+
+const profileAvatar = document.getElementById("profileAvatar");
+const profileName = document.getElementById("profileName");
+const profileUsername = document.getElementById("profileUsername");
+const profileBio = document.getElementById("profileBio");
+const postCount = document.getElementById("postCount");
+
+const feed = document.getElementById("feed");
+const postInput = document.getElementById("postInput");
+const createPostBtn = document.getElementById("createPostBtn");
+
+const searchInput = document.getElementById("searchInput");
+const searchResults = document.getElementById("searchResults");
+
+const pageTitle = document.getElementById("pageTitle");
+const toast = document.getElementById("toast");
 
 
 /* =========================================================
    HELPERS
 ========================================================= */
 
-function normalize(value){
+function showToast(message){
 
- return value
-  .trim()
-  .toLowerCase();
+  toast.textContent = message;
+  toast.classList.add("show");
 
+  clearTimeout(showToast.timer);
+
+  showToast.timer = setTimeout(()=>{
+    toast.classList.remove("show");
+  },2500);
+}
+
+
+function showAuthError(message){
+
+  authError.textContent = message;
+  authError.style.display = "block";
+}
+
+
+function clearAuthError(){
+
+  authError.textContent = "";
+  authError.style.display = "none";
+}
+
+
+function showProfileError(message){
+
+  profileError.textContent = message;
+  profileError.style.display = "block";
+}
+
+
+function clearProfileError(){
+
+  profileError.textContent = "";
+  profileError.style.display = "none";
+}
+
+
+function normalizeUsername(value){
+
+  return value.trim().toLowerCase();
+}
+
+
+function normalizeDisplayName(value){
+
+  return value
+    .trim()
+    .normalize("NFKC")
+    .toLowerCase();
 }
 
 
 function validUsername(value){
 
- return /^[a-zA-Z0-9_]{3,20}$/.test(value);
-
+  return /^[a-zA-Z0-9_]{3,20}$/.test(value);
 }
 
 
 function validDisplayName(value){
 
- return value.trim().length>=2 &&
-        value.trim().length<=30;
+  const length = value.trim().length;
 
+  return length >= 2 && length <= 30;
 }
 
 
-function profileRef(uid){
+function escapeHTML(value){
 
- return doc(db,"users",uid);
+  const div = document.createElement("div");
+  div.textContent = value ?? "";
 
+  return div.innerHTML;
 }
 
 
-function usernameRef(username){
+function initials(name){
 
- return doc(
-  db,
-  "usernames",
-  normalize(username)
- );
+  const text = (name || "A").trim();
 
+  if(!text) return "A";
+
+  return text
+    .split(/\s+/)
+    .slice(0,2)
+    .map(x=>x[0])
+    .join("")
+    .toUpperCase();
 }
 
 
-function displayNameRef(name){
+/* =========================================================
+   AVATARS
+========================================================= */
 
- return doc(
-  db,
-  "displayNames",
-  normalize(name)
- );
+function setAvatar(element, profile){
 
+  if(!element) return;
+
+  const photo = profile?.photoURL;
+
+  if(photo){
+
+    element.innerHTML = `
+      <img
+        src="${photo}"
+        alt=""
+        loading="lazy"
+      >
+    `;
+
+  }else{
+
+    element.textContent = initials(
+      profile?.displayName ||
+      profile?.username ||
+      "A"
+    );
+
+  }
 }
 
 
@@ -2038,504 +1776,1585 @@ function displayNameRef(name){
    AUTH UI
 ========================================================= */
 
-window.showSignup=function(){
+function setAuthMode(mode){
 
- document.getElementById("login")
-  .classList.add("hidden");
+  authMode = mode;
 
- document.getElementById("signup")
-  .classList.remove("hidden");
+  clearAuthError();
 
-};
+  const signup = mode === "signup";
 
+  displayNameWrap.classList.toggle("hidden", !signup);
+  usernameWrap.classList.toggle("hidden", !signup);
 
-window.showLogin=function(){
+  if(signup){
 
- document.getElementById("signup")
-  .classList.add("hidden");
+    authTitle.textContent = "Create your account.";
+    authSubtitle.textContent =
+      "Pick your name and username to get started.";
 
- document.getElementById("login")
-  .classList.remove("hidden");
+    authSubmit.textContent = "Create account";
 
-};
+    switchText.textContent = "Already have an account?";
+    switchAuth.textContent = "Log in";
 
-
-function authError(message){
-
- const e=
-  document.getElementById("loginError");
-
- e.textContent=message;
-
- e.classList.add("show");
-
-}
-
-
-function signupError(message){
-
- const e=
-  document.getElementById("signupError");
-
- e.textContent=message;
-
- e.classList.add("show");
-
-}
-
-
-window.loginUser=async function(){
-
- const email=
-  document.getElementById("loginEmail")
-   .value
-   .trim();
-
- const password=
-  document.getElementById("loginPassword")
-   .value;
-
- document.getElementById("loginError")
-  .classList.remove("show");
-
- if(!email||!password){
-
-  authError("Enter your email and password.");
-
-  return;
-
- }
-
- try{
-
-  await signInWithEmailAndPassword(
-   auth,
-   email,
-   password
-  );
-
- }catch(error){
-
-  authError(
-   friendlyAuthError(error.code)
-  );
-
- }
-
-};
-
-
-window.createAccount=async function(){
-
- const username=
-  document.getElementById("signupUsername")
-   .value
-   .trim();
-
- const displayName=
-  document.getElementById("signupDisplay")
-   .value
-   .trim();
-
- const email=
-  document.getElementById("signupEmail")
-   .value
-   .trim();
-
- const password=
-  document.getElementById("signupPassword")
-   .value;
-
- const bio=
-  document.getElementById("signupBio")
-   .value
-   .trim();
-
- document.getElementById("signupError")
-  .classList.remove("show");
-
- if(!validUsername(username)){
-
-  signupError(
-   "Username: 3–20 letters, numbers or underscores."
-  );
-
-  return;
-
- }
-
- if(!validDisplayName(displayName)){
-
-  signupError(
-   "Display name must be 2–30 characters."
-  );
-
-  return;
-
- }
-
- if(password.length<6){
-
-  signupError(
-   "Password must be at least 6 characters."
-  );
-
-  return;
-
- }
-
- try{
-
-  /*
-   Create Firebase Auth account first.
-  */
-
-  const credential=
-   await createUserWithEmailAndPassword(
-    auth,
-    email,
-    password
-   );
-
-  const uid=credential.user.uid;
-
-  /*
-   Atomically reserve both names.
-   If either is already taken,
-   the whole transaction fails.
-  */
-
-  try{
-
-   await runTransaction(
-    db,
-    async transaction=>{
-
-     const uRef=
-      usernameRef(username);
-
-     const dRef=
-      displayNameRef(displayName);
-
-     const uSnap=
-      await transaction.get(uRef);
-
-     const dSnap=
-      await transaction.get(dRef);
-
-     if(uSnap.exists()){
-
-      throw new Error(
-       "USERNAME_TAKEN"
-      );
-
-     }
-
-     if(dSnap.exists()){
-
-      throw new Error(
-       "DISPLAY_TAKEN"
-      );
-
-     }
-
-     transaction.set(
-      uRef,
-      {
-       uid:uid,
-       createdAt:serverTimestamp()
-      }
-     );
-
-     transaction.set(
-      dRef,
-      {
-       uid:uid,
-       createdAt:serverTimestamp()
-      }
-     );
-
-     transaction.set(
-      profileRef(uid),
-      {
-       uid:uid,
-       email:email,
-       username:username,
-       usernameLower:normalize(username),
-       displayName:displayName,
-       displayNameLower:normalize(displayName),
-       bio:bio,
-       photoURL:"",
-       createdAt:serverTimestamp(),
-       streak:1,
-       days:1,
-       vibes:1,
-       score:87,
-       challenge:false,
-       vibe:{
-        name:"Chaotic Good",
-        desc:"A little random. Mostly iconic.",
-        score:"8.7",
-        energy:87,
-        chaos:72,
-        social:64
-       }
-      }
-     );
-
-    }
-   );
-
-  }catch(error){
-
-   /*
-    If the requested name is unavailable,
-    remove the newly created auth account
-    so we don't leave an unusable account behind.
-   */
-
-   await credential.user.delete();
-
-   if(error.message==="USERNAME_TAKEN"){
-
-    signupError(
-     "That username is already taken."
-    );
-
-   }else if(
-    error.message==="DISPLAY_TAKEN"
-   ){
-
-    signupError(
-     "That display name is already taken."
-    );
-
-   }else{
-
-    signupError(
-     "Could not reserve your profile name."
-    );
-
-   }
-
-   return;
-
-  }
-
-  toast("Account created.");
-
- }catch(error){
-
-  signupError(
-   friendlyAuthError(error.code)
-  );
-
- }
-
-};
-
-
-window.googleSignIn=async function(){
-
- try{
-
-  const result=
-   await signInWithPopup(
-    auth,
-    googleProvider
-   );
-
-  const user=result.user;
-
-  const snap=
-   await getDoc(profileRef(user.uid));
-
-  /*
-   Existing Google account.
-  */
-
-  if(snap.exists()){
-
-   toast("Welcome back.");
-
-   return;
-
-  }
-
-  /*
-   New Google user:
-   They still need to choose a unique username
-   and display name.
-  */
-
-  const username=
-   prompt(
-    "Choose your VYBE username (3-20 letters, numbers or _):"
-   );
-
-  if(!username||
-     !validUsername(username)){
-
-   await signOut(auth);
-
-   toast("Invalid username.");
-
-   return;
-
-  }
-
-  const displayName=
-   prompt(
-    "Choose your display name:"
-   );
-
-  if(!displayName||
-     !validDisplayName(displayName)){
-
-   await signOut(auth);
-
-   toast("Invalid display name.");
-
-   return;
-
-  }
-
-  await runTransaction(
-   db,
-   async transaction=>{
-
-    const uRef=
-     usernameRef(username);
-
-    const dRef=
-     displayNameRef(displayName);
-
-    const uSnap=
-     await transaction.get(uRef);
-
-    const dSnap=
-     await transaction.get(dRef);
-
-    if(uSnap.exists()){
-
-     throw new Error(
-      "USERNAME_TAKEN"
-     );
-
-    }
-
-    if(dSnap.exists()){
-
-     throw new Error(
-      "DISPLAY_TAKEN"
-     );
-
-    }
-
-    transaction.set(
-     uRef,
-     {
-      uid:user.uid,
-      createdAt:serverTimestamp()
-     }
-    );
-
-    transaction.set(
-     dRef,
-     {
-      uid:user.uid,
-      createdAt:serverTimestamp()
-     }
-    );
-
-    transaction.set(
-     profileRef(user.uid),
-     {
-      uid:user.uid,
-      email:user.email||"",
-      username:username,
-      usernameLower:normalize(username),
-      displayName:displayName,
-      displayNameLower:normalize(displayName),
-      bio:"",
-      photoURL:user.photoURL||"",
-      createdAt:serverTimestamp(),
-      streak:1,
-      days:1,
-      vibes:1,
-      score:87,
-      challenge:false,
-      vibe:{
-       name:"Chaotic Good",
-       desc:"A little random. Mostly iconic.",
-       score:"8.7",
-       energy:87,
-       chaos:72,
-       social:64
-      }
-     }
-    );
-
-   }
-  );
-
-  toast("Welcome to VYBE.");
-
- }catch(error){
-
-  if(error.message==="USERNAME_TAKEN"){
-
-   await signOut(auth);
-
-   toast("That username is already taken.");
-
-  }else if(
-   error.message==="DISPLAY_TAKEN"
-  ){
-
-   await signOut(auth);
-
-   toast("That display name is already taken.");
+    passwordInput.autocomplete = "new-password";
 
   }else{
 
-   console.error(error);
+    authTitle.textContent = "Welcome back.";
+    authSubtitle.textContent =
+      "Log in to your Alteo account.";
 
-   toast("Google sign-in failed.");
+    authSubmit.textContent = "Log in";
+
+    switchText.textContent = "Don't have an account?";
+    switchAuth.textContent = "Create one";
+
+    passwordInput.autocomplete = "current-password";
+  }
+}
+
+
+switchAuth.addEventListener("click",()=>{
+
+  setAuthMode(
+    authMode === "login"
+      ? "signup"
+      : "login"
+  );
+
+});
+
+
+/* =========================================================
+   EMAIL AUTH
+========================================================= */
+
+authForm.addEventListener("submit",async event=>{
+
+  event.preventDefault();
+
+  clearAuthError();
+
+  const email = emailInput.value.trim();
+  const password = passwordInput.value;
+
+  if(!email || !password){
+
+    showAuthError("Enter your email and password.");
+    return;
+  }
+
+  authSubmit.disabled = true;
+  authSubmit.textContent =
+    authMode === "signup"
+      ? "Creating..."
+      : "Logging in...";
+
+  try{
+
+    if(authMode === "signup"){
+
+      const displayName = displayNameInput.value.trim();
+      const username = usernameInput.value.trim();
+
+      if(!validUsername(username)){
+
+        throw new Error(
+          "Username must be 3–20 characters and only use letters, numbers or underscores."
+        );
+
+      }
+
+      if(!validDisplayName(displayName)){
+
+        throw new Error(
+          "Display name must be between 2 and 30 characters."
+        );
+
+      }
+
+      const credential =
+        await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+
+      await createProfileAtomically(
+        credential.user,
+        username,
+        displayName,
+        ""
+      );
+
+      await updateProfile(
+        credential.user,
+        {
+          displayName: displayName
+        }
+      );
+
+    }else{
+
+      await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+    }
+
+  }catch(error){
+
+    console.error(error);
+
+    showAuthError(
+      friendlyFirebaseError(error)
+    );
+
+  }finally{
+
+    authSubmit.disabled = false;
+
+    authSubmit.textContent =
+      authMode === "signup"
+        ? "Create account"
+        : "Log in";
 
   }
 
- }
-
-};
+});
 
 
-function friendlyAuthError(code){
+/* =========================================================
+   GOOGLE LOGIN
+========================================================= */
 
- const errors={
+googleBtn.addEventListener("click",async()=>{
 
-  "auth/invalid-email":
-   "That email address isn't valid.",
+  clearAuthError();
 
-  "auth/email-already-in-use":
-   "An account already uses that email.",
+  googleBtn.disabled = true;
+  googleBtn.textContent = "Connecting...";
 
-  "auth/weak-password":
-   "Choose a stronger password.",
+  try{
 
-  "auth/invalid-credential":
-   "Email or password is incorrect.",
+    await signInWithPopup(
+      auth,
+      googleProvider
+    );
 
-  "auth/user-not-found":
-   "Email or password is incorrect.",
+  }catch(error){
 
-  "auth/wrong-password":
-   "Email or password is incorrect."
+    console.error(error);
 
- };
+    /*
+      Some mobile browsers block popup authentication.
+      Redirect is used as a fallback.
+    */
 
- return errors[code]||
-        "Something went wrong. Try again.";
+    if(
+      error.code === "auth/popup-blocked" ||
+      error.code === "auth/popup-closed-by-user" ||
+      error.code === "auth/cancelled-popup-request"
+    ){
+
+      try{
+
+        await signInWithRedirect(
+          auth,
+          googleProvider
+        );
+
+      }catch(redirectError){
+
+        showAuthError(
+          friendlyFirebaseError(redirectError)
+        );
+
+      }
+
+    }else{
+
+      showAuthError(
+        friendlyFirebaseError(error)
+      );
+
+    }
+
+  }finally{
+
+    googleBtn.disabled = false;
+    googleBtn.innerHTML =
+      '<span class="google-icon">G</span> Continue with Google';
+
+  }
+
+});
+
+
+/* =========================================================
+   FIREBASE ERRORS
+========================================================= */
+
+function friendlyFirebaseError(error){
+
+  const code = error?.code || "";
+
+  const messages = {
+
+    "auth/invalid-email":
+      "That email address is not valid.",
+
+    "auth/email-already-in-use":
+      "That email is already registered.",
+
+    "auth/weak-password":
+      "Your password is too weak. Use a stronger password.",
+
+    "auth/invalid-credential":
+      "The email or password is incorrect.",
+
+    "auth/wrong-password":
+      "The email or password is incorrect.",
+
+    "auth/user-not-found":
+      "The email or password is incorrect.",
+
+    "auth/network-request-failed":
+      "Network error. Check your internet connection.",
+
+    "auth/popup-blocked":
+      "The Google sign-in popup was blocked.",
+
+    "auth/popup-closed-by-user":
+      "Google sign-in was cancelled.",
+
+    "auth/operation-not-allowed":
+      "This sign-in method is not enabled in Firebase."
+
+  };
+
+  return messages[code] ||
+    error?.message ||
+    "Something went wrong. Try again.";
+
+}
+
+
+/* =========================================================
+   PROFILE CREATION
+========================================================= */
+
+async function createProfileAtomically(
+  user,
+  username,
+  displayName,
+  bio = "",
+  photoURL = ""
+){
+
+  const usernameLower =
+    normalizeUsername(username);
+
+  const displayNameLower =
+    normalizeDisplayName(displayName);
+
+  const userRef =
+    doc(db,"users",user.uid);
+
+  const usernameRef =
+    doc(db,"usernames",usernameLower);
+
+  const displayNameRef =
+    doc(db,"displayNames",displayNameLower);
+
+  await runTransaction(db,async transaction=>{
+
+    const usernameSnap =
+      await transaction.get(usernameRef);
+
+    const displayNameSnap =
+      await transaction.get(displayNameRef);
+
+    if(usernameSnap.exists()){
+
+      throw new Error(
+        "That username is already taken."
+      );
+
+    }
+
+    if(displayNameSnap.exists()){
+
+      throw new Error(
+        "That display name is already taken."
+      );
+
+    }
+
+    transaction.set(
+      usernameRef,
+      {
+        uid:user.uid,
+        createdAt:serverTimestamp()
+      }
+    );
+
+    transaction.set(
+      displayNameRef,
+      {
+        uid:user.uid,
+        createdAt:serverTimestamp()
+      }
+    );
+
+    transaction.set(
+      userRef,
+      {
+        uid:user.uid,
+        email:user.email || "",
+        username:username,
+        usernameLower:usernameLower,
+        displayName:displayName,
+        displayNameLower:displayNameLower,
+        bio:bio,
+        photoURL:photoURL,
+        createdAt:serverTimestamp(),
+        updatedAt:serverTimestamp()
+      }
+    );
+
+  });
+
+}
+
+
+/* =========================================================
+   LOAD PROFILE
+========================================================= */
+
+async function loadProfile(user){
+
+  const userRef =
+    doc(db,"users",user.uid);
+
+  const snap =
+    await getDoc(userRef);
+
+  if(snap.exists()){
+
+    currentProfile = snap.data();
+
+    return true;
+
+  }
+
+  return false;
+}
+
+
+/* =========================================================
+   GOOGLE FIRST-TIME PROFILE
+========================================================= */
+
+async function setupGoogleProfile(user){
+
+  profileSetupMode = true;
+
+  currentProfile = null;
+
+  profileModalTitle.textContent =
+    "Create your Alteo profile";
+
+  editUsername.value = "";
+  editDisplayName.value =
+    user.displayName ||
+    "";
+
+  editBio.value = "";
+
+  selectedPhotoData =
+    user.photoURL || null;
+
+  setAvatar(
+    editAvatar,
+    {
+      displayName:user.displayName || "A",
+      photoURL:user.photoURL || ""
+    }
+  );
+
+  clearProfileError();
+
+  profileModal.style.display = "flex";
+
+}
+
+
+/* =========================================================
+   SAVE PROFILE
+========================================================= */
+
+async function saveProfile(){
+
+  if(!currentUser) return;
+
+  clearProfileError();
+
+  const username =
+    editUsername.value.trim();
+
+  const displayName =
+    editDisplayName.value.trim();
+
+  const bio =
+    editBio.value.trim();
+
+  if(!validUsername(username)){
+
+    showProfileError(
+      "Username must be 3–20 characters and only use letters, numbers or underscores."
+    );
+
+    return;
+  }
+
+  if(!validDisplayName(displayName)){
+
+    showProfileError(
+      "Display name must be between 2 and 30 characters."
+    );
+
+    return;
+  }
+
+  saveProfileBtn.disabled = true;
+  saveProfileBtn.textContent = "Saving...";
+
+  try{
+
+    const usernameLower =
+      normalizeUsername(username);
+
+    const displayNameLower =
+      normalizeDisplayName(displayName);
+
+    const userRef =
+      doc(db,"users",currentUser.uid);
+
+    /*
+      FIRST PROFILE
+    */
+
+    if(!currentProfile){
+
+      await createProfileAtomically(
+        currentUser,
+        username,
+        displayName,
+        bio,
+        selectedPhotoData || ""
+      );
+
+    }else{
+
+      const oldUsername =
+        currentProfile.usernameLower ||
+        normalizeUsername(currentProfile.username || "");
+
+      const oldDisplayName =
+        currentProfile.displayNameLower ||
+        normalizeDisplayName(currentProfile.displayName || "");
+
+      const usernameChanged =
+        usernameLower !== oldUsername;
+
+      const displayNameChanged =
+        displayNameLower !== oldDisplayName;
+
+      const newUsernameRef =
+        doc(db,"usernames",usernameLower);
+
+      const newDisplayNameRef =
+        doc(db,"displayNames",displayNameLower);
+
+      const oldUsernameRef =
+        doc(db,"usernames",oldUsername);
+
+      const oldDisplayNameRef =
+        doc(db,"displayNames",oldDisplayName);
+
+      await runTransaction(db,async transaction=>{
+
+        if(usernameChanged){
+
+          const usernameSnap =
+            await transaction.get(newUsernameRef);
+
+          if(
+            usernameSnap.exists() &&
+            usernameSnap.data().uid !== currentUser.uid
+          ){
+
+            throw new Error(
+              "That username is already taken."
+            );
+
+          }
+
+        }
+
+        if(displayNameChanged){
+
+          const displayNameSnap =
+            await transaction.get(newDisplayNameRef);
+
+          if(
+            displayNameSnap.exists() &&
+            displayNameSnap.data().uid !== currentUser.uid
+          ){
+
+            throw new Error(
+              "That display name is already taken."
+            );
+
+          }
+
+        }
+
+        if(usernameChanged){
+
+          transaction.set(
+            newUsernameRef,
+            {
+              uid:currentUser.uid,
+              createdAt:serverTimestamp()
+            }
+          );
+
+          transaction.delete(
+            oldUsernameRef
+          );
+
+        }
+
+        if(displayNameChanged){
+
+          transaction.set(
+            newDisplayNameRef,
+            {
+              uid:currentUser.uid,
+              createdAt:serverTimestamp()
+            }
+          );
+
+          transaction.delete(
+            oldDisplayNameRef
+          );
+
+        }
+
+        transaction.update(
+          userRef,
+          {
+            username:username,
+            usernameLower:usernameLower,
+            displayName:displayName,
+            displayNameLower:displayNameLower,
+            bio:bio,
+            photoURL:selectedPhotoData || "",
+            updatedAt:serverTimestamp()
+          }
+        );
+
+      });
+
+    }
+
+    await updateProfile(
+      currentUser,
+      {
+        displayName:displayName,
+        photoURL:selectedPhotoData || null
+      }
+    );
+
+    await loadProfile(currentUser);
+
+    profileSetupMode = false;
+
+    closeModal();
+
+    updateAllUI();
+
+    showToast("Profile updated");
+
+  }catch(error){
+
+    console.error(error);
+
+    showProfileError(
+      error.message ||
+      "Could not save your profile."
+    );
+
+  }finally{
+
+    saveProfileBtn.disabled = false;
+    saveProfileBtn.textContent =
+      "Save changes";
+
+  }
+
+}
+
+
+/* =========================================================
+   PROFILE PICTURE
+   FIRESTORE ONLY
+========================================================= */
+
+photoInput.addEventListener("change",event=>{
+
+  const file =
+    event.target.files?.[0];
+
+  if(!file) return;
+
+  if(!file.type.startsWith("image/")){
+
+    showProfileError(
+      "Please select an image."
+    );
+
+    return;
+  }
+
+  /*
+    Limit original file size before processing.
+    The final Base64 image will be much smaller.
+  */
+
+  if(file.size > 8 * 1024 * 1024){
+
+    showProfileError(
+      "That image is too large. Choose an image under 8 MB."
+    );
+
+    return;
+  }
+
+  compressImage(file)
+    .then(dataURL=>{
+
+      selectedPhotoData = dataURL;
+
+      editAvatar.innerHTML =
+        `<img src="${dataURL}" alt="">`;
+
+    })
+    .catch(error=>{
+
+      console.error(error);
+
+      showProfileError(
+        "Could not process that image."
+      );
+
+    });
+
+});
+
+
+function compressImage(file){
+
+  return new Promise((resolve,reject)=>{
+
+    const reader =
+      new FileReader();
+
+    reader.onload = event=>{
+
+      const img =
+        new Image();
+
+      img.onload = ()=>{
+
+        const maxSize = 420;
+
+        let width =
+          img.width;
+
+        let height =
+          img.height;
+
+        if(width > height){
+
+          if(width > maxSize){
+
+            height =
+              Math.round(
+                height * maxSize / width
+              );
+
+            width = maxSize;
+
+          }
+
+        }else{
+
+          if(height > maxSize){
+
+            width =
+              Math.round(
+                width * maxSize / height
+              );
+
+            height = maxSize;
+
+          }
+
+        }
+
+        const canvas =
+          document.createElement("canvas");
+
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx =
+          canvas.getContext("2d");
+
+        ctx.drawImage(
+          img,
+          0,
+          0,
+          width,
+          height
+        );
+
+        /*
+          JPEG keeps the Firestore document
+          much smaller than the original image.
+        */
+
+        const dataURL =
+          canvas.toDataURL(
+            "image/jpeg",
+            .72
+          );
+
+        /*
+          Safety check.
+          Firestore document size is ~1 MiB.
+        */
+
+        if(dataURL.length > 700000){
+
+          const smaller =
+            canvas.toDataURL(
+              "image/jpeg",
+              .5
+            );
+
+          resolve(smaller);
+
+        }else{
+
+          resolve(dataURL);
+
+        }
+
+      };
+
+      img.onerror =
+        reject;
+
+      img.src =
+        event.target.result;
+
+    };
+
+    reader.onerror =
+      reject;
+
+    reader.readAsDataURL(file);
+
+  });
+
+}
+
+
+/* =========================================================
+   OPEN / CLOSE PROFILE
+========================================================= */
+
+function openProfileModal(){
+
+  profileSetupMode = false;
+
+  profileModalTitle.textContent =
+    "Edit profile";
+
+  clearProfileError();
+
+  if(currentProfile){
+
+    editUsername.value =
+      currentProfile.username || "";
+
+    editDisplayName.value =
+      currentProfile.displayName || "";
+
+    editBio.value =
+      currentProfile.bio || "";
+
+    selectedPhotoData =
+      currentProfile.photoURL || "";
+
+    setAvatar(
+      editAvatar,
+      currentProfile
+    );
+
+  }
+
+  profileModal.style.display = "flex";
+}
+
+
+function closeModal(){
+
+  profileModal.style.display = "none";
+
+  clearProfileError();
+
+}
+
+
+closeProfileModal.addEventListener(
+  "click",
+  closeModal
+);
+
+
+profileModal.addEventListener("click",event=>{
+
+  if(event.target === profileModal){
+
+    if(!profileSetupMode){
+
+      closeModal();
+
+    }
+
+  }
+
+});
+
+
+saveProfileBtn.addEventListener(
+  "click",
+  saveProfile
+);
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+logoutBtn.addEventListener("click",async()=>{
+
+  try{
+
+    await signOut(auth);
+
+    closeModal();
+
+    showToast("Logged out");
+
+  }catch(error){
+
+    console.error(error);
+
+  }
+
+});
+
+
+/* =========================================================
+   UI UPDATE
+========================================================= */
+
+function updateAllUI(){
+
+  if(!currentProfile) return;
+
+  setAvatar(
+    sideAvatar,
+    currentProfile
+  );
+
+  setAvatar(
+    composerAvatar,
+    currentProfile
+  );
+
+  setAvatar(
+    profileAvatar,
+    currentProfile
+  );
+
+  sideDisplay.textContent =
+    currentProfile.displayName ||
+    "Alteo user";
+
+  sideUsername.textContent =
+    "@" +
+    (currentProfile.username || "");
+
+  profileName.textContent =
+    currentProfile.displayName ||
+    "";
+
+  profileUsername.textContent =
+    "@" +
+    (currentProfile.username || "");
+
+  profileBio.textContent =
+    currentProfile.bio ||
+    "";
+
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function openPage(page){
+
+  const pages = [
+    "home",
+    "search",
+    "profile"
+  ];
+
+  pages.forEach(name=>{
+
+    const element =
+      document.getElementById(
+        "page-" + name
+      );
+
+    if(element){
+
+      element.classList.toggle(
+        "hidden",
+        name !== page
+      );
+
+    }
+
+  });
+
+  const titles = {
+    home:"Home",
+    search:"Discover",
+    profile:"Profile"
+  };
+
+  pageTitle.textContent =
+    titles[page] || "Alteo";
+
+  document.querySelectorAll(
+    ".nav-btn[data-page], .mobile-nav button[data-page]"
+  ).forEach(button=>{
+
+    button.classList.toggle(
+      "active",
+      button.dataset.page === page
+    );
+
+  });
+
+}
+
+
+document.querySelectorAll(
+  ".nav-btn[data-page], .mobile-nav button[data-page]"
+).forEach(button=>{
+
+  button.addEventListener(
+    "click",
+    ()=>{
+      openPage(button.dataset.page);
+    }
+  );
+
+});
+
+
+document.getElementById(
+  "editProfileBtn"
+).addEventListener(
+  "click",
+  openProfileModal
+);
+
+
+document.getElementById(
+  "sidebarProfile"
+).addEventListener(
+  "click",
+  ()=>{
+    openPage("profile");
+  }
+);
+
+
+document.getElementById(
+  "settingsBtn"
+).addEventListener(
+  "click",
+  openProfileModal
+);
+
+
+document.getElementById(
+  "mobileSettings"
+).addEventListener(
+  "click",
+  openProfileModal
+);
+
+
+/* =========================================================
+   CREATE POST
+========================================================= */
+
+createPostBtn.addEventListener("click",async()=>{
+
+  if(!currentUser || !currentProfile){
+
+    showToast("Create your profile first.");
+
+    return;
+  }
+
+  const text =
+    postInput.value.trim();
+
+  if(!text){
+
+    showToast("Write something first.");
+
+    return;
+  }
+
+  if(text.length > 1000){
+
+    showToast("Post is too long.");
+
+    return;
+  }
+
+  createPostBtn.disabled = true;
+  createPostBtn.textContent = "Posting...";
+
+  try{
+
+    await addDoc(
+      collection(db,"posts"),
+      {
+        uid:currentUser.uid,
+        username:currentProfile.username,
+        displayName:currentProfile.displayName,
+        photoURL:currentProfile.photoURL || "",
+        text:text,
+        createdAt:serverTimestamp()
+      }
+    );
+
+    postInput.value = "";
+
+    showToast("Posted");
+
+  }catch(error){
+
+    console.error(error);
+
+    showToast(
+      "Could not create the post."
+    );
+
+  }finally{
+
+    createPostBtn.disabled = false;
+    createPostBtn.textContent = "Post";
+
+  }
+
+});
+
+
+/* =========================================================
+   FEED
+========================================================= */
+
+function startFeed(){
+
+  if(unsubscribePosts){
+
+    unsubscribePosts();
+
+    unsubscribePosts = null;
+
+  }
+
+  const postsQuery =
+    query(
+      collection(db,"posts"),
+      orderBy("createdAt","desc"),
+      limit(50)
+    );
+
+  unsubscribePosts =
+    onSnapshot(
+      postsQuery,
+      snapshot=>{
+
+        feed.innerHTML = "";
+
+        if(snapshot.empty){
+
+          feed.innerHTML = `
+            <div class="empty">
+              Be the first person to post.
+            </div>
+          `;
+
+          return;
+        }
+
+        snapshot.forEach(docSnap=>{
+
+          const post =
+            docSnap.data();
+
+          renderPost(
+            docSnap.id,
+            post
+          );
+
+        });
+
+      },
+      error=>{
+
+        console.error(error);
+
+        feed.innerHTML = `
+          <div class="empty">
+            Couldn't load the feed.
+          </div>
+        `;
+
+      }
+    );
+
+}
+
+
+function renderPost(id,post){
+
+  const article =
+    document.createElement("article");
+
+  article.className = "post";
+
+  const date =
+    post.createdAt?.toDate
+      ? post.createdAt.toDate()
+      : null;
+
+  const time =
+    date
+      ? formatTime(date)
+      : "now";
+
+  const avatarHTML =
+    post.photoURL
+      ? `<div class="avatar">
+          <img src="${post.photoURL}" alt="" loading="lazy">
+         </div>`
+      : `<div class="avatar">
+          ${escapeHTML(
+            initials(
+              post.displayName ||
+              post.username
+            )
+          )}
+         </div>`;
+
+  article.innerHTML = `
+
+    <div class="post-head">
+
+      ${avatarHTML}
+
+      <div class="post-user">
+
+        <div class="post-display">
+          ${escapeHTML(
+            post.displayName ||
+            post.username ||
+            "Alteo user"
+          )}
+        </div>
+
+        <div class="post-username">
+          @${escapeHTML(
+            post.username || ""
+          )}
+        </div>
+
+      </div>
+
+      <div class="post-time">
+        ${time}
+      </div>
+
+    </div>
+
+    <div class="post-content">
+      ${escapeHTML(post.text || "")}
+    </div>
+
+    <div class="post-actions">
+
+      <button class="post-action like-btn">
+        <svg><use href="#i-heart"></use></svg>
+        <span>0</span>
+      </button>
+
+      <button class="post-action">
+        <svg><use href="#i-comment"></use></svg>
+        <span>Reply</span>
+      </button>
+
+      <button class="post-action">
+        <svg><use href="#i-send"></use></svg>
+        <span>Share</span>
+      </button>
+
+    </div>
+
+  `;
+
+  const likeButton =
+    article.querySelector(".like-btn");
+
+  likeButton.addEventListener(
+    "click",
+    ()=>{
+      likeButton.classList.toggle("liked");
+
+      const span =
+        likeButton.querySelector("span");
+
+      span.textContent =
+        likeButton.classList.contains("liked")
+          ? "1"
+          : "0";
+    }
+  );
+
+  feed.appendChild(article);
+
+}
+
+
+function formatTime(date){
+
+  const seconds =
+    Math.floor(
+      (Date.now() - date.getTime()) / 1000
+    );
+
+  if(seconds < 10)
+    return "now";
+
+  if(seconds < 60)
+    return seconds + "s";
+
+  const minutes =
+    Math.floor(seconds / 60);
+
+  if(minutes < 60)
+    return minutes + "m";
+
+  const hours =
+    Math.floor(minutes / 60);
+
+  if(hours < 24)
+    return hours + "h";
+
+  const days =
+    Math.floor(hours / 24);
+
+  if(days < 7)
+    return days + "d";
+
+  return date.toLocaleDateString();
+}
+
+
+/* =========================================================
+   SEARCH USERS
+========================================================= */
+
+let searchTimer = null;
+
+searchInput.addEventListener(
+  "input",
+  ()=>{
+
+    clearTimeout(searchTimer);
+
+    const value =
+      searchInput.value.trim();
+
+    if(!value){
+
+      searchResults.innerHTML = `
+        <div class="empty">
+          Search for an Alteo user.
+        </div>
+      `;
+
+      return;
+    }
+
+    searchTimer =
+      setTimeout(
+        ()=>searchUsers(value),
+        350
+      );
+
+  }
+);
+
+
+async function searchUsers(value){
+
+  searchResults.innerHTML = `
+    <div class="empty">
+      Searching...
+    </div>
+  `;
+
+  const normalized =
+    value.toLowerCase();
+
+  try{
+
+    /*
+      Prefix search for usernames.
+    */
+
+    const usernameQuery =
+      query(
+        collection(db,"users"),
+        where(
+          "usernameLower",
+          ">=",
+          normalized
+        ),
+        where(
+          "usernameLower",
+          "<=",
+          normalized + "\uf8ff"
+        ),
+        limit(10)
+      );
+
+    /*
+      Prefix search for display names.
+    */
+
+    const displayQuery =
+      query(
+        collection(db,"users"),
+        where(
+          "displayNameLower",
+          ">=",
+          normalizeDisplayName(value)
+        ),
+        where(
+          "displayNameLower",
+          "<=",
+          normalizeDisplayName(value) + "\uf8ff"
+        ),
+        limit(10)
+      );
+
+    const [
+      usernameSnap,
+      displaySnap
+    ] = await Promise.all([
+      getDocs(usernameQuery),
+      getDocs(displayQuery)
+    ]);
+
+    const users = new Map();
+
+    usernameSnap.forEach(
+      snap=>{
+        users.set(
+          snap.id,
+          snap.data()
+        );
+      }
+    );
+
+    displaySnap.forEach(
+      snap=>{
+        users.set(
+          snap.id,
+          snap.data()
+        );
+      }
+    );
+
+    searchResults.innerHTML = "";
+
+    if(users.size === 0){
+
+      searchResults.innerHTML = `
+        <div class="empty">
+          No users found.
+        </div>
+      `;
+
+      return;
+    }
+
+    users.forEach(user=>{
+
+      const item =
+        document.createElement("div");
+
+      item.className = "user-result";
+
+      const avatar =
+        document.createElement("div");
+
+      avatar.className = "avatar";
+
+      setAvatar(
+        avatar,
+        user
+      );
+
+      const info =
+        document.createElement("div");
+
+      info.className = "result-info";
+
+      info.innerHTML = `
+        <div class="result-name">
+          ${escapeHTML(
+            user.displayName ||
+            user.username
+          )}
+        </div>
+
+        <div class="result-username">
+          @${escapeHTML(
+            user.username || ""
+          )}
+        </div>
+      `;
+
+      item.appendChild(avatar);
+      item.appendChild(info);
+
+      item.addEventListener(
+        "click",
+        ()=>{
+          /*
+            For now clicking a user
+            takes you to the profile page.
+          */
+          openPage("profile");
+
+          if(user.uid === currentUser?.uid){
+
+            return;
+          }
+
+          showToast(
+            "Profile viewing is ready for the next update."
+          );
+
+        }
+      );
+
+      searchResults.appendChild(item);
+
+    });
+
+  }catch(error){
+
+    console.error(error);
+
+    searchResults.innerHTML = `
+      <div class="empty">
+        Search couldn't be completed.
+      </div>
+    `;
+
+  }
+
+}
+
+
+/* =========================================================
+   PROFILE POST COUNT
+========================================================= */
+
+async function loadPostCount(){
+
+  if(!currentUser) return;
+
+  try{
+
+    const postsQuery =
+      query(
+        collection(db,"posts"),
+        where(
+          "uid",
+          "==",
+          currentUser.uid
+        ),
+        limit(100)
+      );
+
+    const snap =
+      await getDocs(postsQuery);
+
+    postCount.textContent =
+      snap.size;
+
+  }catch(error){
+
+    console.error(error);
+
+  }
 
 }
 
@@ -2545,913 +3364,113 @@ function friendlyAuthError(code){
 ========================================================= */
 
 onAuthStateChanged(
- auth,
- async user=>{
+  auth,
+  async user=>{
 
-  if(user){
+    currentUser = user;
 
-   currentUser=user;
+    if(!user){
 
-   const snap=
-    await getDoc(
-     profileRef(user.uid)
-    );
+      currentProfile = null;
 
-   if(!snap.exists()){
+      if(unsubscribePosts){
 
-    document
-     .getElementById("loading")
-     .classList.add("hide");
+        unsubscribePosts();
+        unsubscribePosts = null;
 
-    return;
+      }
 
-   }
+      appScreen.style.display = "none";
+      authScreen.style.display = "flex";
 
-   profile={
-    id:snap.id,
-    ...snap.data()
-   };
+      loader.style.opacity = "0";
 
-   document
-    .getElementById("auth")
-    .classList.add("hidden");
-
-   document
-    .getElementById("app")
-    .classList.remove("hidden");
-
-   updateUI();
-
-  }else{
-
-   currentUser=null;
-   profile=null;
-
-   document
-    .getElementById("app")
-    .classList.add("hidden");
-
-   document
-    .getElementById("auth")
-    .classList.remove("hidden");
-
-  }
-
-  document
-   .getElementById("loading")
-   .classList.add("hide");
-
- });
-
-
-/* =========================================================
-   APP NAV
-========================================================= */
-
-window.go=function(id,button){
-
- document
-  .querySelectorAll(".page")
-  .forEach(
-   p=>p.classList.remove("active")
-  );
-
- document
-  .getElementById(id)
-  .classList.add("active");
-
- document
-  .querySelectorAll(".nav button")
-  .forEach(
-   b=>b.classList.remove("active")
-  );
-
- if(button){
-
-  button.classList.add("active");
-
- }
-
- window.scrollTo({
-  top:0,
-  behavior:"smooth"
- });
-
- updateUI();
-
-};
-
-
-/* =========================================================
-   UI
-========================================================= */
-
-function updateUI(){
-
- if(!profile)return;
-
- const vibe=profile.vibe||{};
-
- document.getElementById("homeVibe")
-  .textContent=vibe.name||"Chaotic Good";
-
- document.getElementById("homeDesc")
-  .textContent=
-   vibe.desc||"A little random. Mostly iconic.";
-
- document.getElementById("homeScore")
-  .textContent=vibe.score||"8.7";
-
- document.getElementById("statDays")
-  .textContent=profile.days||1;
-
- document.getElementById("statScore")
-  .textContent=(profile.score||87)+"%";
-
- document.getElementById("statVibes")
-  .textContent=profile.vibes||1;
-
- document.getElementById("streak")
-  .textContent=
-   `${profile.streak||1} day${(profile.streak||1)===1?"":"s"} streak`;
-
- document.getElementById("challengeBar")
-  .style.width=
-   profile.challenge ? "100%" : "63%";
-
- document.getElementById("resultName")
-  .textContent=vibe.name||"Chaotic Good";
-
- document.getElementById("resultDesc")
-  .textContent=vibe.desc||"";
-
- setMeter(
-  "energy",
-  "energyBar",
-  vibe.energy||87
- );
-
- setMeter(
-  "chaos",
-  "chaosBar",
-  vibe.chaos||72
- );
-
- setMeter(
-  "social",
-  "socialBar",
-  vibe.social||64
- );
-
-
- document.getElementById("profileDisplay")
-  .textContent=
-   profile.displayName||"VYBE User";
-
- document.getElementById("profileUsername")
-  .textContent=
-   "@"+(profile.username||"username");
-
- document.getElementById("profileBio")
-  .textContent=
-   profile.bio||"No bio yet.";
-
- document.getElementById("profileEmail")
-  .textContent=
-   profile.email||currentUser?.email||"";
-
- document.getElementById("profileVibes")
-  .textContent=profile.vibes||1;
-
- document.getElementById("profileStreak")
-  .textContent=profile.streak||1;
-
- document.getElementById("profileEnergy")
-  .textContent=(profile.score||87)+"%";
-
- setAvatar(
-  document.getElementById("profileAvatar"),
-  profile
- );
-
- document.getElementById("date")
-  .textContent=
-   new Date().toLocaleDateString(
-    undefined,
-    {
-     month:"short",
-     day:"numeric"
-    }
-   );
-
-}
-
-
-function setMeter(
- textId,
- barId,
- value
-){
-
- document.getElementById(textId)
-  .textContent=value+"%";
-
- document.getElementById(barId)
-  .style.width=value+"%";
-
-}
-
-
-function setAvatar(element,user){
-
- if(user.photoURL){
-
-  element.innerHTML=
-   `<img src="${escapeHtml(user.photoURL)}" alt="">`;
-
- }else{
-
-  element.textContent=
-   (user.displayName||"V")
-    .charAt(0)
-    .toUpperCase();
-
- }
-
-}
-
-
-function escapeHtml(value){
-
- return String(value)
-  .replaceAll("&","&amp;")
-  .replaceAll("<","&lt;")
-  .replaceAll(">","&gt;")
-  .replaceAll('"',"&quot;")
-  .replaceAll("'","&#039;");
-
-}
-
-
-/* =========================================================
-   QUIZ
-========================================================= */
-
-const questions=[
-
- {
-  q:"Your friend says 'come outside.' You...",
-  a:[
-   "Already outside.",
-   "Ask where we're going.",
-   "Need three business days.",
-   "Say bet and disappear."
-  ]
- },
-
- {
-  q:"Pick your ideal night.",
-  a:[
-   "Random adventure.",
-   "Gaming and snacks.",
-   "Music and headphones.",
-   "Sleep. Obviously."
-  ]
- },
-
- {
-  q:"Your group chat is...",
-  a:[
-   "Pure chaos.",
-   "Dead until 2AM.",
-   "Actually organized.",
-   "One person carrying it."
-  ]
- },
-
- {
-  q:"Someone sends 'we need to talk.'",
-  a:[
-   "Whatever.",
-   "WHAT DID I DO?",
-   "Send a meme.",
-   "Leave them on read."
-  ]
- },
-
- {
-  q:"Choose your current energy.",
-  a:[
-   "MAXIMUM.",
-   "Unpredictable.",
-   "Chill.",
-   "Running on 2%."
-  ]
- }
-
-];
-
-
-const vibes=[
-
- {
-  name:"Chaotic Good",
-  desc:"You somehow turn ordinary moments into stories.",
-  energy:92,
-  chaos:88,
-  social:76
- },
-
- {
-  name:"Main Character",
-  desc:"Today has serious protagonist energy.",
-  energy:95,
-  chaos:61,
-  social:89
- },
-
- {
-  name:"Unbothered",
-  desc:"Peaceful, chilled, and absolutely not stressing.",
-  energy:63,
-  chaos:29,
-  social:48
- },
-
- {
-  name:"Pure Energy",
-  desc:"Your battery is basically impossible to kill.",
-  energy:99,
-  chaos:67,
-  social:91
- },
-
- {
-  name:"Night Thinker",
-  desc:"Your best ideas definitely happen way too late.",
-  energy:58,
-  chaos:54,
-  social:63
- }
-
-];
-
-
-let questionIndex=0;
-let answers=[];
-
-
-window.startQuiz=function(){
-
- questionIndex=0;
- answers=[];
-
- go("quiz");
-
- renderQuestion();
-
-};
-
-
-function renderQuestion(){
-
- const q=questions[questionIndex];
-
- document.getElementById("question")
-  .textContent=q.q;
-
- document.getElementById("quizCount")
-  .textContent=
-   `${questionIndex+1} / ${questions.length}`;
-
- document.getElementById("quizBar")
-  .style.width=
-   `${((questionIndex+1)/questions.length)*100}%`;
-
- document.getElementById("options")
-  .innerHTML=
-   q.a.map(
-    (answer,i)=>
-     `
-      <button
-       class="option"
-       onclick="answerQuestion(${i})">
-       ${escapeHtml(answer)}
-      </button>
-     `
-   ).join("");
-
-}
-
-
-window.answerQuestion=function(index){
-
- answers.push(index);
-
- if(questionIndex<questions.length-1){
-
-  questionIndex++;
-
-  renderQuestion();
-
- }else{
-
-  generateVibe();
-
- }
-
-};
-
-
-async function generateVibe(){
-
- const total=
-  answers.reduce(
-   (sum,v)=>sum+v,
-   0
-  );
-
- const base=
-  vibes[total%vibes.length];
-
- const score=
-  (
-   7.5+
-   (base.energy/100)*2.4
-  ).toFixed(1);
-
- profile.vibe={
-  ...base,
-  score
- };
-
- profile.vibes=
-  (profile.vibes||0)+1;
-
- profile.score=
-  Math.round(
-   (base.energy+base.social)/2
-  );
-
- profile.days=
-  Math.max(
-   profile.days||1,
-   profile.vibes
-  );
-
- await updateDoc(
-  profileRef(currentUser.uid),
-  {
-   vibe:profile.vibe,
-   vibes:profile.vibes,
-   score:profile.score,
-   days:profile.days
-  }
- );
-
- updateUI();
-
- go("result");
-
- toast("New vibe unlocked.");
-
-}
-
-
-/* =========================================================
-   CHALLENGE
-========================================================= */
-
-window.completeChallenge=async function(){
-
- if(profile.challenge){
-
-  toast("Already completed.");
-
-  return;
-
- }
-
- profile.challenge=true;
-
- await updateDoc(
-  profileRef(currentUser.uid),
-  {
-   challenge:true
-  }
- );
-
- updateUI();
-
- toast("Challenge completed.");
-
-};
-
-
-/* =========================================================
-   SHARE
-========================================================= */
-
-window.shareVibe=async function(){
-
- if(!profile)return;
-
- const v=profile.vibe;
-
- const text=
- `MY VYBE\n\n`+
- `${v.name}\n\n`+
- `Energy ${v.energy}%\n`+
- `Chaos ${v.chaos}%\n`+
- `Social battery ${v.social}%\n\n`+
- `What's yours? #VYBE`;
-
- if(navigator.share){
-
-  try{
-
-   await navigator.share({
-    title:"My VYBE",
-    text:text
-   });
-
-   toast("Shared.");
-
-  }catch(e){}
-
- }else{
-
-  await navigator.clipboard.writeText(text);
-
-  toast("Copied.");
-
- }
-
-};
-
-
-/* =========================================================
-   PROFILE SETTINGS
-========================================================= */
-
-window.openSettings=function(){
-
- document.getElementById("editUsername")
-  .value=profile.username||"";
-
- document.getElementById("editDisplay")
-  .value=profile.displayName||"";
-
- document.getElementById("editBio")
-  .value=profile.bio||"";
-
- document.getElementById("settingsError")
-  .classList.remove("show");
-
- pendingPhoto=null;
-
- setAvatar(
-  document.getElementById("photoPreview"),
-  profile
- );
-
- document
-  .getElementById("settings")
-  .classList.add("show");
-
-};
-
-
-window.closeSettings=function(event){
-
- if(
-  event &&
-  event.target!==document.getElementById("settings")
- ){
-  return;
- }
-
- document
-  .getElementById("settings")
-  .classList.remove("show");
-
-};
-
-
-window.previewPhoto=function(event){
-
- const file=
-  event.target.files?.[0];
-
- if(!file)return;
-
- if(file.size>5*1024*1024){
-
-  toast("Image must be under 5 MB.");
-
-  return;
-
- }
-
- pendingPhoto=file;
-
- const url=
-  URL.createObjectURL(file);
-
- document.getElementById("photoPreview")
-  .innerHTML=
-   `<img src="${url}" alt="">`;
-
-};
-
-
-window.saveProfile=async function(){
-
- const username=
-  document.getElementById("editUsername")
-   .value.trim();
-
- const displayName=
-  document.getElementById("editDisplay")
-   .value.trim();
-
- const bio=
-  document.getElementById("editBio")
-   .value.trim();
-
- const error=
-  document.getElementById("settingsError");
-
- error.classList.remove("show");
-
- if(!validUsername(username)){
-
-  error.textContent=
-   "Username must be 3–20 letters, numbers or underscores.";
-
-  error.classList.add("show");
-
-  return;
-
- }
-
- if(!validDisplayName(displayName)){
-
-  error.textContent=
-   "Display name must be 2–30 characters.";
-
-  error.classList.add("show");
-
-  return;
-
- }
-
- try{
-
-  const oldUsername=
-   profile.username;
-
-  const oldDisplay=
-   profile.displayName;
-
-  /*
-   Reserve names atomically.
-   If a new name is unchanged,
-   its existing reservation is reused.
-  */
-
-  await runTransaction(
-   db,
-   async transaction=>{
-
-    const newURef=
-     usernameRef(username);
-
-    const newDRef=
-     displayNameRef(displayName);
-
-    const oldURef=
-     usernameRef(oldUsername);
-
-    const oldDRef=
-     displayNameRef(oldDisplay);
-
-    const [
-     newUSnap,
-     newDSnap
-    ]=
-     await Promise.all([
-      transaction.get(newURef),
-      transaction.get(newDRef)
-     ]);
-
-    if(
-     normalize(username)!==
-     normalize(oldUsername)
-    ){
-
-     if(
-      newUSnap.exists() &&
-      newUSnap.data().uid!==currentUser.uid
-     ){
-
-      throw new Error(
-       "USERNAME_TAKEN"
+      setTimeout(
+        ()=>loader.style.display = "none",
+        450
       );
 
-     }
-
-     transaction.set(
-      newURef,
-      {
-       uid:currentUser.uid,
-       updatedAt:serverTimestamp()
-      }
-     );
-
-     transaction.delete(oldURef);
-
+      return;
     }
 
-    if(
-     normalize(displayName)!==
-     normalize(oldDisplay)
-    ){
+    try{
 
-     if(
-      newDSnap.exists() &&
-      newDSnap.data().uid!==currentUser.uid
-     ){
+      const exists =
+        await loadProfile(user);
 
-      throw new Error(
-       "DISPLAY_TAKEN"
+      if(!exists){
+
+        /*
+          New Google user needs to choose
+          their unique username/display name.
+        */
+
+        appScreen.style.display = "none";
+        authScreen.style.display = "none";
+
+        await setupGoogleProfile(user);
+
+      }else{
+
+        profileSetupMode = false;
+
+        authScreen.style.display = "none";
+        appScreen.style.display = "block";
+
+        updateAllUI();
+
+        startFeed();
+
+        loadPostCount();
+
+      }
+
+    }catch(error){
+
+      console.error(error);
+
+      showToast(
+        "Couldn't load your profile."
       );
 
-     }
+    }finally{
 
-     transaction.set(
-      newDRef,
-      {
-       uid:currentUser.uid,
-       updatedAt:serverTimestamp()
-      }
-     );
+      loader.style.opacity = "0";
 
-     transaction.delete(oldDRef);
+      setTimeout(
+        ()=>loader.style.display = "none",
+        450
+      );
 
     }
-
-    transaction.update(
-     profileRef(currentUser.uid),
-     {
-      username:username,
-      usernameLower:normalize(username),
-      displayName:displayName,
-      displayNameLower:normalize(displayName),
-      bio:bio
-     }
-    );
-
-   }
-  );
-
-  /*
-   Upload profile picture after the profile transaction.
-  */
-
-  let photoURL=
-   profile.photoURL||"";
-
-  if(pendingPhoto){
-
-   const storageRef=
-    ref(
-     storage,
-     `profilePictures/${currentUser.uid}/avatar`
-    );
-
-   await uploadBytes(
-    storageRef,
-    pendingPhoto,
-    {
-     contentType:pendingPhoto.type
-    }
-   );
-
-   photoURL=
-    await getDownloadURL(storageRef);
-
-   await updateDoc(
-    profileRef(currentUser.uid),
-    {
-     photoURL:photoURL
-    }
-   );
 
   }
-
-  profile.username=username;
-  profile.displayName=displayName;
-  profile.bio=bio;
-  profile.photoURL=photoURL;
-
-  updateUI();
-
-  closeSettings();
-
-  toast("Profile updated.");
-
- }catch(error){
-
-  console.error(error);
-
-  const settingsError=
-   document.getElementById("settingsError");
-
-  if(error.message==="USERNAME_TAKEN"){
-
-   settingsError.textContent=
-    "That username is already taken.";
-
-  }else if(
-   error.message==="DISPLAY_TAKEN"
-  ){
-
-   settingsError.textContent=
-    "That display name is already taken.";
-
-  }else{
-
-   settingsError.textContent=
-    "Couldn't update your profile.";
-
-  }
-
-  settingsError.classList.add("show");
-
- }
-
-};
+);
 
 
 /* =========================================================
-   LOGOUT
+   REDIRECT RESULT
 ========================================================= */
 
-window.logout=async function(){
+try{
 
- try{
+  await getRedirectResult(auth);
 
-  await signOut(auth);
+}catch(error){
 
-  toast("Signed out.");
-
- }catch(error){
-
-  toast("Couldn't sign out.");
-
- }
-
-};
-
-
-/* =========================================================
-   DISCOVER
-========================================================= */
-
-window.vote=function(vibe){
-
- toast("You picked "+vibe+".");
-
-};
-
-
-/* =========================================================
-   TOAST
-========================================================= */
-
-let toastTimer;
-
-window.toast=function(message){
-
- const t=
-  document.getElementById("toast");
-
- t.textContent=message;
-
- t.classList.add("show");
-
- clearTimeout(toastTimer);
-
- toastTimer=
-  setTimeout(
-   ()=>{
-    t.classList.remove("show");
-   },
-   2200
+  console.error(
+    "Google redirect:",
+    error
   );
 
-};
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+setAuthMode("login");
 
 </script>
 
