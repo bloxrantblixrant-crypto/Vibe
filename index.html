@@ -1,0 +1,3459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#08080b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<title>VYBE</title>
+
+<style>
+*{
+ box-sizing:border-box;
+ -webkit-tap-highlight-color:transparent;
+}
+
+:root{
+ --bg:#08080b;
+ --surface:#111116;
+ --surface2:#17171d;
+ --surface3:#202027;
+ --border:#292930;
+ --text:#fafafa;
+ --muted:#94949f;
+ --purple:#8b5cf6;
+ --pink:#d946ef;
+ --red:#ff5c70;
+ --green:#35d39a;
+}
+
+html,body{
+ margin:0;
+ min-height:100%;
+ background:var(--bg);
+ color:var(--text);
+ font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",sans-serif;
+}
+
+body{
+ overflow-x:hidden;
+}
+
+button,input,textarea{
+ font:inherit;
+}
+
+button{
+ border:0;
+ cursor:pointer;
+}
+
+.hidden{
+ display:none!important;
+}
+
+/* BACKGROUND */
+
+body:before,
+body:after{
+ content:"";
+ position:fixed;
+ z-index:-2;
+ width:420px;
+ height:420px;
+ border-radius:50%;
+ filter:blur(100px);
+ opacity:.16;
+ pointer-events:none;
+}
+
+body:before{
+ background:#7c3aed;
+ top:-180px;
+ left:-180px;
+ animation:floatA 12s ease-in-out infinite alternate;
+}
+
+body:after{
+ background:#d946ef;
+ right:-180px;
+ bottom:-180px;
+ animation:floatB 15s ease-in-out infinite alternate;
+}
+
+@keyframes floatA{
+ from{transform:translate(0,0)}
+ to{transform:translate(100px,90px)}
+}
+
+@keyframes floatB{
+ from{transform:translate(0,0)}
+ to{transform:translate(-90px,-80px)}
+}
+
+/* AUTH */
+
+.auth{
+ min-height:100vh;
+ min-height:100svh;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ padding:
+ max(25px,env(safe-area-inset-top))
+ 20px
+ max(25px,env(safe-area-inset-bottom));
+}
+
+.authBox{
+ width:100%;
+ max-width:430px;
+ animation:authIn .65s cubic-bezier(.16,1,.3,1);
+}
+
+@keyframes authIn{
+ from{
+  opacity:0;
+  transform:translateY(30px) scale(.97);
+ }
+ to{
+  opacity:1;
+  transform:none;
+ }
+}
+
+.logo{
+ text-align:center;
+ font-size:39px;
+ font-weight:950;
+ letter-spacing:-2.8px;
+ margin-bottom:8px;
+}
+
+.logo span{
+ background:linear-gradient(90deg,#a78bfa,#e879f9);
+ -webkit-background-clip:text;
+ color:transparent;
+}
+
+.logoSub{
+ text-align:center;
+ color:var(--muted);
+ font-size:14px;
+ margin-bottom:29px;
+}
+
+.authCard{
+ background:rgba(17,17,22,.84);
+ border:1px solid var(--border);
+ border-radius:29px;
+ padding:25px;
+ box-shadow:
+ 0 35px 100px rgba(0,0,0,.45),
+ inset 0 1px rgba(255,255,255,.025);
+ backdrop-filter:blur(25px);
+}
+
+.authTitle{
+ margin:0 0 7px;
+ font-size:27px;
+ letter-spacing:-1.2px;
+}
+
+.authDescription{
+ color:var(--muted);
+ margin:0 0 23px;
+ font-size:14px;
+ line-height:1.45;
+}
+
+.field{
+ margin-bottom:14px;
+}
+
+label{
+ display:block;
+ color:#c6c6ce;
+ font-size:12px;
+ font-weight:750;
+ margin-bottom:7px;
+}
+
+.input,
+.textarea{
+ width:100%;
+ border:1px solid var(--border);
+ outline:0;
+ background:#0b0b0e;
+ color:#fff;
+ border-radius:15px;
+ padding:15px;
+ transition:.2s;
+}
+
+.input{
+ height:53px;
+}
+
+.textarea{
+ min-height:100px;
+ resize:none;
+}
+
+.input:focus,
+.textarea:focus{
+ border-color:#7752d4;
+ box-shadow:0 0 0 4px rgba(139,92,246,.09);
+}
+
+.primary{
+ width:100%;
+ height:54px;
+ border-radius:16px;
+ color:#fff;
+ font-weight:850;
+ background:linear-gradient(135deg,#7c3aed,#c026d3);
+ box-shadow:0 13px 35px rgba(124,58,237,.22);
+ transition:.2s;
+ position:relative;
+ overflow:hidden;
+}
+
+.primary:after{
+ content:"";
+ position:absolute;
+ top:0;
+ left:-100%;
+ width:60%;
+ height:100%;
+ background:linear-gradient(90deg,transparent,rgba(255,255,255,.17),transparent);
+ transform:skewX(-20deg);
+ transition:.6s;
+}
+
+.primary:hover:after{
+ left:130%;
+}
+
+.primary:active{
+ transform:scale(.975);
+}
+
+.google{
+ width:100%;
+ height:53px;
+ border-radius:16px;
+ background:#fff;
+ color:#111;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ gap:10px;
+ font-weight:800;
+ transition:.2s;
+}
+
+.google:active{
+ transform:scale(.975);
+}
+
+.google svg{
+ width:19px;
+ height:19px;
+}
+
+.divider{
+ display:flex;
+ align-items:center;
+ gap:12px;
+ margin:19px 0;
+ color:#666670;
+ font-size:11px;
+ font-weight:700;
+}
+
+.divider:before,
+.divider:after{
+ content:"";
+ height:1px;
+ flex:1;
+ background:var(--border);
+}
+
+.switch{
+ text-align:center;
+ color:var(--muted);
+ margin-top:21px;
+ font-size:13px;
+}
+
+.link{
+ color:#b7a0ff;
+ background:none;
+ font-weight:800;
+}
+
+.error{
+ color:#ff7787;
+ font-size:12px;
+ margin-top:7px;
+ display:none;
+}
+
+.error.show{
+ display:block;
+}
+
+.success{
+ color:var(--green);
+ font-size:12px;
+ margin-top:7px;
+}
+
+.terms{
+ color:#5f5f68;
+ font-size:10px;
+ text-align:center;
+ line-height:1.5;
+ margin:17px 12px 0;
+}
+
+/* APP */
+
+.app{
+ max-width:590px;
+ width:100%;
+ margin:auto;
+ padding:
+ max(12px,env(safe-area-inset-top))
+ 18px
+ calc(105px + env(safe-area-inset-bottom));
+}
+
+.topbar{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ padding:9px 1px 13px;
+}
+
+.brand{
+ display:flex;
+ align-items:center;
+ gap:9px;
+ font-size:23px;
+ font-weight:950;
+ letter-spacing:-1.2px;
+}
+
+.mark{
+ width:30px;
+ height:30px;
+ border-radius:9px;
+ background:linear-gradient(135deg,#8b5cf6,#d946ef);
+ position:relative;
+ box-shadow:0 8px 25px rgba(139,92,246,.2);
+}
+
+.mark:before,
+.mark:after{
+ content:"";
+ position:absolute;
+ background:white;
+ border-radius:3px;
+ transform:rotate(45deg);
+}
+
+.mark:before{
+ width:12px;
+ height:4px;
+ left:9px;
+ top:13px;
+}
+
+.mark:after{
+ width:4px;
+ height:12px;
+ left:13px;
+ top:9px;
+}
+
+.topIcon{
+ width:43px;
+ height:43px;
+ display:grid;
+ place-items:center;
+ border-radius:14px;
+ background:var(--surface);
+ border:1px solid var(--border);
+ color:white;
+ transition:.18s;
+}
+
+.topIcon svg{
+ width:20px;
+ height:20px;
+}
+
+.topIcon:active{
+ transform:scale(.92) rotate(-4deg);
+}
+
+.page{
+ display:none;
+ animation:page .35s cubic-bezier(.16,1,.3,1);
+}
+
+.page.active{
+ display:block;
+}
+
+@keyframes page{
+ from{
+  opacity:0;
+  transform:translateY(12px);
+ }
+ to{
+  opacity:1;
+  transform:none;
+ }
+}
+
+/* HOME */
+
+.hero{
+ padding:25px 2px 17px;
+}
+
+.hero h1{
+ margin:0 0 11px;
+ font-size:44px;
+ line-height:.97;
+ letter-spacing:-3px;
+ font-weight:950;
+}
+
+.hero p{
+ margin:0;
+ color:var(--muted);
+ font-size:15px;
+}
+
+.vibeCard{
+ position:relative;
+ overflow:hidden;
+ min-height:355px;
+ padding:27px;
+ border-radius:32px;
+ background:
+ radial-gradient(circle at 80% 15%,rgba(255,255,255,.24),transparent 20%),
+ linear-gradient(140deg,#6d28d9,#c026d3);
+ box-shadow:0 30px 85px rgba(124,58,237,.22);
+ animation:cardFloat 5s ease-in-out infinite;
+}
+
+@keyframes cardFloat{
+ 0%,100%{transform:translateY(0)}
+ 50%{transform:translateY(-4px)}
+}
+
+.vibeCard:before{
+ content:"";
+ position:absolute;
+ width:300px;
+ height:300px;
+ right:-150px;
+ top:-145px;
+ border:1px solid rgba(255,255,255,.18);
+ border-radius:50%;
+}
+
+.vibeCard:after{
+ content:"";
+ position:absolute;
+ width:250px;
+ height:250px;
+ left:-180px;
+ bottom:-160px;
+ border:1px solid rgba(255,255,255,.12);
+ border-radius:50%;
+}
+
+.cardTop{
+ display:flex;
+ justify-content:space-between;
+ font-size:10px;
+ font-weight:850;
+ letter-spacing:1.5px;
+ opacity:.7;
+}
+
+.symbol{
+ width:76px;
+ height:76px;
+ position:relative;
+ margin-top:43px;
+}
+
+.symbol:before{
+ content:"";
+ position:absolute;
+ width:63px;
+ height:63px;
+ left:7px;
+ top:7px;
+ border:5px solid white;
+ border-radius:20px;
+ transform:rotate(45deg);
+}
+
+.symbol:after{
+ content:"";
+ position:absolute;
+ width:23px;
+ height:23px;
+ left:27px;
+ top:27px;
+ background:white;
+ border-radius:7px;
+}
+
+.vibeName{
+ position:relative;
+ z-index:2;
+ margin-top:11px;
+ font-size:39px;
+ letter-spacing:-2.5px;
+ font-weight:950;
+}
+
+.vibeDesc{
+ position:relative;
+ z-index:2;
+ margin-top:4px;
+ max-width:250px;
+ opacity:.82;
+ font-size:14px;
+}
+
+.score{
+ position:absolute;
+ right:25px;
+ bottom:25px;
+ z-index:4;
+ text-align:right;
+}
+
+.score b{
+ display:block;
+ font-size:35px;
+ line-height:1;
+}
+
+.score small{
+ font-size:8px;
+ letter-spacing:1.3px;
+ opacity:.65;
+}
+
+.secondary{
+ width:100%;
+ height:52px;
+ border-radius:16px;
+ background:var(--surface);
+ border:1px solid var(--border);
+ color:white;
+ font-weight:750;
+ margin-top:10px;
+ transition:.18s;
+}
+
+.secondary:active{
+ transform:scale(.975);
+}
+
+.section{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ margin:29px 2px 12px;
+}
+
+.section h2{
+ margin:0;
+ font-size:19px;
+ letter-spacing:-.5px;
+}
+
+.section span{
+ color:var(--muted);
+ font-size:12px;
+}
+
+.stats{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:9px;
+}
+
+.stat{
+ min-height:91px;
+ border-radius:20px;
+ padding:16px 12px;
+ background:var(--surface);
+ border:1px solid var(--border);
+ color:#fff;
+ text-align:left;
+ transition:.2s;
+}
+
+.stat:active{
+ transform:scale(.97);
+}
+
+.stat b{
+ font-size:23px;
+}
+
+.stat small{
+ display:block;
+ color:var(--muted);
+ margin-top:4px;
+ font-size:11px;
+}
+
+.streak{
+ display:flex;
+ align-items:center;
+ gap:14px;
+ padding:17px;
+ background:var(--surface);
+ border:1px solid var(--border);
+ border-radius:22px;
+}
+
+.streakIcon{
+ width:49px;
+ height:49px;
+ border-radius:15px;
+ display:grid;
+ place-items:center;
+ background:#241b32;
+ color:#b99cff;
+}
+
+.streakIcon svg{
+ width:24px;
+ height:24px;
+}
+
+.challenge{
+ padding:19px;
+ background:var(--surface);
+ border:1px solid var(--border);
+ border-radius:22px;
+}
+
+.challengeTitle{
+ font-weight:850;
+ font-size:17px;
+}
+
+.challenge p{
+ color:var(--muted);
+ font-size:14px;
+ line-height:1.45;
+}
+
+.progress{
+ height:7px;
+ background:#292930;
+ border-radius:99px;
+ overflow:hidden;
+}
+
+.progress i{
+ display:block;
+ height:100%;
+ width:63%;
+ border-radius:99px;
+ background:linear-gradient(90deg,#8b5cf6,#d946ef);
+ transition:.45s;
+}
+
+/* QUIZ */
+
+.quizTop{
+ padding-top:22px;
+}
+
+.quizProgress{
+ height:5px;
+ background:#24242a;
+ border-radius:99px;
+ overflow:hidden;
+}
+
+.quizProgress i{
+ display:block;
+ height:100%;
+ width:20%;
+ background:linear-gradient(90deg,#8b5cf6,#d946ef);
+ transition:.35s;
+}
+
+.quizCount{
+ color:var(--muted);
+ font-size:12px;
+ margin-top:9px;
+}
+
+.question{
+ margin:36px 0 20px;
+ font-size:31px;
+ line-height:1.08;
+ font-weight:930;
+ letter-spacing:-1.7px;
+}
+
+.option{
+ width:100%;
+ min-height:58px;
+ margin:6px 0;
+ padding:16px;
+ text-align:left;
+ border-radius:17px;
+ background:var(--surface);
+ border:1px solid var(--border);
+ color:#fff;
+ font-weight:700;
+ transition:.18s;
+}
+
+.option:hover{
+ border-color:#7651d2;
+ transform:translateY(-1px);
+}
+
+.option:active{
+ transform:scale(.98);
+}
+
+/* RESULT */
+
+.result{
+ text-align:center;
+ padding-top:30px;
+}
+
+.resultSymbol{
+ width:100px;
+ height:100px;
+ margin:0 auto 24px;
+ position:relative;
+}
+
+.resultSymbol:before{
+ content:"";
+ position:absolute;
+ width:78px;
+ height:78px;
+ left:11px;
+ top:11px;
+ border:6px solid #a78bfa;
+ border-radius:25px;
+ transform:rotate(45deg);
+}
+
+.resultSymbol:after{
+ content:"";
+ position:absolute;
+ width:28px;
+ height:28px;
+ left:36px;
+ top:36px;
+ background:#a78bfa;
+ border-radius:8px;
+}
+
+.resultLabel{
+ color:var(--muted);
+ font-size:10px;
+ letter-spacing:2px;
+ font-weight:850;
+}
+
+.result h1{
+ margin:8px 0;
+ font-size:43px;
+ letter-spacing:-2.5px;
+}
+
+.result p{
+ color:var(--muted);
+ line-height:1.5;
+ max-width:400px;
+ margin:auto;
+}
+
+.meter{
+ text-align:left;
+ margin:24px 0;
+}
+
+.meterRow{
+ display:flex;
+ justify-content:space-between;
+ margin-bottom:7px;
+ font-size:13px;
+}
+
+/* DISCOVER */
+
+.discoverCard{
+ margin-top:12px;
+ padding:21px;
+ border-radius:23px;
+ background:var(--surface);
+ border:1px solid var(--border);
+}
+
+.discoverTitle{
+ font-weight:850;
+}
+
+.discoverBig{
+ margin:17px 0 5px;
+ font-size:25px;
+ font-weight:930;
+ letter-spacing:-1px;
+}
+
+.discoverMuted{
+ color:var(--muted);
+ font-size:13px;
+}
+
+/* PROFILE */
+
+.profile{
+ text-align:center;
+ padding-top:27px;
+}
+
+.avatar{
+ width:98px;
+ height:98px;
+ border-radius:31px;
+ margin:auto;
+ background:linear-gradient(135deg,#7c3aed,#d946ef);
+ display:grid;
+ place-items:center;
+ overflow:hidden;
+ font-size:36px;
+ font-weight:900;
+ box-shadow:0 20px 55px rgba(139,92,246,.22);
+}
+
+.avatar img{
+ width:100%;
+ height:100%;
+ object-fit:cover;
+}
+
+.profile h1{
+ margin:14px 0 3px;
+ font-size:29px;
+ letter-spacing:-1.1px;
+}
+
+.profileHandle{
+ color:#a78bfa!important;
+ font-size:13px;
+}
+
+.profileBio{
+ color:var(--muted);
+ max-width:390px;
+ margin:9px auto 0!important;
+ line-height:1.45;
+ font-size:13px;
+}
+
+/* NAV */
+
+.nav{
+ position:fixed;
+ z-index:20;
+ bottom:max(11px,env(safe-area-inset-bottom));
+ left:50%;
+ transform:translateX(-50%);
+ width:min(550px,calc(100% - 24px));
+ padding:7px;
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:5px;
+ border:1px solid #303036;
+ border-radius:24px;
+ background:rgba(18,18,21,.88);
+ backdrop-filter:blur(25px);
+ -webkit-backdrop-filter:blur(25px);
+ box-shadow:0 18px 55px rgba(0,0,0,.45);
+}
+
+.nav button{
+ padding:8px 4px;
+ border-radius:18px;
+ background:transparent;
+ color:#777780;
+ font-size:10px;
+ font-weight:750;
+ transition:.2s;
+}
+
+.nav button svg{
+ display:block;
+ width:21px;
+ height:21px;
+ margin:0 auto 3px;
+}
+
+.nav button.active{
+ color:white;
+ background:#29292f;
+}
+
+/* MODAL */
+
+.modal{
+ position:fixed;
+ inset:0;
+ z-index:100;
+ display:none;
+ justify-content:center;
+ align-items:flex-end;
+ background:rgba(0,0,0,.67);
+ backdrop-filter:blur(12px);
+}
+
+.modal.show{
+ display:flex;
+}
+
+.sheet{
+ width:100%;
+ max-width:590px;
+ padding:24px 20px calc(23px + env(safe-area-inset-bottom));
+ border-radius:29px 29px 0 0;
+ background:#151518;
+ border:1px solid #303036;
+ animation:sheet .3s cubic-bezier(.16,1,.3,1);
+ max-height:90vh;
+ overflow:auto;
+}
+
+@keyframes sheet{
+ from{transform:translateY(100%)}
+ to{transform:none}
+}
+
+.sheet h2{
+ margin:0 0 8px;
+ font-size:23px;
+}
+
+.sheetText{
+ color:var(--muted);
+ font-size:13px;
+ line-height:1.5;
+}
+
+.photoUpload{
+ display:flex;
+ align-items:center;
+ gap:14px;
+ margin:19px 0;
+}
+
+.photoPreview{
+ width:67px;
+ height:67px;
+ border-radius:21px;
+ overflow:hidden;
+ background:linear-gradient(135deg,#7c3aed,#d946ef);
+ display:grid;
+ place-items:center;
+ font-weight:900;
+ font-size:24px;
+}
+
+.photoPreview img{
+ width:100%;
+ height:100%;
+ object-fit:cover;
+}
+
+.uploadBtn{
+ background:var(--surface3);
+ border:1px solid var(--border);
+ color:white;
+ border-radius:13px;
+ padding:11px 14px;
+ font-size:12px;
+ font-weight:750;
+}
+
+/* TOAST */
+
+.toast{
+ position:fixed;
+ z-index:200;
+ left:50%;
+ bottom:100px;
+ transform:translate(-50%,20px);
+ background:#f5f5f5;
+ color:#111;
+ padding:12px 16px;
+ border-radius:14px;
+ font-size:13px;
+ font-weight:800;
+ opacity:0;
+ pointer-events:none;
+ transition:.25s;
+ box-shadow:0 15px 45px rgba(0,0,0,.35);
+ white-space:nowrap;
+}
+
+.toast.show{
+ opacity:1;
+ transform:translate(-50%,0);
+}
+
+.loading{
+ position:fixed;
+ inset:0;
+ z-index:300;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ background:#08080b;
+ transition:.35s;
+}
+
+.loading.hide{
+ opacity:0;
+ pointer-events:none;
+}
+
+.spinner{
+ width:32px;
+ height:32px;
+ border:3px solid #28282e;
+ border-top-color:#a78bfa;
+ border-radius:50%;
+ animation:spin .7s linear infinite;
+}
+
+@keyframes spin{
+ to{transform:rotate(360deg)}
+}
+
+@media(min-width:650px){
+ .app{
+  padding-top:25px;
+ }
+ .nav{
+  bottom:20px;
+ }
+}
+</style>
+</head>
+
+<body>
+
+<div id="loading" class="loading">
+ <div class="spinner"></div>
+</div>
+
+
+<!-- AUTH -->
+
+<div id="auth" class="auth hidden">
+
+ <div class="authBox">
+
+  <div class="logo">
+   VY<span>BE</span>
+  </div>
+
+  <div class="logoSub">
+   Find your vibe. Share it.
+  </div>
+
+  <div class="authCard">
+
+   <!-- LOGIN -->
+
+   <div id="login">
+
+    <h1 class="authTitle">
+     Welcome back.
+    </h1>
+
+    <p class="authDescription">
+     Sign in to continue.
+    </p>
+
+    <div class="field">
+     <label>Email</label>
+     <input
+      id="loginEmail"
+      class="input"
+      type="email"
+      autocomplete="email"
+      placeholder="you@example.com">
+    </div>
+
+    <div class="field">
+     <label>Password</label>
+     <input
+      id="loginPassword"
+      class="input"
+      type="password"
+      autocomplete="current-password"
+      placeholder="Your password">
+    </div>
+
+    <div id="loginError" class="error"></div>
+
+    <button
+     class="primary"
+     onclick="loginUser()">
+     Sign in
+    </button>
+
+    <div class="divider">OR</div>
+
+    <button
+     class="google"
+     onclick="googleSignIn()">
+
+     <svg viewBox="0 0 24 24">
+      <path fill="#4285F4" d="M21.35 12.23c0-.72-.06-1.42-.18-2.09H12v3.95h5.24a4.48 4.48 0 0 1-1.94 2.94v2.45h3.14c1.84-1.7 2.91-4.2 2.91-7.25z"/>
+      <path fill="#34A853" d="M12 21.9c2.63 0 4.84-.87 6.45-2.42l-3.14-2.45c-.87.58-1.98.92-3.31.92-2.54 0-4.69-1.72-5.46-4.03H3.3v2.53A9.74 9.74 0 0 0 12 21.9z"/>
+      <path fill="#FBBC05" d="M6.54 13.92A5.86 5.86 0 0 1 6.23 12c0-.67.11-1.32.31-1.92V7.55H3.3A9.74 9.74 0 0 0 2.25 12c0 1.57.38 3.06 1.05 4.45l3.24-2.53z"/>
+      <path fill="#EA4335" d="M12 6.05c1.43 0 2.71.49 3.72 1.45l2.79-2.79C16.83 3.06 14.63 2.1 12 2.1A9.74 9.74 0 0 0 3.3 7.55l3.24 2.53C7.31 7.77 9.46 6.05 12 6.05z"/>
+     </svg>
+
+     Continue with Google
+
+    </button>
+
+    <div class="switch">
+     Don't have an account?
+
+     <button
+      class="link"
+      onclick="showSignup()">
+      Create one
+     </button>
+    </div>
+
+   </div>
+
+
+   <!-- SIGNUP -->
+
+   <div id="signup" class="hidden">
+
+    <h1 class="authTitle">
+     Create your account.
+    </h1>
+
+    <p class="authDescription">
+     Pick your identity on VYBE.
+    </p>
+
+    <div class="field">
+     <label>Username</label>
+
+     <input
+      id="signupUsername"
+      class="input"
+      maxlength="20"
+      autocomplete="username"
+      placeholder="alteoyt">
+
+     <div
+      id="usernameStatus"
+      class="error">
+     </div>
+
+    </div>
+
+    <div class="field">
+     <label>Display name</label>
+
+     <input
+      id="signupDisplay"
+      class="input"
+      maxlength="30"
+      placeholder="ALTEO">
+    </div>
+
+    <div class="field">
+     <label>Email</label>
+
+     <input
+      id="signupEmail"
+      class="input"
+      type="email"
+      autocomplete="email"
+      placeholder="you@example.com">
+    </div>
+
+    <div class="field">
+     <label>Password</label>
+
+     <input
+      id="signupPassword"
+      class="input"
+      type="password"
+      autocomplete="new-password"
+      placeholder="At least 6 characters">
+    </div>
+
+    <div class="field">
+     <label>Bio</label>
+
+     <textarea
+      id="signupBio"
+      class="textarea"
+      maxlength="160"
+      placeholder="Tell people a little about you..."></textarea>
+    </div>
+
+    <div id="signupError" class="error"></div>
+
+    <button
+     class="primary"
+     onclick="createAccount()">
+     Create account
+    </button>
+
+    <div class="divider">OR</div>
+
+    <button
+     class="google"
+     onclick="googleSignIn(true)">
+
+     <svg viewBox="0 0 24 24">
+      <path fill="#4285F4" d="M21.35 12.23c0-.72-.06-1.42-.18-2.09H12v3.95h5.24a4.48 4.48 0 0 1-1.94 2.94v2.45h3.14c1.84-1.7 2.91-4.2 2.91-7.25z"/>
+      <path fill="#34A853" d="M12 21.9c2.63 0 4.84-.87 6.45-2.42l-3.14-2.45c-.87.58-1.98.92-3.31.92-2.54 0-4.69-1.72-5.46-4.03H3.3v2.53A9.74 9.74 0 0 0 12 21.9z"/>
+      <path fill="#FBBC05" d="M6.54 13.92A5.86 5.86 0 0 1 6.23 12c0-.67.11-1.32.31-1.92V7.55H3.3A9.74 9.74 0 0 0 2.25 12c0 1.57.38 3.06 1.05 4.45l3.24-2.53z"/>
+      <path fill="#EA4335" d="M12 6.05c1.43 0 2.71.49 3.72 1.45l2.79-2.79C16.83 3.06 14.63 2.1 12 2.1A9.74 9.74 0 0 0 3.3 7.55l3.24 2.53C7.31 7.77 9.46 6.05 12 6.05z"/>
+     </svg>
+
+     Continue with Google
+
+    </button>
+
+    <div class="switch">
+     Already have an account?
+
+     <button
+      class="link"
+      onclick="showLogin()">
+      Sign in
+     </button>
+    </div>
+
+   </div>
+
+  </div>
+
+  <div class="terms">
+   Your account information is stored securely by Firebase.
+  </div>
+
+ </div>
+</div>
+
+
+<!-- APP -->
+
+<div id="app" class="hidden">
+
+ <div class="app">
+
+  <header class="topbar">
+
+   <div class="brand">
+    <span class="mark"></span>
+    VYBE
+   </div>
+
+   <button
+    class="topIcon"
+    onclick="openSettings()">
+
+    <svg viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.8">
+
+     <circle cx="12" cy="12" r="3"/>
+
+     <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.7 1.7-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56V20h-2.4v-.09a1.7 1.7 0 0 0-1.03-1.56 1.7 1.7 0 0 0-1.88.34l-.06.06-1.7-1.7.06-.06A1.7 1.7 0 0 0 8.46 15a1.7 1.7 0 0 0-1.56-1.03H6.8v-2.4h.1A1.7 1.7 0 0 0 8.46 10a1.7 1.7 0 0 0-.34-1.88l-.06-.06 1.7-1.7.06.06A1.7 1.7 0 0 0 11.7 6.1 1.7 1.7 0 0 0 12.73 4.5V4.4h2.4v.1a1.7 1.7 0 0 0 1.03 1.56 1.7 1.7 0 0 0 1.88-.34l.06-.06 1.7 1.7-.06.06A1.7 1.7 0 0 0 19.4 9a1.7 1.7 0 0 0 1.56 1.03h.1v2.4h-.1A1.7 1.7 0 0 0 19.4 15Z"/>
+    </svg>
+
+   </button>
+
+  </header>
+
+
+  <!-- HOME -->
+
+  <section id="home" class="page active">
+
+   <div class="hero">
+    <h1>What's your<br>vibe today?</h1>
+    <p>Five questions. One completely different you.</p>
+   </div>
+
+   <div class="vibeCard">
+
+    <div class="cardTop">
+     <span>VYBE DAILY</span>
+     <span id="date"></span>
+    </div>
+
+    <div class="symbol"></div>
+
+    <div
+     class="vibeName"
+     id="homeVibe">
+     Chaotic Good
+    </div>
+
+    <div
+     class="vibeDesc"
+     id="homeDesc">
+     A little random. Mostly iconic.
+    </div>
+
+    <div class="score">
+     <b id="homeScore">8.7</b>
+     <small>VYBE SCORE</small>
+    </div>
+
+   </div>
+
+   <button
+    class="primary"
+    style="margin-top:14px"
+    onclick="startQuiz()">
+    Find my vibe
+   </button>
+
+   <button
+    class="secondary"
+    onclick="shareVibe()">
+    Share my vibe
+   </button>
+
+
+   <div class="section">
+    <h2>Your stats</h2>
+    <span>This week</span>
+   </div>
+
+   <div class="stats">
+
+    <div class="stat">
+     <b id="statDays">1</b>
+     <small>days active</small>
+    </div>
+
+    <div class="stat">
+     <b id="statScore">87%</b>
+     <small>energy</small>
+    </div>
+
+    <div class="stat">
+     <b id="statVibes">1</b>
+     <small>vibes made</small>
+    </div>
+
+   </div>
+
+
+   <div class="section">
+    <h2>Streak</h2>
+   </div>
+
+   <div class="streak">
+
+    <div class="streakIcon">
+     <svg viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8">
+
+      <path d="M12 21c4.4 0 7-2.8 7-6.4 0-3.2-2-5.1-4.2-7.5-.3 2-1.2 3.3-2.5 4.1.1-3.7-1.8-6.7-4.3-8.2.2 3.7-3 5.8-3 9.1C5 17.6 7.7 21 12 21Z"/>
+     </svg>
+    </div>
+
+    <div>
+     <b id="streak">1 day streak</b>
+     <div style="color:var(--muted);font-size:12px;margin-top:4px">
+      Keep it going tomorrow.
+     </div>
+    </div>
+
+   </div>
+
+
+   <div class="section">
+    <h2>Today's challenge</h2>
+   </div>
+
+   <div class="challenge">
+
+    <div class="challengeTitle">
+     Make someone laugh
+    </div>
+
+    <p>
+     Send something genuinely funny to a friend today.
+    </p>
+
+    <div class="progress">
+     <i id="challengeBar"></i>
+    </div>
+
+    <button
+     class="secondary"
+     onclick="completeChallenge()">
+     Mark complete
+    </button>
+
+   </div>
+
+  </section>
+
+
+  <!-- QUIZ -->
+
+  <section id="quiz" class="page">
+
+   <div class="quizTop">
+
+    <div class="quizProgress">
+     <i id="quizBar"></i>
+    </div>
+
+    <div
+     class="quizCount"
+     id="quizCount">
+     1 / 5
+    </div>
+
+   </div>
+
+   <div
+    class="question"
+    id="question">
+   </div>
+
+   <div id="options"></div>
+
+  </section>
+
+
+  <!-- RESULT -->
+
+  <section id="result" class="page">
+
+   <div class="result">
+
+    <div class="resultSymbol"></div>
+
+    <div class="resultLabel">
+     TODAY'S VYBE
+    </div>
+
+    <h1 id="resultName">
+     Chaotic Good
+    </h1>
+
+    <p id="resultDesc"></p>
+
+
+    <div class="meter">
+
+     <div class="meterRow">
+      <span>Energy</span>
+      <b id="energy">87%</b>
+     </div>
+
+     <div class="progress">
+      <i id="energyBar"></i>
+     </div>
+
+    </div>
+
+
+    <div class="meter">
+
+     <div class="meterRow">
+      <span>Chaos</span>
+      <b id="chaos">72%</b>
+     </div>
+
+     <div class="progress">
+      <i id="chaosBar"></i>
+     </div>
+
+    </div>
+
+
+    <div class="meter">
+
+     <div class="meterRow">
+      <span>Social battery</span>
+      <b id="social">64%</b>
+     </div>
+
+     <div class="progress">
+      <i id="socialBar"></i>
+     </div>
+
+    </div>
+
+
+    <button
+     class="primary"
+     onclick="shareVibe()">
+     Share this vibe
+    </button>
+
+    <button
+     class="secondary"
+     onclick="go('home')">
+     Back home
+    </button>
+
+   </div>
+
+  </section>
+
+
+  <!-- DISCOVER -->
+
+  <section id="discover" class="page">
+
+   <div class="hero">
+    <h1>Discover<br>your people.</h1>
+    <p>See what's trending across VYBE.</p>
+   </div>
+
+   <div class="discoverCard">
+
+    <div class="discoverTitle">
+     Trending right now
+    </div>
+
+    <div class="discoverBig">
+     Main Character
+    </div>
+
+    <div class="discoverMuted">
+     42,831 people picked this today.
+    </div>
+
+    <button
+     class="secondary"
+     onclick="vote('Main Character')">
+     Pick this vibe
+    </button>
+
+   </div>
+
+
+   <div class="section">
+    <h2>Vibe wall</h2>
+   </div>
+
+   <div class="stats">
+
+    <button
+     class="stat"
+     onclick="vote('Chaos')">
+     <b>31%</b>
+     <small>Chaos</small>
+    </button>
+
+    <button
+     class="stat"
+     onclick="vote('Chill')">
+     <b>27%</b>
+     <small>Chill</small>
+    </button>
+
+    <button
+     class="stat"
+     onclick="vote('Main Character')">
+     <b>42%</b>
+     <small>Main Character</small>
+    </button>
+
+   </div>
+
+  </section>
+
+
+  <!-- PROFILE -->
+
+  <section id="profile" class="page">
+
+   <div class="profile">
+
+    <div
+     class="avatar"
+     id="profileAvatar">
+     V
+    </div>
+
+    <h1 id="profileDisplay">
+     VYBE User
+    </h1>
+
+    <p
+     class="profileHandle"
+     id="profileUsername">
+     @username
+    </p>
+
+    <p
+     class="profileBio"
+     id="profileBio">
+    </p>
+
+   </div>
+
+
+   <div
+    class="stats"
+    style="margin-top:25px">
+
+    <div class="stat">
+     <b id="profileVibes">1</b>
+     <small>vibes</small>
+    </div>
+
+    <div class="stat">
+     <b id="profileStreak">1</b>
+     <small>streak</small>
+    </div>
+
+    <div class="stat">
+     <b id="profileEnergy">87%</b>
+     <small>energy</small>
+    </div>
+
+   </div>
+
+
+   <div class="section">
+    <h2>Account</h2>
+   </div>
+
+   <div class="challenge">
+
+    <div class="challengeTitle">
+     Profile
+    </div>
+
+    <p id="profileEmail"></p>
+
+    <button
+     class="secondary"
+     onclick="openSettings()">
+     Edit profile
+    </button>
+
+    <button
+     class="secondary"
+     onclick="logout()"
+     style="color:#ff7787">
+     Sign out
+    </button>
+
+   </div>
+
+  </section>
+
+ </div>
+
+
+ <!-- NAV -->
+
+ <nav class="nav">
+
+  <button
+   class="active"
+   onclick="go('home',this)">
+
+   <svg viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.8">
+
+    <path d="M3.5 10.7 12 3.8l8.5 6.9V20a1 1 0 0 1-1 1h-5v-5h-5v5h-5a1 1 0 0 1-1-1v-9.3Z"/>
+   </svg>
+
+   Home
+
+  </button>
+
+
+  <button
+   onclick="go('discover',this)">
+
+   <svg viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.8">
+
+    <circle cx="11" cy="11" r="7"/>
+    <path d="m20 20-4-4"/>
+   </svg>
+
+   Discover
+
+  </button>
+
+
+  <button
+   onclick="startQuiz()">
+
+   <svg viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.8">
+
+    <circle cx="12" cy="12" r="9"/>
+    <path d="M12 8v8M8 12h8"/>
+   </svg>
+
+   Vibe
+
+  </button>
+
+
+  <button
+   onclick="go('profile',this)">
+
+   <svg viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.8">
+
+    <circle cx="12" cy="8" r="3.2"/>
+    <path d="M5.5 20c.6-3.4 3-5.4 6.5-5.4s5.9 2 6.5 5.4"/>
+   </svg>
+
+   Profile
+
+  </button>
+
+ </nav>
+
+</div>
+
+
+<!-- SETTINGS -->
+
+<div
+ id="settings"
+ class="modal"
+ onclick="closeSettings(event)">
+
+ <div
+  class="sheet"
+  onclick="event.stopPropagation()">
+
+  <h2>Edit profile</h2>
+
+  <p class="sheetText">
+   Change your VYBE identity.
+  </p>
+
+
+  <div class="photoUpload">
+
+   <div
+    class="photoPreview"
+    id="photoPreview">
+    V
+   </div>
+
+   <div>
+
+    <input
+     id="photoInput"
+     type="file"
+     accept="image/*"
+     hidden
+     onchange="previewPhoto(event)">
+
+    <button
+     class="uploadBtn"
+     onclick="document.getElementById('photoInput').click()">
+     Change profile picture
+    </button>
+
+   </div>
+
+  </div>
+
+
+  <div class="field">
+
+   <label>Username</label>
+
+   <input
+    id="editUsername"
+    class="input"
+    maxlength="20"
+    placeholder="username">
+
+   <div
+    id="editUsernameStatus"
+    class="error">
+   </div>
+
+  </div>
+
+
+  <div class="field">
+
+   <label>Display name</label>
+
+   <input
+    id="editDisplay"
+    class="input"
+    maxlength="30"
+    placeholder="Display name">
+
+   <div
+    id="editDisplayStatus"
+    class="error">
+   </div>
+
+  </div>
+
+
+  <div class="field">
+
+   <label>Bio</label>
+
+   <textarea
+    id="editBio"
+    class="textarea"
+    maxlength="160"
+    placeholder="Your bio"></textarea>
+
+  </div>
+
+
+  <div id="settingsError" class="error"></div>
+
+
+  <button
+   class="primary"
+   onclick="saveProfile()">
+   Save changes
+  </button>
+
+  <button
+   class="secondary"
+   onclick="closeSettings()">
+   Cancel
+  </button>
+
+ </div>
+
+</div>
+
+
+<div id="toast" class="toast"></div>
+
+
+<!-- FIREBASE -->
+
+<script type="module">
+
+/*
+===========================================================
+  PUT YOUR FIREBASE CONFIG HERE
+===========================================================
+*/
+
+import {
+ initializeApp
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+import {
+ getAuth,
+ GoogleAuthProvider,
+ signInWithPopup,
+ signInWithEmailAndPassword,
+ createUserWithEmailAndPassword,
+ onAuthStateChanged,
+ signOut
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+import {
+ getFirestore,
+ doc,
+ getDoc,
+ setDoc,
+ updateDoc,
+ deleteDoc,
+ runTransaction,
+ serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+import {
+ getStorage,
+ ref,
+ uploadBytes,
+ getDownloadURL
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-storage.js";
+
+
+const firebaseConfig = {
+
+ apiKey:"YOUR_API_KEY",
+
+ authDomain:"YOUR_PROJECT.firebaseapp.com",
+
+ projectId:"YOUR_PROJECT_ID",
+
+ storageBucket:"YOUR_PROJECT.firebasestorage.app",
+
+ messagingSenderId:"YOUR_MESSAGING_SENDER_ID",
+
+ appId:"YOUR_APP_ID"
+
+};
+
+
+const firebaseApp=
+ initializeApp(firebaseConfig);
+
+const auth=
+ getAuth(firebaseApp);
+
+const db=
+ getFirestore(firebaseApp);
+
+const storage=
+ getStorage(firebaseApp);
+
+const googleProvider=
+ new GoogleAuthProvider();
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let currentUser=null;
+let profile=null;
+let pendingPhoto=null;
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function normalize(value){
+
+ return value
+  .trim()
+  .toLowerCase();
+
+}
+
+
+function validUsername(value){
+
+ return /^[a-zA-Z0-9_]{3,20}$/.test(value);
+
+}
+
+
+function validDisplayName(value){
+
+ return value.trim().length>=2 &&
+        value.trim().length<=30;
+
+}
+
+
+function profileRef(uid){
+
+ return doc(db,"users",uid);
+
+}
+
+
+function usernameRef(username){
+
+ return doc(
+  db,
+  "usernames",
+  normalize(username)
+ );
+
+}
+
+
+function displayNameRef(name){
+
+ return doc(
+  db,
+  "displayNames",
+  normalize(name)
+ );
+
+}
+
+
+/* =========================================================
+   AUTH UI
+========================================================= */
+
+window.showSignup=function(){
+
+ document.getElementById("login")
+  .classList.add("hidden");
+
+ document.getElementById("signup")
+  .classList.remove("hidden");
+
+};
+
+
+window.showLogin=function(){
+
+ document.getElementById("signup")
+  .classList.add("hidden");
+
+ document.getElementById("login")
+  .classList.remove("hidden");
+
+};
+
+
+function authError(message){
+
+ const e=
+  document.getElementById("loginError");
+
+ e.textContent=message;
+
+ e.classList.add("show");
+
+}
+
+
+function signupError(message){
+
+ const e=
+  document.getElementById("signupError");
+
+ e.textContent=message;
+
+ e.classList.add("show");
+
+}
+
+
+window.loginUser=async function(){
+
+ const email=
+  document.getElementById("loginEmail")
+   .value
+   .trim();
+
+ const password=
+  document.getElementById("loginPassword")
+   .value;
+
+ document.getElementById("loginError")
+  .classList.remove("show");
+
+ if(!email||!password){
+
+  authError("Enter your email and password.");
+
+  return;
+
+ }
+
+ try{
+
+  await signInWithEmailAndPassword(
+   auth,
+   email,
+   password
+  );
+
+ }catch(error){
+
+  authError(
+   friendlyAuthError(error.code)
+  );
+
+ }
+
+};
+
+
+window.createAccount=async function(){
+
+ const username=
+  document.getElementById("signupUsername")
+   .value
+   .trim();
+
+ const displayName=
+  document.getElementById("signupDisplay")
+   .value
+   .trim();
+
+ const email=
+  document.getElementById("signupEmail")
+   .value
+   .trim();
+
+ const password=
+  document.getElementById("signupPassword")
+   .value;
+
+ const bio=
+  document.getElementById("signupBio")
+   .value
+   .trim();
+
+ document.getElementById("signupError")
+  .classList.remove("show");
+
+ if(!validUsername(username)){
+
+  signupError(
+   "Username: 3–20 letters, numbers or underscores."
+  );
+
+  return;
+
+ }
+
+ if(!validDisplayName(displayName)){
+
+  signupError(
+   "Display name must be 2–30 characters."
+  );
+
+  return;
+
+ }
+
+ if(password.length<6){
+
+  signupError(
+   "Password must be at least 6 characters."
+  );
+
+  return;
+
+ }
+
+ try{
+
+  /*
+   Create Firebase Auth account first.
+  */
+
+  const credential=
+   await createUserWithEmailAndPassword(
+    auth,
+    email,
+    password
+   );
+
+  const uid=credential.user.uid;
+
+  /*
+   Atomically reserve both names.
+   If either is already taken,
+   the whole transaction fails.
+  */
+
+  try{
+
+   await runTransaction(
+    db,
+    async transaction=>{
+
+     const uRef=
+      usernameRef(username);
+
+     const dRef=
+      displayNameRef(displayName);
+
+     const uSnap=
+      await transaction.get(uRef);
+
+     const dSnap=
+      await transaction.get(dRef);
+
+     if(uSnap.exists()){
+
+      throw new Error(
+       "USERNAME_TAKEN"
+      );
+
+     }
+
+     if(dSnap.exists()){
+
+      throw new Error(
+       "DISPLAY_TAKEN"
+      );
+
+     }
+
+     transaction.set(
+      uRef,
+      {
+       uid:uid,
+       createdAt:serverTimestamp()
+      }
+     );
+
+     transaction.set(
+      dRef,
+      {
+       uid:uid,
+       createdAt:serverTimestamp()
+      }
+     );
+
+     transaction.set(
+      profileRef(uid),
+      {
+       uid:uid,
+       email:email,
+       username:username,
+       usernameLower:normalize(username),
+       displayName:displayName,
+       displayNameLower:normalize(displayName),
+       bio:bio,
+       photoURL:"",
+       createdAt:serverTimestamp(),
+       streak:1,
+       days:1,
+       vibes:1,
+       score:87,
+       challenge:false,
+       vibe:{
+        name:"Chaotic Good",
+        desc:"A little random. Mostly iconic.",
+        score:"8.7",
+        energy:87,
+        chaos:72,
+        social:64
+       }
+      }
+     );
+
+    }
+   );
+
+  }catch(error){
+
+   /*
+    If the requested name is unavailable,
+    remove the newly created auth account
+    so we don't leave an unusable account behind.
+   */
+
+   await credential.user.delete();
+
+   if(error.message==="USERNAME_TAKEN"){
+
+    signupError(
+     "That username is already taken."
+    );
+
+   }else if(
+    error.message==="DISPLAY_TAKEN"
+   ){
+
+    signupError(
+     "That display name is already taken."
+    );
+
+   }else{
+
+    signupError(
+     "Could not reserve your profile name."
+    );
+
+   }
+
+   return;
+
+  }
+
+  toast("Account created.");
+
+ }catch(error){
+
+  signupError(
+   friendlyAuthError(error.code)
+  );
+
+ }
+
+};
+
+
+window.googleSignIn=async function(){
+
+ try{
+
+  const result=
+   await signInWithPopup(
+    auth,
+    googleProvider
+   );
+
+  const user=result.user;
+
+  const snap=
+   await getDoc(profileRef(user.uid));
+
+  /*
+   Existing Google account.
+  */
+
+  if(snap.exists()){
+
+   toast("Welcome back.");
+
+   return;
+
+  }
+
+  /*
+   New Google user:
+   They still need to choose a unique username
+   and display name.
+  */
+
+  const username=
+   prompt(
+    "Choose your VYBE username (3-20 letters, numbers or _):"
+   );
+
+  if(!username||
+     !validUsername(username)){
+
+   await signOut(auth);
+
+   toast("Invalid username.");
+
+   return;
+
+  }
+
+  const displayName=
+   prompt(
+    "Choose your display name:"
+   );
+
+  if(!displayName||
+     !validDisplayName(displayName)){
+
+   await signOut(auth);
+
+   toast("Invalid display name.");
+
+   return;
+
+  }
+
+  await runTransaction(
+   db,
+   async transaction=>{
+
+    const uRef=
+     usernameRef(username);
+
+    const dRef=
+     displayNameRef(displayName);
+
+    const uSnap=
+     await transaction.get(uRef);
+
+    const dSnap=
+     await transaction.get(dRef);
+
+    if(uSnap.exists()){
+
+     throw new Error(
+      "USERNAME_TAKEN"
+     );
+
+    }
+
+    if(dSnap.exists()){
+
+     throw new Error(
+      "DISPLAY_TAKEN"
+     );
+
+    }
+
+    transaction.set(
+     uRef,
+     {
+      uid:user.uid,
+      createdAt:serverTimestamp()
+     }
+    );
+
+    transaction.set(
+     dRef,
+     {
+      uid:user.uid,
+      createdAt:serverTimestamp()
+     }
+    );
+
+    transaction.set(
+     profileRef(user.uid),
+     {
+      uid:user.uid,
+      email:user.email||"",
+      username:username,
+      usernameLower:normalize(username),
+      displayName:displayName,
+      displayNameLower:normalize(displayName),
+      bio:"",
+      photoURL:user.photoURL||"",
+      createdAt:serverTimestamp(),
+      streak:1,
+      days:1,
+      vibes:1,
+      score:87,
+      challenge:false,
+      vibe:{
+       name:"Chaotic Good",
+       desc:"A little random. Mostly iconic.",
+       score:"8.7",
+       energy:87,
+       chaos:72,
+       social:64
+      }
+     }
+    );
+
+   }
+  );
+
+  toast("Welcome to VYBE.");
+
+ }catch(error){
+
+  if(error.message==="USERNAME_TAKEN"){
+
+   await signOut(auth);
+
+   toast("That username is already taken.");
+
+  }else if(
+   error.message==="DISPLAY_TAKEN"
+  ){
+
+   await signOut(auth);
+
+   toast("That display name is already taken.");
+
+  }else{
+
+   console.error(error);
+
+   toast("Google sign-in failed.");
+
+  }
+
+ }
+
+};
+
+
+function friendlyAuthError(code){
+
+ const errors={
+
+  "auth/invalid-email":
+   "That email address isn't valid.",
+
+  "auth/email-already-in-use":
+   "An account already uses that email.",
+
+  "auth/weak-password":
+   "Choose a stronger password.",
+
+  "auth/invalid-credential":
+   "Email or password is incorrect.",
+
+  "auth/user-not-found":
+   "Email or password is incorrect.",
+
+  "auth/wrong-password":
+   "Email or password is incorrect."
+
+ };
+
+ return errors[code]||
+        "Something went wrong. Try again.";
+
+}
+
+
+/* =========================================================
+   AUTH STATE
+========================================================= */
+
+onAuthStateChanged(
+ auth,
+ async user=>{
+
+  if(user){
+
+   currentUser=user;
+
+   const snap=
+    await getDoc(
+     profileRef(user.uid)
+    );
+
+   if(!snap.exists()){
+
+    document
+     .getElementById("loading")
+     .classList.add("hide");
+
+    return;
+
+   }
+
+   profile={
+    id:snap.id,
+    ...snap.data()
+   };
+
+   document
+    .getElementById("auth")
+    .classList.add("hidden");
+
+   document
+    .getElementById("app")
+    .classList.remove("hidden");
+
+   updateUI();
+
+  }else{
+
+   currentUser=null;
+   profile=null;
+
+   document
+    .getElementById("app")
+    .classList.add("hidden");
+
+   document
+    .getElementById("auth")
+    .classList.remove("hidden");
+
+  }
+
+  document
+   .getElementById("loading")
+   .classList.add("hide");
+
+ });
+
+
+/* =========================================================
+   APP NAV
+========================================================= */
+
+window.go=function(id,button){
+
+ document
+  .querySelectorAll(".page")
+  .forEach(
+   p=>p.classList.remove("active")
+  );
+
+ document
+  .getElementById(id)
+  .classList.add("active");
+
+ document
+  .querySelectorAll(".nav button")
+  .forEach(
+   b=>b.classList.remove("active")
+  );
+
+ if(button){
+
+  button.classList.add("active");
+
+ }
+
+ window.scrollTo({
+  top:0,
+  behavior:"smooth"
+ });
+
+ updateUI();
+
+};
+
+
+/* =========================================================
+   UI
+========================================================= */
+
+function updateUI(){
+
+ if(!profile)return;
+
+ const vibe=profile.vibe||{};
+
+ document.getElementById("homeVibe")
+  .textContent=vibe.name||"Chaotic Good";
+
+ document.getElementById("homeDesc")
+  .textContent=
+   vibe.desc||"A little random. Mostly iconic.";
+
+ document.getElementById("homeScore")
+  .textContent=vibe.score||"8.7";
+
+ document.getElementById("statDays")
+  .textContent=profile.days||1;
+
+ document.getElementById("statScore")
+  .textContent=(profile.score||87)+"%";
+
+ document.getElementById("statVibes")
+  .textContent=profile.vibes||1;
+
+ document.getElementById("streak")
+  .textContent=
+   `${profile.streak||1} day${(profile.streak||1)===1?"":"s"} streak`;
+
+ document.getElementById("challengeBar")
+  .style.width=
+   profile.challenge ? "100%" : "63%";
+
+ document.getElementById("resultName")
+  .textContent=vibe.name||"Chaotic Good";
+
+ document.getElementById("resultDesc")
+  .textContent=vibe.desc||"";
+
+ setMeter(
+  "energy",
+  "energyBar",
+  vibe.energy||87
+ );
+
+ setMeter(
+  "chaos",
+  "chaosBar",
+  vibe.chaos||72
+ );
+
+ setMeter(
+  "social",
+  "socialBar",
+  vibe.social||64
+ );
+
+
+ document.getElementById("profileDisplay")
+  .textContent=
+   profile.displayName||"VYBE User";
+
+ document.getElementById("profileUsername")
+  .textContent=
+   "@"+(profile.username||"username");
+
+ document.getElementById("profileBio")
+  .textContent=
+   profile.bio||"No bio yet.";
+
+ document.getElementById("profileEmail")
+  .textContent=
+   profile.email||currentUser?.email||"";
+
+ document.getElementById("profileVibes")
+  .textContent=profile.vibes||1;
+
+ document.getElementById("profileStreak")
+  .textContent=profile.streak||1;
+
+ document.getElementById("profileEnergy")
+  .textContent=(profile.score||87)+"%";
+
+ setAvatar(
+  document.getElementById("profileAvatar"),
+  profile
+ );
+
+ document.getElementById("date")
+  .textContent=
+   new Date().toLocaleDateString(
+    undefined,
+    {
+     month:"short",
+     day:"numeric"
+    }
+   );
+
+}
+
+
+function setMeter(
+ textId,
+ barId,
+ value
+){
+
+ document.getElementById(textId)
+  .textContent=value+"%";
+
+ document.getElementById(barId)
+  .style.width=value+"%";
+
+}
+
+
+function setAvatar(element,user){
+
+ if(user.photoURL){
+
+  element.innerHTML=
+   `<img src="${escapeHtml(user.photoURL)}" alt="">`;
+
+ }else{
+
+  element.textContent=
+   (user.displayName||"V")
+    .charAt(0)
+    .toUpperCase();
+
+ }
+
+}
+
+
+function escapeHtml(value){
+
+ return String(value)
+  .replaceAll("&","&amp;")
+  .replaceAll("<","&lt;")
+  .replaceAll(">","&gt;")
+  .replaceAll('"',"&quot;")
+  .replaceAll("'","&#039;");
+
+}
+
+
+/* =========================================================
+   QUIZ
+========================================================= */
+
+const questions=[
+
+ {
+  q:"Your friend says 'come outside.' You...",
+  a:[
+   "Already outside.",
+   "Ask where we're going.",
+   "Need three business days.",
+   "Say bet and disappear."
+  ]
+ },
+
+ {
+  q:"Pick your ideal night.",
+  a:[
+   "Random adventure.",
+   "Gaming and snacks.",
+   "Music and headphones.",
+   "Sleep. Obviously."
+  ]
+ },
+
+ {
+  q:"Your group chat is...",
+  a:[
+   "Pure chaos.",
+   "Dead until 2AM.",
+   "Actually organized.",
+   "One person carrying it."
+  ]
+ },
+
+ {
+  q:"Someone sends 'we need to talk.'",
+  a:[
+   "Whatever.",
+   "WHAT DID I DO?",
+   "Send a meme.",
+   "Leave them on read."
+  ]
+ },
+
+ {
+  q:"Choose your current energy.",
+  a:[
+   "MAXIMUM.",
+   "Unpredictable.",
+   "Chill.",
+   "Running on 2%."
+  ]
+ }
+
+];
+
+
+const vibes=[
+
+ {
+  name:"Chaotic Good",
+  desc:"You somehow turn ordinary moments into stories.",
+  energy:92,
+  chaos:88,
+  social:76
+ },
+
+ {
+  name:"Main Character",
+  desc:"Today has serious protagonist energy.",
+  energy:95,
+  chaos:61,
+  social:89
+ },
+
+ {
+  name:"Unbothered",
+  desc:"Peaceful, chilled, and absolutely not stressing.",
+  energy:63,
+  chaos:29,
+  social:48
+ },
+
+ {
+  name:"Pure Energy",
+  desc:"Your battery is basically impossible to kill.",
+  energy:99,
+  chaos:67,
+  social:91
+ },
+
+ {
+  name:"Night Thinker",
+  desc:"Your best ideas definitely happen way too late.",
+  energy:58,
+  chaos:54,
+  social:63
+ }
+
+];
+
+
+let questionIndex=0;
+let answers=[];
+
+
+window.startQuiz=function(){
+
+ questionIndex=0;
+ answers=[];
+
+ go("quiz");
+
+ renderQuestion();
+
+};
+
+
+function renderQuestion(){
+
+ const q=questions[questionIndex];
+
+ document.getElementById("question")
+  .textContent=q.q;
+
+ document.getElementById("quizCount")
+  .textContent=
+   `${questionIndex+1} / ${questions.length}`;
+
+ document.getElementById("quizBar")
+  .style.width=
+   `${((questionIndex+1)/questions.length)*100}%`;
+
+ document.getElementById("options")
+  .innerHTML=
+   q.a.map(
+    (answer,i)=>
+     `
+      <button
+       class="option"
+       onclick="answerQuestion(${i})">
+       ${escapeHtml(answer)}
+      </button>
+     `
+   ).join("");
+
+}
+
+
+window.answerQuestion=function(index){
+
+ answers.push(index);
+
+ if(questionIndex<questions.length-1){
+
+  questionIndex++;
+
+  renderQuestion();
+
+ }else{
+
+  generateVibe();
+
+ }
+
+};
+
+
+async function generateVibe(){
+
+ const total=
+  answers.reduce(
+   (sum,v)=>sum+v,
+   0
+  );
+
+ const base=
+  vibes[total%vibes.length];
+
+ const score=
+  (
+   7.5+
+   (base.energy/100)*2.4
+  ).toFixed(1);
+
+ profile.vibe={
+  ...base,
+  score
+ };
+
+ profile.vibes=
+  (profile.vibes||0)+1;
+
+ profile.score=
+  Math.round(
+   (base.energy+base.social)/2
+  );
+
+ profile.days=
+  Math.max(
+   profile.days||1,
+   profile.vibes
+  );
+
+ await updateDoc(
+  profileRef(currentUser.uid),
+  {
+   vibe:profile.vibe,
+   vibes:profile.vibes,
+   score:profile.score,
+   days:profile.days
+  }
+ );
+
+ updateUI();
+
+ go("result");
+
+ toast("New vibe unlocked.");
+
+}
+
+
+/* =========================================================
+   CHALLENGE
+========================================================= */
+
+window.completeChallenge=async function(){
+
+ if(profile.challenge){
+
+  toast("Already completed.");
+
+  return;
+
+ }
+
+ profile.challenge=true;
+
+ await updateDoc(
+  profileRef(currentUser.uid),
+  {
+   challenge:true
+  }
+ );
+
+ updateUI();
+
+ toast("Challenge completed.");
+
+};
+
+
+/* =========================================================
+   SHARE
+========================================================= */
+
+window.shareVibe=async function(){
+
+ if(!profile)return;
+
+ const v=profile.vibe;
+
+ const text=
+ `MY VYBE\n\n`+
+ `${v.name}\n\n`+
+ `Energy ${v.energy}%\n`+
+ `Chaos ${v.chaos}%\n`+
+ `Social battery ${v.social}%\n\n`+
+ `What's yours? #VYBE`;
+
+ if(navigator.share){
+
+  try{
+
+   await navigator.share({
+    title:"My VYBE",
+    text:text
+   });
+
+   toast("Shared.");
+
+  }catch(e){}
+
+ }else{
+
+  await navigator.clipboard.writeText(text);
+
+  toast("Copied.");
+
+ }
+
+};
+
+
+/* =========================================================
+   PROFILE SETTINGS
+========================================================= */
+
+window.openSettings=function(){
+
+ document.getElementById("editUsername")
+  .value=profile.username||"";
+
+ document.getElementById("editDisplay")
+  .value=profile.displayName||"";
+
+ document.getElementById("editBio")
+  .value=profile.bio||"";
+
+ document.getElementById("settingsError")
+  .classList.remove("show");
+
+ pendingPhoto=null;
+
+ setAvatar(
+  document.getElementById("photoPreview"),
+  profile
+ );
+
+ document
+  .getElementById("settings")
+  .classList.add("show");
+
+};
+
+
+window.closeSettings=function(event){
+
+ if(
+  event &&
+  event.target!==document.getElementById("settings")
+ ){
+  return;
+ }
+
+ document
+  .getElementById("settings")
+  .classList.remove("show");
+
+};
+
+
+window.previewPhoto=function(event){
+
+ const file=
+  event.target.files?.[0];
+
+ if(!file)return;
+
+ if(file.size>5*1024*1024){
+
+  toast("Image must be under 5 MB.");
+
+  return;
+
+ }
+
+ pendingPhoto=file;
+
+ const url=
+  URL.createObjectURL(file);
+
+ document.getElementById("photoPreview")
+  .innerHTML=
+   `<img src="${url}" alt="">`;
+
+};
+
+
+window.saveProfile=async function(){
+
+ const username=
+  document.getElementById("editUsername")
+   .value.trim();
+
+ const displayName=
+  document.getElementById("editDisplay")
+   .value.trim();
+
+ const bio=
+  document.getElementById("editBio")
+   .value.trim();
+
+ const error=
+  document.getElementById("settingsError");
+
+ error.classList.remove("show");
+
+ if(!validUsername(username)){
+
+  error.textContent=
+   "Username must be 3–20 letters, numbers or underscores.";
+
+  error.classList.add("show");
+
+  return;
+
+ }
+
+ if(!validDisplayName(displayName)){
+
+  error.textContent=
+   "Display name must be 2–30 characters.";
+
+  error.classList.add("show");
+
+  return;
+
+ }
+
+ try{
+
+  const oldUsername=
+   profile.username;
+
+  const oldDisplay=
+   profile.displayName;
+
+  /*
+   Reserve names atomically.
+   If a new name is unchanged,
+   its existing reservation is reused.
+  */
+
+  await runTransaction(
+   db,
+   async transaction=>{
+
+    const newURef=
+     usernameRef(username);
+
+    const newDRef=
+     displayNameRef(displayName);
+
+    const oldURef=
+     usernameRef(oldUsername);
+
+    const oldDRef=
+     displayNameRef(oldDisplay);
+
+    const [
+     newUSnap,
+     newDSnap
+    ]=
+     await Promise.all([
+      transaction.get(newURef),
+      transaction.get(newDRef)
+     ]);
+
+    if(
+     normalize(username)!==
+     normalize(oldUsername)
+    ){
+
+     if(
+      newUSnap.exists() &&
+      newUSnap.data().uid!==currentUser.uid
+     ){
+
+      throw new Error(
+       "USERNAME_TAKEN"
+      );
+
+     }
+
+     transaction.set(
+      newURef,
+      {
+       uid:currentUser.uid,
+       updatedAt:serverTimestamp()
+      }
+     );
+
+     transaction.delete(oldURef);
+
+    }
+
+    if(
+     normalize(displayName)!==
+     normalize(oldDisplay)
+    ){
+
+     if(
+      newDSnap.exists() &&
+      newDSnap.data().uid!==currentUser.uid
+     ){
+
+      throw new Error(
+       "DISPLAY_TAKEN"
+      );
+
+     }
+
+     transaction.set(
+      newDRef,
+      {
+       uid:currentUser.uid,
+       updatedAt:serverTimestamp()
+      }
+     );
+
+     transaction.delete(oldDRef);
+
+    }
+
+    transaction.update(
+     profileRef(currentUser.uid),
+     {
+      username:username,
+      usernameLower:normalize(username),
+      displayName:displayName,
+      displayNameLower:normalize(displayName),
+      bio:bio
+     }
+    );
+
+   }
+  );
+
+  /*
+   Upload profile picture after the profile transaction.
+  */
+
+  let photoURL=
+   profile.photoURL||"";
+
+  if(pendingPhoto){
+
+   const storageRef=
+    ref(
+     storage,
+     `profilePictures/${currentUser.uid}/avatar`
+    );
+
+   await uploadBytes(
+    storageRef,
+    pendingPhoto,
+    {
+     contentType:pendingPhoto.type
+    }
+   );
+
+   photoURL=
+    await getDownloadURL(storageRef);
+
+   await updateDoc(
+    profileRef(currentUser.uid),
+    {
+     photoURL:photoURL
+    }
+   );
+
+  }
+
+  profile.username=username;
+  profile.displayName=displayName;
+  profile.bio=bio;
+  profile.photoURL=photoURL;
+
+  updateUI();
+
+  closeSettings();
+
+  toast("Profile updated.");
+
+ }catch(error){
+
+  console.error(error);
+
+  const settingsError=
+   document.getElementById("settingsError");
+
+  if(error.message==="USERNAME_TAKEN"){
+
+   settingsError.textContent=
+    "That username is already taken.";
+
+  }else if(
+   error.message==="DISPLAY_TAKEN"
+  ){
+
+   settingsError.textContent=
+    "That display name is already taken.";
+
+  }else{
+
+   settingsError.textContent=
+    "Couldn't update your profile.";
+
+  }
+
+  settingsError.classList.add("show");
+
+ }
+
+};
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+window.logout=async function(){
+
+ try{
+
+  await signOut(auth);
+
+  toast("Signed out.");
+
+ }catch(error){
+
+  toast("Couldn't sign out.");
+
+ }
+
+};
+
+
+/* =========================================================
+   DISCOVER
+========================================================= */
+
+window.vote=function(vibe){
+
+ toast("You picked "+vibe+".");
+
+};
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+let toastTimer;
+
+window.toast=function(message){
+
+ const t=
+  document.getElementById("toast");
+
+ t.textContent=message;
+
+ t.classList.add("show");
+
+ clearTimeout(toastTimer);
+
+ toastTimer=
+  setTimeout(
+   ()=>{
+    t.classList.remove("show");
+   },
+   2200
+  );
+
+};
+
+</script>
+
+</body>
+</html>
