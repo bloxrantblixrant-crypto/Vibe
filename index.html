@@ -3,30 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#08080a">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
+<meta name="theme-color" content="#09090b">
 <title>Alteo</title>
 
 <style>
-:root{
-  --bg:#08080a;
-  --panel:#101014;
-  --panel2:#15151b;
-  --panel3:#1c1c23;
-  --text:#f7f7f8;
-  --muted:#92929b;
-  --line:rgba(255,255,255,.09);
-  --accent:#ffffff;
-  --danger:#ff4d67;
-  --radius:24px;
-  --nav:76px;
-}
-
 *{
   box-sizing:border-box;
   -webkit-tap-highlight-color:transparent;
+}
+
+:root{
+  --bg:#08090c;
+  --panel:#101116;
+  --panel2:#15171e;
+  --border:#242731;
+  --text:#f5f7fb;
+  --muted:#8d93a1;
+  --accent:#7c5cff;
+  --accent2:#9d87ff;
+  --danger:#ff5f6d;
+  --success:#49d17d;
+  --radius:20px;
 }
 
 html,body{
@@ -41,9 +38,7 @@ body{
   overflow-x:hidden;
 }
 
-button,
-input,
-textarea{
+button,input,textarea{
   font:inherit;
 }
 
@@ -52,364 +47,300 @@ button{
   cursor:pointer;
 }
 
-svg{
-  width:22px;
-  height:22px;
-  fill:none;
-  stroke:currentColor;
-  stroke-width:1.8;
-  stroke-linecap:round;
-  stroke-linejoin:round;
-}
-
 .hidden{
   display:none!important;
 }
 
-/* LOADING */
+svg{
+  width:20px;
+  height:20px;
+  stroke:currentColor;
+  fill:none;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
 
-#loader{
+#toast{
   position:fixed;
-  inset:0;
+  left:50%;
+  bottom:28px;
+  transform:translate(-50%,20px);
+  background:#181a22;
+  border:1px solid #30333e;
+  color:white;
+  padding:13px 18px;
+  border-radius:14px;
+  opacity:0;
+  pointer-events:none;
+  transition:.25s ease;
   z-index:9999;
-  background:#08080a;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  transition:.45s ease;
+  box-shadow:0 15px 50px #0008;
 }
 
-.loader-inner{
-  text-align:center;
-}
-
-.logo{
-  width:62px;
-  height:62px;
-  border-radius:20px;
-  background:#fff;
-  color:#08080a;
-  display:grid;
-  place-items:center;
-  font-size:25px;
-  font-weight:900;
-  margin:auto;
-  box-shadow:0 15px 50px rgba(255,255,255,.1);
-}
-
-.loader-ring{
-  width:26px;
-  height:26px;
-  border:2px solid rgba(255,255,255,.12);
-  border-top-color:#fff;
-  border-radius:50%;
-  margin:25px auto 0;
-  animation:spin .8s linear infinite;
-}
-
-@keyframes spin{
-  to{transform:rotate(360deg)}
+#toast.show{
+  opacity:1;
+  transform:translate(-50%,0);
 }
 
 /* AUTH */
 
-#authScreen{
+#auth{
   min-height:100vh;
-  display:none;
+  display:flex;
   align-items:center;
   justify-content:center;
   padding:25px;
-  position:relative;
-  overflow:hidden;
-}
-
-.auth-glow{
-  position:absolute;
-  width:450px;
-  height:450px;
-  border-radius:50%;
-  background:radial-gradient(circle,rgba(255,255,255,.07),transparent 65%);
-  filter:blur(20px);
-  pointer-events:none;
+  background:
+    radial-gradient(circle at 20% 10%,#7c5cff18,transparent 35%),
+    radial-gradient(circle at 90% 80%,#5c9cff10,transparent 30%),
+    var(--bg);
 }
 
 .auth-card{
-  width:min(430px,100%);
-  background:rgba(16,16,20,.88);
-  border:1px solid var(--line);
-  border-radius:30px;
+  width:min(440px,100%);
+  background:#101116eF;
+  border:1px solid var(--border);
+  border-radius:28px;
   padding:32px;
-  position:relative;
-  z-index:1;
-  box-shadow:0 35px 100px rgba(0,0,0,.45);
-  backdrop-filter:blur(30px);
-  animation:authIn .6s cubic-bezier(.2,.8,.2,1);
+  box-shadow:0 30px 100px #0008;
+  backdrop-filter:blur(25px);
+  animation:authIn .5s ease;
 }
 
 @keyframes authIn{
-  from{
-    opacity:0;
-    transform:translateY(25px) scale(.97);
-  }
-  to{
-    opacity:1;
-    transform:none;
-  }
+  from{opacity:0;transform:translateY(20px) scale(.98)}
+  to{opacity:1;transform:none}
 }
 
-.auth-brand{
-  display:flex;
-  align-items:center;
-  gap:13px;
-  margin-bottom:30px;
+.logo{
+  font-size:31px;
+  font-weight:850;
+  letter-spacing:-1.5px;
 }
 
-.auth-brand .logo{
-  width:48px;
-  height:48px;
-  border-radius:15px;
-  font-size:19px;
-  margin:0;
+.logo span{
+  color:var(--accent2);
 }
 
-.auth-brand-name{
-  font-size:24px;
-  font-weight:800;
-  letter-spacing:-.7px;
-}
-
-.auth-title{
-  font-size:30px;
-  letter-spacing:-1px;
-  margin:0 0 8px;
-}
-
-.auth-subtitle{
+.auth-sub{
   color:var(--muted);
-  margin:0 0 25px;
-  line-height:1.5;
+  margin:8px 0 28px;
 }
 
-.auth-form{
-  display:flex;
-  flex-direction:column;
-  gap:13px;
+.auth-tabs{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  background:#090a0d;
+  border:1px solid var(--border);
+  padding:4px;
+  border-radius:13px;
+  margin-bottom:20px;
 }
 
-.input-wrap{
-  position:relative;
+.auth-tab{
+  background:transparent;
+  color:var(--muted);
+  padding:10px;
+  border-radius:9px;
 }
 
-.input{
+.auth-tab.active{
+  color:white;
+  background:#1a1c24;
+}
+
+.field{
+  margin-bottom:14px;
+}
+
+.field label{
+  display:block;
+  font-size:13px;
+  color:#aeb3bf;
+  margin-bottom:7px;
+}
+
+.field input,
+.field textarea,
+.search-input,
+.message-input{
   width:100%;
-  background:#18181d;
-  color:#fff;
-  border:1px solid transparent;
-  outline:0;
-  padding:15px 16px;
-  border-radius:15px;
+  border:1px solid var(--border);
+  outline:none;
+  color:white;
+  background:#0b0c10;
+  border-radius:13px;
+  padding:13px 14px;
   transition:.2s;
 }
 
-.input:focus{
-  border-color:rgba(255,255,255,.25);
-  background:#1b1b21;
-  box-shadow:0 0 0 4px rgba(255,255,255,.035);
+.field textarea{
+  resize:vertical;
+  min-height:100px;
 }
 
-.primary-btn{
+.field input:focus,
+.field textarea:focus,
+.search-input:focus,
+.message-input:focus{
+  border-color:#6955cf;
+  box-shadow:0 0 0 3px #7c5cff12;
+}
+
+.primary{
   width:100%;
-  background:#fff;
-  color:#08080a;
-  padding:15px;
-  border-radius:15px;
+  padding:13px;
+  border-radius:13px;
+  background:var(--accent);
+  color:white;
   font-weight:750;
   transition:.2s;
 }
 
-.primary-btn:hover{
+.primary:hover{
+  background:#8b72ff;
   transform:translateY(-1px);
 }
 
-.primary-btn:active{
-  transform:scale(.98);
-}
-
-.google-btn{
+.google{
   width:100%;
-  background:#18181d;
-  color:#fff;
-  border:1px solid var(--line);
-  padding:14px;
-  border-radius:15px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:10px;
-  font-weight:650;
-  transition:.2s;
-}
-
-.google-btn:hover{
-  background:#202027;
-}
-
-.google-icon{
-  width:19px;
-  height:19px;
-  font-weight:800;
-  display:grid;
-  place-items:center;
+  padding:12px;
+  margin-top:10px;
+  border-radius:13px;
+  background:#171920;
+  color:white;
+  border:1px solid var(--border);
 }
 
 .divider{
   display:flex;
   align-items:center;
-  gap:12px;
-  color:#65656d;
-  font-size:12px;
+  gap:10px;
   margin:18px 0;
+  color:#686d79;
+  font-size:12px;
 }
 
 .divider:before,
 .divider:after{
   content:"";
   height:1px;
-  background:var(--line);
   flex:1;
+  background:var(--border);
 }
 
-.auth-switch{
-  color:var(--muted);
-  text-align:center;
-  font-size:14px;
-  margin:20px 0 0;
-}
-
-.auth-switch button{
-  background:none;
-  color:#fff;
-  font-weight:700;
-  padding:0;
-}
-
-.auth-error{
-  display:none;
-  background:rgba(255,77,103,.1);
-  border:1px solid rgba(255,77,103,.18);
-  color:#ff8799;
-  padding:12px 14px;
-  border-radius:13px;
+.error{
+  color:#ff7b87;
   font-size:13px;
-  line-height:1.4;
+  margin:10px 0;
 }
 
 /* APP */
 
 #app{
-  display:none;
   min-height:100vh;
 }
 
-.app-layout{
-  min-height:100vh;
-  display:flex;
+.layout{
+  display:grid;
+  grid-template-columns:240px minmax(0,680px) 300px;
+  justify-content:center;
+  gap:24px;
+  max-width:1300px;
+  margin:auto;
+  padding:20px;
 }
 
 .sidebar{
-  width:260px;
-  height:100vh;
-  position:fixed;
-  left:0;
-  top:0;
-  padding:25px 16px;
-  border-right:1px solid var(--line);
-  background:rgba(8,8,10,.9);
-  backdrop-filter:blur(25px);
-  z-index:50;
-}
-
-.side-brand{
+  position:sticky;
+  top:20px;
+  height:calc(100vh - 40px);
   display:flex;
-  align-items:center;
-  gap:11px;
-  padding:5px 10px 35px;
+  flex-direction:column;
 }
 
 .side-logo{
-  width:38px;
-  height:38px;
-  border-radius:12px;
-  background:#fff;
-  color:#000;
-  display:grid;
-  place-items:center;
-  font-weight:900;
-}
-
-.side-name{
-  font-weight:800;
-  font-size:20px;
+  padding:10px 13px 25px;
 }
 
 .nav{
   display:flex;
   flex-direction:column;
-  gap:6px;
+  gap:5px;
 }
 
 .nav-btn{
-  color:#8d8d96;
-  background:transparent;
-  width:100%;
-  padding:13px 14px;
-  border-radius:14px;
   display:flex;
   align-items:center;
   gap:13px;
-  font-weight:650;
+  width:100%;
+  color:#aeb3bf;
+  background:transparent;
+  padding:12px 14px;
+  border-radius:13px;
   text-align:left;
   transition:.2s;
 }
 
-.nav-btn:hover{
-  color:#fff;
-  background:#141419;
-}
-
+.nav-btn:hover,
 .nav-btn.active{
-  color:#fff;
-  background:#19191f;
+  color:white;
+  background:#15171e;
 }
 
-.sidebar-profile{
-  position:absolute;
-  left:16px;
-  right:16px;
-  bottom:18px;
-  padding:10px;
-  border-radius:16px;
+.nav-btn.active svg{
+  color:var(--accent2);
+}
+
+.nav-bottom{
+  margin-top:auto;
+}
+
+.main{
+  min-width:0;
+}
+
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:30;
+  padding:10px 0 15px;
+  background:linear-gradient(#08090c 70%,transparent);
+}
+
+.page-title{
+  font-size:25px;
+  font-weight:800;
+  letter-spacing:-.8px;
+}
+
+.card{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+}
+
+.composer{
+  padding:18px;
+  margin-bottom:14px;
+}
+
+.composer-row{
   display:flex;
-  align-items:center;
-  gap:10px;
-  cursor:pointer;
-}
-
-.sidebar-profile:hover{
-  background:#141419;
+  gap:12px;
 }
 
 .avatar{
-  width:40px;
-  height:40px;
+  width:42px;
+  height:42px;
+  flex:0 0 42px;
   border-radius:50%;
-  background:#222228;
-  overflow:hidden;
-  flex:none;
+  background:linear-gradient(135deg,#2a2d37,#171920);
   display:grid;
   place-items:center;
-  color:#aaa;
-  font-weight:750;
+  overflow:hidden;
+  font-weight:800;
 }
 
 .avatar img{
@@ -418,633 +349,576 @@ svg{
   object-fit:cover;
 }
 
-.side-user{
-  min-width:0;
-}
-
-.side-display{
-  font-size:13px;
-  font-weight:700;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-.side-username{
-  color:#707078;
-  font-size:12px;
-  margin-top:2px;
-}
-
-/* MAIN */
-
-.main{
-  margin-left:260px;
-  width:calc(100% - 260px);
-  min-height:100vh;
-}
-
-.content{
-  width:min(760px,100%);
-  margin:auto;
-  padding:28px 22px 100px;
-}
-
-.topbar{
-  height:55px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:22px;
-}
-
-.page-title{
-  font-size:28px;
-  font-weight:800;
-  letter-spacing:-1px;
-}
-
-.mobile-logo{
-  display:none;
-}
-
-/* FEED */
-
-.composer{
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:22px;
-  padding:16px;
-  margin-bottom:18px;
-}
-
-.composer-top{
-  display:flex;
-  gap:12px;
-}
-
 .composer textarea{
   flex:1;
-  min-height:55px;
-  resize:none;
+  min-height:65px;
   background:transparent;
   border:0;
   outline:0;
-  color:#fff;
-  padding:10px 0;
-  font-size:15px;
-}
-
-.composer textarea::placeholder{
-  color:#6e6e77;
+  resize:none;
+  color:white;
+  font-size:16px;
 }
 
 .composer-bottom{
-  border-top:1px solid var(--line);
-  margin-top:10px;
-  padding-top:12px;
   display:flex;
-  justify-content:flex-end;
+  justify-content:space-between;
+  align-items:center;
+  border-top:1px solid var(--border);
+  padding-top:12px;
 }
 
-.post-btn{
-  background:#fff;
-  color:#000;
-  padding:9px 17px;
-  border-radius:12px;
+.muted{
+  color:var(--muted);
   font-size:13px;
-  font-weight:750;
+}
+
+.small-btn{
+  padding:9px 14px;
+  border-radius:11px;
+  background:var(--accent);
+  color:white;
+  font-weight:700;
 }
 
 .post{
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:22px;
   padding:17px;
-  margin-bottom:15px;
-  animation:postIn .35s ease;
+  margin-bottom:14px;
+  animation:postIn .3s ease;
 }
 
 @keyframes postIn{
-  from{
-    opacity:0;
-    transform:translateY(10px);
-  }
-  to{
-    opacity:1;
-    transform:none;
-  }
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:none}
 }
 
 .post-head{
   display:flex;
-  align-items:center;
   gap:11px;
+  align-items:center;
 }
 
 .post-user{
+  flex:1;
   min-width:0;
 }
 
-.post-display{
+.post-name{
   font-weight:750;
-  font-size:14px;
+  cursor:pointer;
 }
 
-.post-username{
-  color:#777780;
+.post-handle{
+  color:var(--muted);
   font-size:12px;
-  margin-top:2px;
 }
 
 .post-time{
-  color:#66666e;
+  color:#696e7a;
   font-size:12px;
-  margin-left:auto;
 }
 
-.post-content{
-  font-size:15px;
-  line-height:1.6;
+.more-btn{
+  color:#858a96;
+  background:transparent;
+  padding:5px;
+}
+
+.post-text{
   white-space:pre-wrap;
   word-break:break-word;
-  margin:15px 2px 13px;
+  margin:14px 0;
+  line-height:1.5;
+}
+
+.post-image{
+  width:100%;
+  max-height:560px;
+  object-fit:contain;
+  background:#08090c;
+  border-radius:15px;
+  border:1px solid var(--border);
 }
 
 .post-actions{
   display:flex;
   gap:5px;
-  border-top:1px solid var(--line);
-  padding-top:11px;
+  margin-top:10px;
+  border-top:1px solid var(--border);
+  padding-top:8px;
 }
 
-.post-action{
+.action{
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  color:#858b99;
   background:transparent;
-  color:#777780;
-  display:flex;
-  align-items:center;
-  gap:6px;
-  padding:7px 9px;
+  padding:9px;
   border-radius:10px;
-  font-size:12px;
-}
-
-.post-action:hover{
-  background:#19191f;
-  color:#fff;
-}
-
-.post-action.liked{
-  color:#fff;
-}
-
-/* SEARCH */
-
-.search-box{
-  position:relative;
-  margin-bottom:18px;
-}
-
-.search-box svg{
-  position:absolute;
-  left:15px;
-  top:50%;
-  transform:translateY(-50%);
-  color:#707078;
-}
-
-.search-input{
-  width:100%;
-  background:var(--panel);
-  border:1px solid var(--line);
-  outline:0;
-  color:#fff;
-  border-radius:17px;
-  padding:15px 15px 15px 46px;
-}
-
-.search-results{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
-
-.user-result{
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:18px;
-  padding:13px;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  cursor:pointer;
   transition:.2s;
 }
 
-.user-result:hover{
-  background:#16161b;
+.action:hover{
+  background:#181a21;
+  color:white;
 }
 
-.result-info{
-  min-width:0;
+.action.liked{
+  color:#ff6075;
 }
 
-.result-name{
-  font-weight:750;
-  font-size:14px;
+.right{
+  position:sticky;
+  top:20px;
+  height:max-content;
 }
 
-.result-username{
-  color:#777780;
-  font-size:12px;
-  margin-top:3px;
+.right-card{
+  padding:17px;
+  margin-bottom:14px;
 }
 
-.empty{
-  text-align:center;
-  color:#686870;
-  padding:50px 20px;
-  font-size:14px;
+.right-title{
+  font-weight:800;
+  margin-bottom:13px;
 }
 
 /* PROFILE */
 
-.profile-card{
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:26px;
-  overflow:hidden;
-}
-
 .profile-cover{
-  height:145px;
+  height:140px;
+  border-radius:20px 20px 0 0;
   background:
-    radial-gradient(circle at 20% 20%,rgba(255,255,255,.12),transparent 35%),
-    radial-gradient(circle at 80% 80%,rgba(255,255,255,.07),transparent 35%),
-    #17171c;
+    radial-gradient(circle at 20% 20%,#9b82ff,transparent 35%),
+    radial-gradient(circle at 80% 80%,#485cff,transparent 35%),
+    #15171f;
 }
 
-.profile-main{
-  padding:0 22px 22px;
-}
-
-.profile-avatar-wrap{
-  margin-top:-42px;
-  position:relative;
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-end;
+.profile-info{
+  padding:0 20px 20px;
 }
 
 .profile-avatar{
-  width:84px;
-  height:84px;
+  width:88px;
+  height:88px;
+  margin-top:-44px;
   border:4px solid var(--panel);
   border-radius:50%;
-}
-
-.edit-profile-btn{
-  background:#fff;
-  color:#000;
-  padding:9px 15px;
-  border-radius:12px;
-  font-size:13px;
-  font-weight:750;
-}
-
-.profile-name{
-  font-size:23px;
-  font-weight:800;
-  margin-top:14px;
-  letter-spacing:-.5px;
-}
-
-.profile-handle{
-  color:#777780;
-  font-size:14px;
-  margin-top:3px;
-}
-
-.profile-bio{
-  color:#c4c4c9;
-  font-size:14px;
-  line-height:1.55;
-  margin-top:14px;
-  white-space:pre-wrap;
-}
-
-.profile-stats{
-  display:flex;
-  gap:30px;
-  margin-top:20px;
-}
-
-.stat strong{
-  display:block;
-  font-size:16px;
-}
-
-.stat span{
-  display:block;
-  color:#6f6f77;
-  font-size:12px;
-  margin-top:3px;
-}
-
-/* MODAL */
-
-.modal-overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.68);
-  backdrop-filter:blur(12px);
-  z-index:200;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-  animation:fadeIn .2s ease;
-}
-
-.modal{
-  width:min(480px,100%);
-  max-height:90vh;
-  overflow:auto;
-  background:#111115;
-  border:1px solid var(--line);
-  border-radius:27px;
-  padding:24px;
-  box-shadow:0 35px 100px rgba(0,0,0,.55);
-  animation:modalIn .3s cubic-bezier(.2,.8,.2,1);
-}
-
-@keyframes fadeIn{
-  from{opacity:0}
-  to{opacity:1}
-}
-
-@keyframes modalIn{
-  from{
-    opacity:0;
-    transform:translateY(20px) scale(.96);
-  }
-  to{
-    opacity:1;
-    transform:none;
-  }
-}
-
-.modal-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:22px;
-}
-
-.modal-title{
-  font-size:21px;
-  font-weight:800;
-}
-
-.icon-btn{
-  width:38px;
-  height:38px;
-  border-radius:12px;
-  background:#1b1b21;
-  color:#aaa;
-  display:grid;
-  place-items:center;
-}
-
-.icon-btn:hover{
-  color:#fff;
-  background:#222229;
-}
-
-.profile-edit-avatar{
-  display:flex;
-  justify-content:center;
-  margin:5px 0 22px;
-}
-
-.edit-avatar{
-  width:90px;
-  height:90px;
-  border-radius:50%;
-  background:#202027;
   overflow:hidden;
-  position:relative;
-  cursor:pointer;
-  border:2px solid rgba(255,255,255,.1);
+  background:#22252d;
 }
 
-.edit-avatar img{
+.profile-avatar img{
   width:100%;
   height:100%;
   object-fit:cover;
 }
 
-.edit-avatar-overlay{
-  position:absolute;
-  inset:0;
-  display:grid;
-  place-items:center;
-  background:rgba(0,0,0,.45);
-  opacity:0;
-  transition:.2s;
+.profile-name{
+  font-size:24px;
+  font-weight:850;
+  margin-top:10px;
 }
 
-.edit-avatar:hover .edit-avatar-overlay{
-  opacity:1;
+.profile-handle{
+  color:var(--muted);
 }
 
-.field{
+.profile-bio{
+  margin-top:12px;
+  color:#c8ccd5;
+  line-height:1.45;
+}
+
+.stats{
+  display:flex;
+  gap:25px;
+  margin-top:17px;
+}
+
+.stat strong{
+  display:block;
+}
+
+.stat span{
+  color:var(--muted);
+  font-size:13px;
+}
+
+.profile-actions{
+  display:flex;
+  gap:8px;
+  margin-top:17px;
+}
+
+.outline-btn{
+  border:1px solid var(--border);
+  background:#15171e;
+  color:white;
+  padding:10px 15px;
+  border-radius:11px;
+  font-weight:700;
+}
+
+.outline-btn.following{
+  background:var(--accent);
+  border-color:var(--accent);
+}
+
+/* SEARCH */
+
+.search-box{
   margin-bottom:15px;
 }
 
-.field label{
-  display:block;
-  color:#9999a2;
-  font-size:12px;
-  margin:0 0 7px 3px;
+.search-results{
+  display:flex;
+  flex-direction:column;
+  gap:7px;
 }
 
-.field input,
-.field textarea{
-  width:100%;
-  background:#19191f;
-  color:#fff;
-  border:1px solid transparent;
-  outline:0;
+.user-result{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px;
   border-radius:14px;
-  padding:13px;
+  background:#101116;
+  border:1px solid var(--border);
+  cursor:pointer;
 }
 
-.field textarea{
-  min-height:100px;
-  resize:vertical;
+.user-result:hover{
+  background:#161820;
 }
 
-.field input:focus,
-.field textarea:focus{
-  border-color:rgba(255,255,255,.2);
+.user-info{
+  flex:1;
 }
 
-.field-help{
-  color:#66666e;
-  font-size:11px;
-  margin-top:6px;
-  padding-left:3px;
-}
-
-.modal-error{
-  color:#ff7d91;
-  font-size:12px;
-  line-height:1.45;
-  margin:10px 2px;
-  display:none;
-}
-
-.save-btn{
-  width:100%;
-  padding:14px;
-  border-radius:14px;
-  background:#fff;
-  color:#000;
+.user-display{
   font-weight:750;
-  margin-top:5px;
 }
 
-/* MOBILE NAV */
+.user-handle{
+  color:var(--muted);
+  font-size:13px;
+}
+
+/* NOTIFICATIONS */
+
+.notification{
+  display:flex;
+  gap:12px;
+  padding:14px;
+  border-bottom:1px solid var(--border);
+  cursor:pointer;
+}
+
+.notification:last-child{
+  border-bottom:0;
+}
+
+.notification.unread{
+  background:#14121e;
+}
+
+.notification-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--accent);
+  margin-top:8px;
+}
+
+/* MESSAGES */
+
+.messages-layout{
+  display:grid;
+  grid-template-columns:230px 1fr;
+  min-height:620px;
+  overflow:hidden;
+}
+
+.conversations{
+  border-right:1px solid var(--border);
+  overflow:auto;
+}
+
+.conversation{
+  padding:13px;
+  display:flex;
+  gap:10px;
+  cursor:pointer;
+}
+
+.conversation:hover,
+.conversation.active{
+  background:#171920;
+}
+
+.chat{
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+}
+
+.chat-head{
+  padding:15px;
+  border-bottom:1px solid var(--border);
+  font-weight:800;
+}
+
+.messages{
+  flex:1;
+  padding:15px;
+  overflow:auto;
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+}
+
+.message{
+  max-width:75%;
+  padding:10px 13px;
+  border-radius:16px;
+  background:#191b23;
+  width:max-content;
+  line-height:1.4;
+}
+
+.message.mine{
+  margin-left:auto;
+  background:var(--accent);
+}
+
+.message-time{
+  opacity:.55;
+  font-size:10px;
+  margin-top:4px;
+}
+
+.message-send{
+  display:flex;
+  gap:8px;
+  padding:12px;
+  border-top:1px solid var(--border);
+}
+
+.message-input{
+  flex:1;
+}
+
+.send-btn{
+  width:45px;
+  border-radius:12px;
+  background:var(--accent);
+  color:white;
+}
+
+/* MODAL */
+
+.modal-wrap{
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  background:#0009;
+  backdrop-filter:blur(8px);
+}
+
+.modal{
+  width:min(520px,100%);
+  max-height:90vh;
+  overflow:auto;
+  background:#111218;
+  border:1px solid #2b2e38;
+  border-radius:22px;
+  padding:20px;
+  box-shadow:0 30px 100px #000b;
+  animation:modalIn .25s ease;
+}
+
+@keyframes modalIn{
+  from{opacity:0;transform:scale(.97) translateY(8px)}
+  to{opacity:1;transform:none}
+}
+
+.modal-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:18px;
+}
+
+.modal-title{
+  font-size:19px;
+  font-weight:800;
+}
+
+.close{
+  width:34px;
+  height:34px;
+  border-radius:10px;
+  background:#1a1c23;
+  color:#aaa;
+  display:grid;
+  place-items:center;
+}
+
+/* COMMENTS */
+
+.comment{
+  display:flex;
+  gap:10px;
+  padding:11px 0;
+  border-bottom:1px solid var(--border);
+}
+
+.comment:last-child{
+  border-bottom:0;
+}
+
+.comment-body{
+  flex:1;
+}
+
+.comment-name{
+  font-weight:750;
+}
+
+.comment-text{
+  color:#d0d3da;
+  margin-top:3px;
+  white-space:pre-wrap;
+  word-break:break-word;
+}
+
+.comment-form{
+  display:flex;
+  gap:8px;
+  margin-top:12px;
+}
+
+.comment-form input{
+  flex:1;
+  background:#0b0c10;
+  color:white;
+  border:1px solid var(--border);
+  padding:11px;
+  border-radius:11px;
+  outline:0;
+}
+
+/* MOBILE */
 
 .mobile-nav{
   display:none;
 }
 
-/* TOAST */
+@media(max-width:1050px){
+  .layout{
+    grid-template-columns:76px minmax(0,680px);
+    justify-content:center;
+  }
 
-#toast{
-  position:fixed;
-  left:50%;
-  bottom:28px;
-  transform:translate(-50%,20px);
-  background:#fff;
-  color:#000;
-  padding:12px 17px;
-  border-radius:14px;
-  font-size:13px;
-  font-weight:700;
-  z-index:1000;
-  opacity:0;
-  pointer-events:none;
-  transition:.3s;
-  box-shadow:0 15px 45px rgba(0,0,0,.35);
-  max-width:calc(100% - 30px);
-  text-align:center;
+  .sidebar{
+    align-items:center;
+  }
+
+  .side-logo{
+    font-size:0;
+  }
+
+  .side-logo .logo{
+    font-size:25px;
+  }
+
+  .nav-btn span{
+    display:none;
+  }
+
+  .right{
+    display:none;
+  }
 }
 
-#toast.show{
-  opacity:1;
-  transform:translate(-50%,0);
-}
+@media(max-width:700px){
+  .layout{
+    display:block;
+    padding:0 10px 75px;
+  }
 
-/* RESPONSIVE */
-
-@media(max-width:800px){
   .sidebar{
     display:none;
   }
 
-  .main{
-    margin-left:0;
-    width:100%;
-  }
-
-  .content{
-    padding:18px 15px 95px;
+  .topbar{
+    padding:14px 4px 12px;
   }
 
   .mobile-nav{
-    position:fixed;
     display:flex;
+    position:fixed;
+    z-index:500;
     bottom:0;
     left:0;
     right:0;
-    height:70px;
-    background:rgba(10,10,12,.91);
-    backdrop-filter:blur(25px);
-    border-top:1px solid var(--line);
-    z-index:100;
+    height:64px;
+    background:#0d0e12f5;
+    backdrop-filter:blur(20px);
+    border-top:1px solid var(--border);
     padding-bottom:env(safe-area-inset-bottom);
   }
 
   .mobile-nav button{
     flex:1;
     background:transparent;
-    color:#6d6d75;
-    display:grid;
-    place-items:center;
-    align-content:center;
-    gap:4px;
+    color:#777d89;
+    display:flex;
+    align-items:center;
+    justify-content:center;
   }
 
   .mobile-nav button.active{
-    color:#fff;
+    color:white;
   }
 
-  .mobile-nav span{
-    font-size:10px;
-    font-weight:650;
+  .card{
+    border-radius:17px;
   }
 
-  .mobile-logo{
-    display:flex;
-    align-items:center;
-    gap:9px;
+  .messages-layout{
+    grid-template-columns:1fr;
+    min-height:600px;
   }
 
-  .mobile-logo-box{
-    width:35px;
-    height:35px;
-    border-radius:11px;
-    background:#fff;
-    color:#000;
-    display:grid;
-    place-items:center;
-    font-size:13px;
-    font-weight:900;
-  }
-
-  .page-title{
+  .conversations{
     display:none;
   }
 
-  .topbar{
-    margin-bottom:18px;
-  }
-}
-
-@media(max-width:480px){
-  .auth-card{
-    padding:25px 20px;
-    border-radius:24px;
+  .profile-cover{
+    height:110px;
   }
 
-  .auth-title{
-    font-size:27px;
+  .profile-avatar{
+    width:76px;
+    height:76px;
+    margin-top:-38px;
   }
 
   .post{
-    border-radius:19px;
     padding:14px;
   }
 
-  .composer{
-    border-radius:19px;
-  }
-
-  .profile-cover{
-    height:120px;
+  .modal{
+    border-radius:20px;
   }
 }
 </style>
@@ -1052,133 +926,63 @@ svg{
 
 <body>
 
-<!-- ICONS -->
-<svg style="display:none">
-  <symbol id="i-home" viewBox="0 0 24 24">
-    <path d="M3 10.5 12 3l9 7.5"/>
-    <path d="M5 9.5V21h14V9.5"/>
-    <path d="M9 21v-7h6v7"/>
-  </symbol>
-
-  <symbol id="i-search" viewBox="0 0 24 24">
-    <circle cx="10.8" cy="10.8" r="6.8"/>
-    <path d="m16 16 5 5"/>
-  </symbol>
-
-  <symbol id="i-user" viewBox="0 0 24 24">
-    <circle cx="12" cy="8" r="4"/>
-    <path d="M4 21c.8-4.2 3.5-6.5 8-6.5s7.2 2.3 8 6.5"/>
-  </symbol>
-
-  <symbol id="i-settings" viewBox="0 0 24 24">
-    <circle cx="12" cy="12" r="3"/>
-    <path d="M19.4 15a1.8 1.8 0 0 0 .36 1.98l.05.05-1.4 1.4-.05-.05a1.8 1.8 0 0 0-1.98-.36 1.8 1.8 0 0 0-1.1 1.65V20h-2v-.33a1.8 1.8 0 0 0-1.1-1.65 1.8 1.8 0 0 0-1.98.36l-.05.05-1.4-1.4.05-.05A1.8 1.8 0 0 0 9.2 15a1.8 1.8 0 0 0-1.65-1.1H7v-2h.55A1.8 1.8 0 0 0 9.2 10a1.8 1.8 0 0 0-.36-1.98l-.05-.05 1.4-1.4.05.05a1.8 1.8 0 0 0 1.98.36 1.8 1.8 0 0 0 1.1-1.65V5h2v.33a1.8 1.8 0 0 0 1.1 1.65 1.8 1.8 0 0 0 1.98-.36l.05-.05 1.4 1.4-.05.05A1.8 1.8 0 0 0 19.4 10a1.8 1.8 0 0 0 1.65 1.1H21v2h-.33A1.8 1.8 0 0 0 19.4 15Z"/>
-  </symbol>
-
-  <symbol id="i-heart" viewBox="0 0 24 24">
-    <path d="M20.8 8.7c0 5.5-8.8 10.8-8.8 10.8S3.2 14.2 3.2 8.7A4.7 4.7 0 0 1 12 6.4a4.7 4.7 0 0 1 8.8 2.3Z"/>
-  </symbol>
-
-  <symbol id="i-comment" viewBox="0 0 24 24">
-    <path d="M20 11.5a7.5 7.5 0 0 1-8 7.5 9.7 9.7 0 0 1-3.7-.7L4 20l1.6-3.5A7.1 7.1 0 0 1 4 11.5 7.5 7.5 0 0 1 12 4a7.5 7.5 0 0 1 8 7.5Z"/>
-  </symbol>
-
-  <symbol id="i-send" viewBox="0 0 24 24">
-    <path d="m21 3-7.2 18-3.6-7.2L3 10.2 21 3Z"/>
-    <path d="M10.2 13.8 21 3"/>
-  </symbol>
-
-  <symbol id="i-edit" viewBox="0 0 24 24">
-    <path d="m4 20 4.2-1 10.5-10.5a2.1 2.1 0 0 0-3-3L5.2 16 4 20Z"/>
-    <path d="m14.5 7.5 2 2"/>
-  </symbol>
-
-  <symbol id="i-x" viewBox="0 0 24 24">
-    <path d="m6 6 12 12M18 6 6 18"/>
-  </symbol>
-
-  <symbol id="i-camera" viewBox="0 0 24 24">
-    <path d="M4 7h3l1.5-2h7L17 7h3v12H4V7Z"/>
-    <circle cx="12" cy="13" r="3.5"/>
-  </symbol>
-
-  <symbol id="i-logout" viewBox="0 0 24 24">
-    <path d="M10 5H5v14h5"/>
-    <path d="M14 8l4 4-4 4"/>
-    <path d="M18 12H9"/>
-  </symbol>
-</svg>
-
-<!-- LOADER -->
-<div id="loader">
-  <div class="loader-inner">
-    <div class="logo">A</div>
-    <div class="loader-ring"></div>
-  </div>
-</div>
+<div id="toast"></div>
 
 <!-- AUTH -->
-<section id="authScreen">
-
-  <div class="auth-glow"></div>
-
+<section id="auth">
   <div class="auth-card">
 
-    <div class="auth-brand">
-      <div class="logo">A</div>
-      <div class="auth-brand-name">Alteo</div>
+    <div class="logo">al<span>teo</span></div>
+    <div class="auth-sub">A social place built around people.</div>
+
+    <div class="auth-tabs">
+      <button id="loginTab" class="auth-tab active">Log in</button>
+      <button id="signupTab" class="auth-tab">Create account</button>
     </div>
 
-    <h1 class="auth-title" id="authTitle">Welcome back.</h1>
-    <p class="auth-subtitle" id="authSubtitle">
-      Log in to your Alteo account.
-    </p>
+    <form id="authForm">
 
-    <div id="authError" class="auth-error"></div>
+      <div id="signupFields" class="hidden">
 
-    <form class="auth-form" id="authForm">
+        <div class="field">
+          <label>Username</label>
+          <input id="signupUsername"
+                 maxlength="20"
+                 placeholder="yourname"
+                 autocomplete="username">
+        </div>
 
-      <div id="displayNameWrap" class="input-wrap hidden">
-        <input
-          id="displayNameInput"
-          class="input"
-          type="text"
-          maxlength="30"
-          placeholder="Display name"
-          autocomplete="name"
-        >
+        <div class="field">
+          <label>Display name</label>
+          <input id="signupDisplayName"
+                 maxlength="30"
+                 placeholder="Your name">
+        </div>
+
       </div>
 
-      <div id="usernameWrap" class="input-wrap hidden">
-        <input
-          id="usernameInput"
-          class="input"
-          type="text"
-          maxlength="20"
-          placeholder="Username"
-          autocomplete="username"
-        >
+      <div class="field">
+        <label>Email</label>
+        <input id="email"
+               type="email"
+               required
+               autocomplete="email"
+               placeholder="you@example.com">
       </div>
 
-      <input
-        id="emailInput"
-        class="input"
-        type="email"
-        placeholder="Email"
-        autocomplete="email"
-        required
-      >
+      <div class="field">
+        <label>Password</label>
+        <input id="password"
+               type="password"
+               required
+               minlength="6"
+               autocomplete="current-password"
+               placeholder="At least 6 characters">
+      </div>
 
-      <input
-        id="passwordInput"
-        class="input"
-        type="password"
-        placeholder="Password"
-        autocomplete="current-password"
-        required
-      >
+      <div id="authError" class="error"></div>
 
-      <button class="primary-btn" id="authSubmit" type="submit">
+      <button id="authSubmit" class="primary">
         Log in
       </button>
 
@@ -1186,332 +990,361 @@ svg{
 
     <div class="divider">OR</div>
 
-    <button class="google-btn" id="googleBtn">
-      <span class="google-icon">G</span>
+    <button id="googleBtn" class="google">
       Continue with Google
     </button>
-
-    <div class="auth-switch">
-      <span id="switchText">Don't have an account?</span>
-      <button id="switchAuth">Create one</button>
-    </div>
 
   </div>
 </section>
 
+
 <!-- APP -->
-<div id="app">
+<section id="app" class="hidden">
 
-  <div class="app-layout">
+  <div class="layout">
 
+    <!-- SIDEBAR -->
     <aside class="sidebar">
 
-      <div class="side-brand">
-        <div class="side-logo">A</div>
-        <div class="side-name">Alteo</div>
+      <div class="side-logo">
+        <div class="logo">al<span>teo</span></div>
       </div>
 
       <nav class="nav">
 
         <button class="nav-btn active" data-page="home">
           <svg><use href="#i-home"></use></svg>
-          Home
+          <span>Home</span>
         </button>
 
-        <button class="nav-btn" data-page="search">
+        <button class="nav-btn" data-page="discover">
           <svg><use href="#i-search"></use></svg>
-          Discover
+          <span>Discover</span>
+        </button>
+
+        <button class="nav-btn" data-page="notifications">
+          <svg><use href="#i-bell"></use></svg>
+          <span>Notifications</span>
+        </button>
+
+        <button class="nav-btn" data-page="messages">
+          <svg><use href="#i-message"></use></svg>
+          <span>Messages</span>
         </button>
 
         <button class="nav-btn" data-page="profile">
           <svg><use href="#i-user"></use></svg>
-          Profile
-        </button>
-
-        <button class="nav-btn" id="settingsBtn">
-          <svg><use href="#i-settings"></use></svg>
-          Settings
+          <span>Profile</span>
         </button>
 
       </nav>
 
-      <div class="sidebar-profile" id="sidebarProfile">
-        <div class="avatar" id="sideAvatar">A</div>
+      <div class="nav nav-bottom">
 
-        <div class="side-user">
-          <div class="side-display" id="sideDisplay">Loading...</div>
-          <div class="side-username" id="sideUsername">@...</div>
-        </div>
+        <button class="nav-btn" data-page="settings">
+          <svg><use href="#i-settings"></use></svg>
+          <span>Settings</span>
+        </button>
+
+        <button id="logoutBtn" class="nav-btn">
+          <svg><use href="#i-logout"></use></svg>
+          <span>Log out</span>
+        </button>
+
       </div>
 
     </aside>
 
+
+    <!-- MAIN -->
     <main class="main">
 
-      <div class="content">
+      <header class="topbar">
+        <div id="pageTitle" class="page-title">Home</div>
+      </header>
 
-        <header class="topbar">
+      <!-- HOME -->
+      <section id="page-home" class="page">
 
-          <div class="mobile-logo">
-            <div class="mobile-logo-box">A</div>
-            <strong>Alteo</strong>
+        <div class="card composer">
+
+          <div class="composer-row">
+
+            <div id="composerAvatar" class="avatar"></div>
+
+            <textarea
+              id="postText"
+              maxlength="1000"
+              placeholder="What's happening?"></textarea>
+
           </div>
 
-          <div class="page-title" id="pageTitle">Home</div>
+          <div class="composer-bottom">
 
-        </header>
+            <label class="muted" style="cursor:pointer">
+              <input id="postImageInput"
+                     type="file"
+                     accept="image/*"
+                     hidden>
+              Add image
+            </label>
 
-        <!-- HOME -->
-        <section id="page-home">
-
-          <div class="composer">
-
-            <div class="composer-top">
-
-              <div class="avatar" id="composerAvatar">A</div>
-
-              <textarea
-                id="postInput"
-                maxlength="1000"
-                placeholder="What's happening?"
-              ></textarea>
-
+            <div style="display:flex;gap:10px;align-items:center">
+              <span id="postCount" class="muted">0/1000</span>
+              <button id="publishBtn" class="small-btn">Post</button>
             </div>
 
-            <div class="composer-bottom">
-              <button class="post-btn" id="createPostBtn">
-                Post
+          </div>
+
+        </div>
+
+        <div id="feed"></div>
+
+      </section>
+
+
+      <!-- DISCOVER -->
+      <section id="page-discover" class="page hidden">
+
+        <div class="search-box">
+          <input
+            id="userSearch"
+            class="search-input"
+            placeholder="Search people..."
+            autocomplete="off">
+        </div>
+
+        <div id="searchResults" class="search-results"></div>
+
+      </section>
+
+
+      <!-- NOTIFICATIONS -->
+      <section id="page-notifications" class="page hidden">
+
+        <div class="card">
+
+          <div style="padding:16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+            <strong>Notifications</strong>
+            <button id="markNotificationsRead"
+                    class="outline-btn">
+              Mark all read
+            </button>
+          </div>
+
+          <div id="notificationsList"></div>
+
+        </div>
+
+      </section>
+
+
+      <!-- MESSAGES -->
+      <section id="page-messages" class="page hidden">
+
+        <div class="card messages-layout">
+
+          <div id="conversationList" class="conversations"></div>
+
+          <div class="chat">
+
+            <div id="chatHead" class="chat-head">
+              Select a conversation
+            </div>
+
+            <div id="messagesList" class="messages">
+              <div class="muted" style="text-align:center;margin:auto">
+                Choose someone to start messaging.
+              </div>
+            </div>
+
+            <form id="messageForm" class="message-send">
+
+              <input
+                id="messageInput"
+                class="message-input"
+                maxlength="2000"
+                placeholder="Write a message..."
+                disabled>
+
+              <button class="send-btn" disabled>
+                <svg><use href="#i-send"></use></svg>
               </button>
-            </div>
+
+            </form>
 
           </div>
 
-          <div id="feed"></div>
+        </div>
 
-        </section>
+      </section>
 
-        <!-- SEARCH -->
-        <section id="page-search" class="hidden">
 
-          <div class="search-box">
+      <!-- PROFILE -->
+      <section id="page-profile" class="page hidden">
 
-            <svg>
-              <use href="#i-search"></use>
-            </svg>
+        <div id="profileCard" class="card"></div>
 
-            <input
-              id="searchInput"
-              class="search-input"
-              placeholder="Search people..."
-              autocomplete="off"
-            >
+        <div id="profilePosts" style="margin-top:14px"></div>
 
-          </div>
+      </section>
 
-          <div id="searchResults" class="search-results">
-            <div class="empty">
-              Search for an Alteo user.
-            </div>
-          </div>
 
-        </section>
+      <!-- SETTINGS -->
+      <section id="page-settings" class="page hidden">
 
-        <!-- PROFILE -->
-        <section id="page-profile" class="hidden">
+        <div class="card" style="padding:20px">
 
-          <div class="profile-card">
+          <h2 style="margin-top:0">Settings</h2>
 
-            <div class="profile-cover"></div>
+          <button id="editProfileBtn"
+                  class="outline-btn">
+            Edit profile
+          </button>
 
-            <div class="profile-main">
+          <button id="settingsLogout"
+                  class="outline-btn"
+                  style="display:block;margin-top:10px;color:#ff7b87">
+            Log out
+          </button>
 
-              <div class="profile-avatar-wrap">
+        </div>
 
-                <div class="avatar profile-avatar" id="profileAvatar">
-                  A
-                </div>
-
-                <button class="edit-profile-btn" id="editProfileBtn">
-                  Edit profile
-                </button>
-
-              </div>
-
-              <div class="profile-name" id="profileName">
-                Loading...
-              </div>
-
-              <div class="profile-handle" id="profileUsername">
-                @...
-              </div>
-
-              <div class="profile-bio" id="profileBio"></div>
-
-              <div class="profile-stats">
-
-                <div class="stat">
-                  <strong id="postCount">0</strong>
-                  <span>Posts</span>
-                </div>
-
-                <div class="stat">
-                  <strong>0</strong>
-                  <span>Followers</span>
-                </div>
-
-                <div class="stat">
-                  <strong>0</strong>
-                  <span>Following</span>
-                </div>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        </section>
-
-      </div>
+      </section>
 
     </main>
 
+
+    <!-- RIGHT -->
+    <aside class="right">
+
+      <div class="card right-card">
+
+        <div class="right-title">Your profile</div>
+
+        <div style="display:flex;gap:10px;align-items:center">
+
+          <div id="rightAvatar" class="avatar"></div>
+
+          <div>
+            <strong id="rightName">User</strong>
+            <div id="rightHandle" class="muted">@user</div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="card right-card">
+
+        <div class="right-title">About Alteo</div>
+
+        <div class="muted">
+          A social network prototype powered by Firebase.
+        </div>
+
+      </div>
+
+    </aside>
+
   </div>
+
 
   <!-- MOBILE NAV -->
   <nav class="mobile-nav">
 
     <button class="active" data-page="home">
       <svg><use href="#i-home"></use></svg>
-      <span>Home</span>
     </button>
 
-    <button data-page="search">
+    <button data-page="discover">
       <svg><use href="#i-search"></use></svg>
-      <span>Discover</span>
+    </button>
+
+    <button data-page="notifications">
+      <svg><use href="#i-bell"></use></svg>
+    </button>
+
+    <button data-page="messages">
+      <svg><use href="#i-message"></use></svg>
     </button>
 
     <button data-page="profile">
       <svg><use href="#i-user"></use></svg>
-      <span>Profile</span>
-    </button>
-
-    <button id="mobileSettings">
-      <svg><use href="#i-settings"></use></svg>
-      <span>Settings</span>
     </button>
 
   </nav>
 
-</div>
+</section>
 
-<!-- PROFILE MODAL -->
-<div class="modal-overlay" id="profileModal">
 
-  <div class="modal">
+<!-- SVG ICONS -->
+<svg style="display:none">
 
-    <div class="modal-head">
+  <symbol id="i-home" viewBox="0 0 24 24">
+    <path d="m3 10 9-7 9 7"/>
+    <path d="M5 9v11h14V9"/>
+    <path d="M9 20v-6h6v6"/>
+  </symbol>
 
-      <div class="modal-title" id="profileModalTitle">
-        Edit profile
-      </div>
+  <symbol id="i-search" viewBox="0 0 24 24">
+    <circle cx="11" cy="11" r="7"/>
+    <path d="m20 20-4-4"/>
+  </symbol>
 
-      <button class="icon-btn" id="closeProfileModal">
-        <svg><use href="#i-x"></use></svg>
-      </button>
+  <symbol id="i-user" viewBox="0 0 24 24">
+    <circle cx="12" cy="8" r="4"/>
+    <path d="M4 21c1.5-4 4-6 8-6s6.5 2 8 6"/>
+  </symbol>
 
-    </div>
+  <symbol id="i-settings" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="3"/>
+    <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-1.8 1.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6V20h-2.5v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1-1.8-1.8.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.6-1H6v-2.5h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1 1.8-1.8.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.6V4h2.5v.1a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1 1.8 1.8-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.1v2.5h-.1a1.7 1.7 0 0 0-1.6 1Z"/>
+  </symbol>
 
-    <div class="profile-edit-avatar">
+  <symbol id="i-heart" viewBox="0 0 24 24">
+    <path d="M20.8 8.8c0 5.5-8.8 10.2-8.8 10.2S3.2 14.3 3.2 8.8A4.8 4.8 0 0 1 12 6.2a4.8 4.8 0 0 1 8.8 2.6Z"/>
+  </symbol>
 
-      <label class="edit-avatar" for="photoInput">
+  <symbol id="i-message" viewBox="0 0 24 24">
+    <path d="M20 11.5a7.5 7.5 0 0 1-8 7.5 8.6 8.6 0 0 1-4-.9L4 20l1.3-3.5A7.1 7.1 0 0 1 4 11.5 7.5 7.5 0 0 1 12 4a7.5 7.5 0 0 1 8 7.5Z"/>
+  </symbol>
 
-        <div class="avatar" id="editAvatar">
-          A
-        </div>
+  <symbol id="i-send" viewBox="0 0 24 24">
+    <path d="m3 4 18 8-18 8 3-8-3-8Z"/>
+    <path d="M6 12h15"/>
+  </symbol>
 
-        <div class="edit-avatar-overlay">
-          <svg><use href="#i-camera"></use></svg>
-        </div>
+  <symbol id="i-bell" viewBox="0 0 24 24">
+    <path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/>
+    <path d="M10 21h4"/>
+  </symbol>
 
-      </label>
+  <symbol id="i-logout" viewBox="0 0 24 24">
+    <path d="M10 5H5v14h5"/>
+    <path d="m14 8 4 4-4 4"/>
+    <path d="M9 12h9"/>
+  </symbol>
 
-      <input
-        id="photoInput"
-        type="file"
-        accept="image/*"
-        hidden
-      >
+  <symbol id="i-x" viewBox="0 0 24 24">
+    <path d="m6 6 12 12M18 6 6 18"/>
+  </symbol>
 
-    </div>
+  <symbol id="i-trash" viewBox="0 0 24 24">
+    <path d="M4 7h16"/>
+    <path d="M10 11v6M14 11v6"/>
+    <path d="M9 7V4h6v3"/>
+    <path d="M6 7l1 14h10l1-14"/>
+  </symbol>
 
-    <div class="field">
+</svg>
 
-      <label>Username</label>
 
-      <input
-        id="editUsername"
-        maxlength="20"
-        placeholder="yourusername"
-        autocomplete="off"
-      >
+<!-- MODAL ROOT -->
+<div id="modalRoot"></div>
 
-      <div class="field-help">
-        3–20 characters. Letters, numbers and underscores only.
-      </div>
-
-    </div>
-
-    <div class="field">
-
-      <label>Display name</label>
-
-      <input
-        id="editDisplayName"
-        maxlength="30"
-        placeholder="Your display name"
-      >
-
-    </div>
-
-    <div class="field">
-
-      <label>Bio</label>
-
-      <textarea
-        id="editBio"
-        maxlength="160"
-        placeholder="Tell people about yourself..."
-      ></textarea>
-
-    </div>
-
-    <div class="modal-error" id="profileError"></div>
-
-    <button class="save-btn" id="saveProfileBtn">
-      Save changes
-    </button>
-
-    <button
-      class="google-btn"
-      id="logoutBtn"
-      style="margin-top:10px;color:#ff7084"
-    >
-      <svg><use href="#i-logout"></use></svg>
-      Log out
-    </button>
-
-  </div>
-
-</div>
-
-<div id="toast"></div>
 
 <script type="module">
-
-/* =========================================================
-   FIREBASE
-========================================================= */
 
 import { initializeApp }
 from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
@@ -1546,10 +1379,13 @@ import {
   onSnapshot,
   where,
   getDocs,
-  addDoc
+  addDoc,
+  increment
 }
 from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
+
+/* FIREBASE */
 
 const firebaseConfig = {
   apiKey: "AIzaSyBNXUlvTcqcU3r29WtMltATU5JynUEsNU4",
@@ -1564,174 +1400,57 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
 
-const googleProvider = new GoogleAuthProvider();
 
-
-/* =========================================================
-   STATE
-========================================================= */
+/* STATE */
 
 let currentUser = null;
 let currentProfile = null;
-let selectedPhotoData = null;
-let unsubscribePosts = null;
 let authMode = "login";
-let profileSetupMode = false;
+let currentPage = "home";
+let selectedConversation = null;
+
+let unsubFeed = null;
+let unsubNotifications = null;
+let unsubConversations = null;
+let unsubMessages = null;
+
+let currentProfileViewedUid = null;
 
 
-/* =========================================================
-   ELEMENTS
-========================================================= */
+/* HELPERS */
 
-const loader = document.getElementById("loader");
-const authScreen = document.getElementById("authScreen");
-const appScreen = document.getElementById("app");
+const $ = id => document.getElementById(id);
 
-const authTitle = document.getElementById("authTitle");
-const authSubtitle = document.getElementById("authSubtitle");
-const authForm = document.getElementById("authForm");
-const authSubmit = document.getElementById("authSubmit");
-const authError = document.getElementById("authError");
-const switchAuth = document.getElementById("switchAuth");
-const switchText = document.getElementById("switchText");
+function toast(message){
 
-const displayNameWrap = document.getElementById("displayNameWrap");
-const usernameWrap = document.getElementById("usernameWrap");
+  const el = $("toast");
 
-const displayNameInput = document.getElementById("displayNameInput");
-const usernameInput = document.getElementById("usernameInput");
-const emailInput = document.getElementById("emailInput");
-const passwordInput = document.getElementById("passwordInput");
+  el.textContent = message;
+  el.classList.add("show");
 
-const googleBtn = document.getElementById("googleBtn");
+  clearTimeout(window.__toast);
 
-const sideAvatar = document.getElementById("sideAvatar");
-const composerAvatar = document.getElementById("composerAvatar");
-
-const sideDisplay = document.getElementById("sideDisplay");
-const sideUsername = document.getElementById("sideUsername");
-
-const profileModal = document.getElementById("profileModal");
-const profileModalTitle = document.getElementById("profileModalTitle");
-const closeProfileModal = document.getElementById("closeProfileModal");
-
-const editAvatar = document.getElementById("editAvatar");
-const photoInput = document.getElementById("photoInput");
-const editUsername = document.getElementById("editUsername");
-const editDisplayName = document.getElementById("editDisplayName");
-const editBio = document.getElementById("editBio");
-const profileError = document.getElementById("profileError");
-const saveProfileBtn = document.getElementById("saveProfileBtn");
-const logoutBtn = document.getElementById("logoutBtn");
-
-const profileAvatar = document.getElementById("profileAvatar");
-const profileName = document.getElementById("profileName");
-const profileUsername = document.getElementById("profileUsername");
-const profileBio = document.getElementById("profileBio");
-const postCount = document.getElementById("postCount");
-
-const feed = document.getElementById("feed");
-const postInput = document.getElementById("postInput");
-const createPostBtn = document.getElementById("createPostBtn");
-
-const searchInput = document.getElementById("searchInput");
-const searchResults = document.getElementById("searchResults");
-
-const pageTitle = document.getElementById("pageTitle");
-const toast = document.getElementById("toast");
-
-
-/* =========================================================
-   HELPERS
-========================================================= */
-
-function showToast(message){
-
-  toast.textContent = message;
-  toast.classList.add("show");
-
-  clearTimeout(showToast.timer);
-
-  showToast.timer = setTimeout(()=>{
-    toast.classList.remove("show");
-  },2500);
+  window.__toast = setTimeout(()=>{
+    el.classList.remove("show");
+  },2600);
 }
 
+function esc(value){
 
-function showAuthError(message){
-
-  authError.textContent = message;
-  authError.style.display = "block";
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
 }
-
-
-function clearAuthError(){
-
-  authError.textContent = "";
-  authError.style.display = "none";
-}
-
-
-function showProfileError(message){
-
-  profileError.textContent = message;
-  profileError.style.display = "block";
-}
-
-
-function clearProfileError(){
-
-  profileError.textContent = "";
-  profileError.style.display = "none";
-}
-
-
-function normalizeUsername(value){
-
-  return value.trim().toLowerCase();
-}
-
-
-function normalizeDisplayName(value){
-
-  return value
-    .trim()
-    .normalize("NFKC")
-    .toLowerCase();
-}
-
-
-function validUsername(value){
-
-  return /^[a-zA-Z0-9_]{3,20}$/.test(value);
-}
-
-
-function validDisplayName(value){
-
-  const length = value.trim().length;
-
-  return length >= 2 && length <= 30;
-}
-
-
-function escapeHTML(value){
-
-  const div = document.createElement("div");
-  div.textContent = value ?? "";
-
-  return div.innerHTML;
-}
-
 
 function initials(name){
 
-  const text = (name || "A").trim();
-
-  if(!text) return "A";
-
-  return text
+  return String(name || "U")
+    .trim()
     .split(/\s+/)
     .slice(0,2)
     .map(x=>x[0])
@@ -1739,141 +1458,125 @@ function initials(name){
     .toUpperCase();
 }
 
-
-/* =========================================================
-   AVATARS
-========================================================= */
-
-function setAvatar(element, profile){
-
-  if(!element) return;
+function avatarHTML(profile,size="42"){
 
   const photo = profile?.photoURL;
 
   if(photo){
 
-    element.innerHTML = `
-      <img
-        src="${photo}"
-        alt=""
-        loading="lazy"
-      >
+    return `
+      <div class="avatar" style="width:${size}px;height:${size}px;flex-basis:${size}px">
+        <img src="${photo}" alt="">
+      </div>
     `;
 
-  }else{
-
-    element.textContent = initials(
-      profile?.displayName ||
-      profile?.username ||
-      "A"
-    );
-
   }
+
+  return `
+    <div class="avatar"
+         style="width:${size}px;height:${size}px;flex-basis:${size}px">
+      ${esc(initials(profile?.displayName || profile?.username))}
+    </div>
+  `;
+}
+
+function timeAgo(timestamp){
+
+  if(!timestamp) return "now";
+
+  const date = timestamp.toDate
+    ? timestamp.toDate()
+    : new Date(timestamp);
+
+  const seconds = Math.floor((Date.now()-date.getTime())/1000);
+
+  if(seconds < 60) return "now";
+
+  const minutes = Math.floor(seconds/60);
+  if(minutes < 60) return `${minutes}m`;
+
+  const hours = Math.floor(minutes/60);
+  if(hours < 24) return `${hours}h`;
+
+  const days = Math.floor(hours/24);
+  if(days < 7) return `${days}d`;
+
+  return date.toLocaleDateString();
 }
 
 
-/* =========================================================
-   AUTH UI
-========================================================= */
+/* AUTH TABS */
 
-function setAuthMode(mode){
+$("loginTab").onclick = ()=>{
+  authMode = "login";
 
-  authMode = mode;
+  $("loginTab").classList.add("active");
+  $("signupTab").classList.remove("active");
 
-  clearAuthError();
+  $("signupFields").classList.add("hidden");
+  $("authSubmit").textContent = "Log in";
+  $("authError").textContent = "";
+};
 
-  const signup = mode === "signup";
+$("signupTab").onclick = ()=>{
+  authMode = "signup";
 
-  displayNameWrap.classList.toggle("hidden", !signup);
-  usernameWrap.classList.toggle("hidden", !signup);
+  $("signupTab").classList.add("active");
+  $("loginTab").classList.remove("active");
 
-  if(signup){
-
-    authTitle.textContent = "Create your account.";
-    authSubtitle.textContent =
-      "Pick your name and username to get started.";
-
-    authSubmit.textContent = "Create account";
-
-    switchText.textContent = "Already have an account?";
-    switchAuth.textContent = "Log in";
-
-    passwordInput.autocomplete = "new-password";
-
-  }else{
-
-    authTitle.textContent = "Welcome back.";
-    authSubtitle.textContent =
-      "Log in to your Alteo account.";
-
-    authSubmit.textContent = "Log in";
-
-    switchText.textContent = "Don't have an account?";
-    switchAuth.textContent = "Create one";
-
-    passwordInput.autocomplete = "current-password";
-  }
-}
+  $("signupFields").classList.remove("hidden");
+  $("authSubmit").textContent = "Create account";
+  $("authError").textContent = "";
+};
 
 
-switchAuth.addEventListener("click",()=>{
+/* AUTH */
 
-  setAuthMode(
-    authMode === "login"
-      ? "signup"
-      : "login"
-  );
+$("authForm").addEventListener("submit",async e=>{
 
-});
+  e.preventDefault();
 
+  const email = $("email").value.trim();
+  const password = $("password").value;
 
-/* =========================================================
-   EMAIL AUTH
-========================================================= */
-
-authForm.addEventListener("submit",async event=>{
-
-  event.preventDefault();
-
-  clearAuthError();
-
-  const email = emailInput.value.trim();
-  const password = passwordInput.value;
-
-  if(!email || !password){
-
-    showAuthError("Enter your email and password.");
-    return;
-  }
-
-  authSubmit.disabled = true;
-  authSubmit.textContent =
-    authMode === "signup"
-      ? "Creating..."
-      : "Logging in...";
+  $("authError").textContent = "";
 
   try{
 
-    if(authMode === "signup"){
+    if(authMode === "login"){
 
-      const displayName = displayNameInput.value.trim();
-      const username = usernameInput.value.trim();
+      await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
 
-      if(!validUsername(username)){
+    }else{
 
+      const username = $("signupUsername")
+        .value
+        .trim();
+
+      const displayName = $("signupDisplayName")
+        .value
+        .trim();
+
+      if(!/^[a-zA-Z0-9_]{3,20}$/.test(username)){
         throw new Error(
-          "Username must be 3–20 characters and only use letters, numbers or underscores."
+          "Username must be 3–20 characters using letters, numbers or underscores."
         );
-
       }
 
-      if(!validDisplayName(displayName)){
-
+      if(displayName.length < 2 || displayName.length > 30){
         throw new Error(
-          "Display name must be between 2 and 30 characters."
+          "Display name must be 2–30 characters."
         );
-
       }
+
+      const usernameLower = username.toLowerCase();
+      const displayNameLower = displayName
+        .normalize("NFKC")
+        .toLowerCase();
 
       const credential =
         await createUserWithEmailAndPassword(
@@ -1882,990 +1585,568 @@ authForm.addEventListener("submit",async event=>{
           password
         );
 
-      await createProfileAtomically(
-        credential.user,
-        username,
-        displayName,
-        ""
-      );
-
-      await updateProfile(
-        credential.user,
-        {
-          displayName: displayName
-        }
-      );
-
-    }else{
-
-      await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-
-    }
-
-  }catch(error){
-
-    console.error(error);
-
-    showAuthError(
-      friendlyFirebaseError(error)
-    );
-
-  }finally{
-
-    authSubmit.disabled = false;
-
-    authSubmit.textContent =
-      authMode === "signup"
-        ? "Create account"
-        : "Log in";
-
-  }
-
-});
-
-
-/* =========================================================
-   GOOGLE LOGIN
-========================================================= */
-
-googleBtn.addEventListener("click",async()=>{
-
-  clearAuthError();
-
-  googleBtn.disabled = true;
-  googleBtn.textContent = "Connecting...";
-
-  try{
-
-    await signInWithPopup(
-      auth,
-      googleProvider
-    );
-
-  }catch(error){
-
-    console.error(error);
-
-    /*
-      Some mobile browsers block popup authentication.
-      Redirect is used as a fallback.
-    */
-
-    if(
-      error.code === "auth/popup-blocked" ||
-      error.code === "auth/popup-closed-by-user" ||
-      error.code === "auth/cancelled-popup-request"
-    ){
-
-      try{
-
-        await signInWithRedirect(
-          auth,
-          googleProvider
-        );
-
-      }catch(redirectError){
-
-        showAuthError(
-          friendlyFirebaseError(redirectError)
-        );
-
-      }
-
-    }else{
-
-      showAuthError(
-        friendlyFirebaseError(error)
-      );
-
-    }
-
-  }finally{
-
-    googleBtn.disabled = false;
-    googleBtn.innerHTML =
-      '<span class="google-icon">G</span> Continue with Google';
-
-  }
-
-});
-
-
-/* =========================================================
-   FIREBASE ERRORS
-========================================================= */
-
-function friendlyFirebaseError(error){
-
-  const code = error?.code || "";
-
-  const messages = {
-
-    "auth/invalid-email":
-      "That email address is not valid.",
-
-    "auth/email-already-in-use":
-      "That email is already registered.",
-
-    "auth/weak-password":
-      "Your password is too weak. Use a stronger password.",
-
-    "auth/invalid-credential":
-      "The email or password is incorrect.",
-
-    "auth/wrong-password":
-      "The email or password is incorrect.",
-
-    "auth/user-not-found":
-      "The email or password is incorrect.",
-
-    "auth/network-request-failed":
-      "Network error. Check your internet connection.",
-
-    "auth/popup-blocked":
-      "The Google sign-in popup was blocked.",
-
-    "auth/popup-closed-by-user":
-      "Google sign-in was cancelled.",
-
-    "auth/operation-not-allowed":
-      "This sign-in method is not enabled in Firebase."
-
-  };
-
-  return messages[code] ||
-    error?.message ||
-    "Something went wrong. Try again.";
-
-}
-
-
-/* =========================================================
-   PROFILE CREATION
-========================================================= */
-
-async function createProfileAtomically(
-  user,
-  username,
-  displayName,
-  bio = "",
-  photoURL = ""
-){
-
-  const usernameLower =
-    normalizeUsername(username);
-
-  const displayNameLower =
-    normalizeDisplayName(displayName);
-
-  const userRef =
-    doc(db,"users",user.uid);
-
-  const usernameRef =
-    doc(db,"usernames",usernameLower);
-
-  const displayNameRef =
-    doc(db,"displayNames",displayNameLower);
-
-  await runTransaction(db,async transaction=>{
-
-    const usernameSnap =
-      await transaction.get(usernameRef);
-
-    const displayNameSnap =
-      await transaction.get(displayNameRef);
-
-    if(usernameSnap.exists()){
-
-      throw new Error(
-        "That username is already taken."
-      );
-
-    }
-
-    if(displayNameSnap.exists()){
-
-      throw new Error(
-        "That display name is already taken."
-      );
-
-    }
-
-    transaction.set(
-      usernameRef,
-      {
-        uid:user.uid,
-        createdAt:serverTimestamp()
-      }
-    );
-
-    transaction.set(
-      displayNameRef,
-      {
-        uid:user.uid,
-        createdAt:serverTimestamp()
-      }
-    );
-
-    transaction.set(
-      userRef,
-      {
-        uid:user.uid,
-        email:user.email || "",
-        username:username,
-        usernameLower:usernameLower,
-        displayName:displayName,
-        displayNameLower:displayNameLower,
-        bio:bio,
-        photoURL:photoURL,
-        createdAt:serverTimestamp(),
-        updatedAt:serverTimestamp()
-      }
-    );
-
-  });
-
-}
-
-
-/* =========================================================
-   LOAD PROFILE
-========================================================= */
-
-async function loadProfile(user){
-
-  const userRef =
-    doc(db,"users",user.uid);
-
-  const snap =
-    await getDoc(userRef);
-
-  if(snap.exists()){
-
-    currentProfile = snap.data();
-
-    return true;
-
-  }
-
-  return false;
-}
-
-
-/* =========================================================
-   GOOGLE FIRST-TIME PROFILE
-========================================================= */
-
-async function setupGoogleProfile(user){
-
-  profileSetupMode = true;
-
-  currentProfile = null;
-
-  profileModalTitle.textContent =
-    "Create your Alteo profile";
-
-  editUsername.value = "";
-  editDisplayName.value =
-    user.displayName ||
-    "";
-
-  editBio.value = "";
-
-  selectedPhotoData =
-    user.photoURL || null;
-
-  setAvatar(
-    editAvatar,
-    {
-      displayName:user.displayName || "A",
-      photoURL:user.photoURL || ""
-    }
-  );
-
-  clearProfileError();
-
-  profileModal.style.display = "flex";
-
-}
-
-
-/* =========================================================
-   SAVE PROFILE
-========================================================= */
-
-async function saveProfile(){
-
-  if(!currentUser) return;
-
-  clearProfileError();
-
-  const username =
-    editUsername.value.trim();
-
-  const displayName =
-    editDisplayName.value.trim();
-
-  const bio =
-    editBio.value.trim();
-
-  if(!validUsername(username)){
-
-    showProfileError(
-      "Username must be 3–20 characters and only use letters, numbers or underscores."
-    );
-
-    return;
-  }
-
-  if(!validDisplayName(displayName)){
-
-    showProfileError(
-      "Display name must be between 2 and 30 characters."
-    );
-
-    return;
-  }
-
-  saveProfileBtn.disabled = true;
-  saveProfileBtn.textContent = "Saving...";
-
-  try{
-
-    const usernameLower =
-      normalizeUsername(username);
-
-    const displayNameLower =
-      normalizeDisplayName(displayName);
-
-    const userRef =
-      doc(db,"users",currentUser.uid);
-
-    /*
-      FIRST PROFILE
-    */
-
-    if(!currentProfile){
-
-      await createProfileAtomically(
-        currentUser,
-        username,
-        displayName,
-        bio,
-        selectedPhotoData || ""
-      );
-
-    }else{
-
-      const oldUsername =
-        currentProfile.usernameLower ||
-        normalizeUsername(currentProfile.username || "");
-
-      const oldDisplayName =
-        currentProfile.displayNameLower ||
-        normalizeDisplayName(currentProfile.displayName || "");
-
-      const usernameChanged =
-        usernameLower !== oldUsername;
-
-      const displayNameChanged =
-        displayNameLower !== oldDisplayName;
-
-      const newUsernameRef =
-        doc(db,"usernames",usernameLower);
-
-      const newDisplayNameRef =
-        doc(db,"displayNames",displayNameLower);
-
-      const oldUsernameRef =
-        doc(db,"usernames",oldUsername);
-
-      const oldDisplayNameRef =
-        doc(db,"displayNames",oldDisplayName);
+      const uid = credential.user.uid;
 
       await runTransaction(db,async transaction=>{
 
-        if(usernameChanged){
+        const usernameRef =
+          doc(db,"usernames",usernameLower);
 
-          const usernameSnap =
-            await transaction.get(newUsernameRef);
+        const displayRef =
+          doc(db,"displayNames",displayNameLower);
 
-          if(
-            usernameSnap.exists() &&
-            usernameSnap.data().uid !== currentUser.uid
-          ){
+        const usernameSnap =
+          await transaction.get(usernameRef);
 
-            throw new Error(
-              "That username is already taken."
-            );
+        const displaySnap =
+          await transaction.get(displayRef);
 
-          }
-
+        if(usernameSnap.exists()){
+          throw new Error("USERNAME_TAKEN");
         }
 
-        if(displayNameChanged){
-
-          const displayNameSnap =
-            await transaction.get(newDisplayNameRef);
-
-          if(
-            displayNameSnap.exists() &&
-            displayNameSnap.data().uid !== currentUser.uid
-          ){
-
-            throw new Error(
-              "That display name is already taken."
-            );
-
-          }
-
+        if(displaySnap.exists()){
+          throw new Error("DISPLAY_TAKEN");
         }
 
-        if(usernameChanged){
+        transaction.set(usernameRef,{
+          uid,
+          username,
+          createdAt:serverTimestamp()
+        });
 
-          transaction.set(
-            newUsernameRef,
-            {
-              uid:currentUser.uid,
-              createdAt:serverTimestamp()
-            }
-          );
+        transaction.set(displayRef,{
+          uid,
+          displayName,
+          createdAt:serverTimestamp()
+        });
 
-          transaction.delete(
-            oldUsernameRef
-          );
-
-        }
-
-        if(displayNameChanged){
-
-          transaction.set(
-            newDisplayNameRef,
-            {
-              uid:currentUser.uid,
-              createdAt:serverTimestamp()
-            }
-          );
-
-          transaction.delete(
-            oldDisplayNameRef
-          );
-
-        }
-
-        transaction.update(
-          userRef,
+        transaction.set(
+          doc(db,"users",uid),
           {
-            username:username,
-            usernameLower:usernameLower,
-            displayName:displayName,
-            displayNameLower:displayNameLower,
-            bio:bio,
-            photoURL:selectedPhotoData || "",
-            updatedAt:serverTimestamp()
+            uid,
+            username,
+            usernameLower,
+            displayName,
+            displayNameLower,
+            bio:"",
+            photoURL:"",
+            createdAt:serverTimestamp(),
+            followersCount:0,
+            followingCount:0,
+            postsCount:0
           }
         );
 
       });
 
-    }
-
-    await updateProfile(
-      currentUser,
-      {
-        displayName:displayName,
-        photoURL:selectedPhotoData || null
-      }
-    );
-
-    await loadProfile(currentUser);
-
-    profileSetupMode = false;
-
-    closeModal();
-
-    updateAllUI();
-
-    showToast("Profile updated");
-
-  }catch(error){
-
-    console.error(error);
-
-    showProfileError(
-      error.message ||
-      "Could not save your profile."
-    );
-
-  }finally{
-
-    saveProfileBtn.disabled = false;
-    saveProfileBtn.textContent =
-      "Save changes";
-
-  }
-
-}
-
-
-/* =========================================================
-   PROFILE PICTURE
-   FIRESTORE ONLY
-========================================================= */
-
-photoInput.addEventListener("change",event=>{
-
-  const file =
-    event.target.files?.[0];
-
-  if(!file) return;
-
-  if(!file.type.startsWith("image/")){
-
-    showProfileError(
-      "Please select an image."
-    );
-
-    return;
-  }
-
-  /*
-    Limit original file size before processing.
-    The final Base64 image will be much smaller.
-  */
-
-  if(file.size > 8 * 1024 * 1024){
-
-    showProfileError(
-      "That image is too large. Choose an image under 8 MB."
-    );
-
-    return;
-  }
-
-  compressImage(file)
-    .then(dataURL=>{
-
-      selectedPhotoData = dataURL;
-
-      editAvatar.innerHTML =
-        `<img src="${dataURL}" alt="">`;
-
-    })
-    .catch(error=>{
-
-      console.error(error);
-
-      showProfileError(
-        "Could not process that image."
-      );
-
-    });
-
-});
-
-
-function compressImage(file){
-
-  return new Promise((resolve,reject)=>{
-
-    const reader =
-      new FileReader();
-
-    reader.onload = event=>{
-
-      const img =
-        new Image();
-
-      img.onload = ()=>{
-
-        const maxSize = 420;
-
-        let width =
-          img.width;
-
-        let height =
-          img.height;
-
-        if(width > height){
-
-          if(width > maxSize){
-
-            height =
-              Math.round(
-                height * maxSize / width
-              );
-
-            width = maxSize;
-
-          }
-
-        }else{
-
-          if(height > maxSize){
-
-            width =
-              Math.round(
-                width * maxSize / height
-              );
-
-            height = maxSize;
-
-          }
-
-        }
-
-        const canvas =
-          document.createElement("canvas");
-
-        canvas.width = width;
-        canvas.height = height;
-
-        const ctx =
-          canvas.getContext("2d");
-
-        ctx.drawImage(
-          img,
-          0,
-          0,
-          width,
-          height
-        );
-
-        /*
-          JPEG keeps the Firestore document
-          much smaller than the original image.
-        */
-
-        const dataURL =
-          canvas.toDataURL(
-            "image/jpeg",
-            .72
-          );
-
-        /*
-          Safety check.
-          Firestore document size is ~1 MiB.
-        */
-
-        if(dataURL.length > 700000){
-
-          const smaller =
-            canvas.toDataURL(
-              "image/jpeg",
-              .5
-            );
-
-          resolve(smaller);
-
-        }else{
-
-          resolve(dataURL);
-
-        }
-
-      };
-
-      img.onerror =
-        reject;
-
-      img.src =
-        event.target.result;
-
-    };
-
-    reader.onerror =
-      reject;
-
-    reader.readAsDataURL(file);
-
-  });
-
-}
-
-
-/* =========================================================
-   OPEN / CLOSE PROFILE
-========================================================= */
-
-function openProfileModal(){
-
-  profileSetupMode = false;
-
-  profileModalTitle.textContent =
-    "Edit profile";
-
-  clearProfileError();
-
-  if(currentProfile){
-
-    editUsername.value =
-      currentProfile.username || "";
-
-    editDisplayName.value =
-      currentProfile.displayName || "";
-
-    editBio.value =
-      currentProfile.bio || "";
-
-    selectedPhotoData =
-      currentProfile.photoURL || "";
-
-    setAvatar(
-      editAvatar,
-      currentProfile
-    );
-
-  }
-
-  profileModal.style.display = "flex";
-}
-
-
-function closeModal(){
-
-  profileModal.style.display = "none";
-
-  clearProfileError();
-
-}
-
-
-closeProfileModal.addEventListener(
-  "click",
-  closeModal
-);
-
-
-profileModal.addEventListener("click",event=>{
-
-  if(event.target === profileModal){
-
-    if(!profileSetupMode){
-
-      closeModal();
+      await updateProfile(credential.user,{
+        displayName
+      });
+
+      toast("Account created");
 
     }
 
-  }
+  }catch(err){
 
+    console.error(err);
+
+    let message = err.message || "Something went wrong.";
+
+    if(message === "USERNAME_TAKEN")
+      message = "That username is already taken.";
+
+    if(message === "DISPLAY_TAKEN")
+      message = "That display name is already taken.";
+
+    if(err.code === "auth/email-already-in-use")
+      message = "That email is already registered.";
+
+    if(err.code === "auth/invalid-credential")
+      message = "Incorrect email or password.";
+
+    if(err.code === "auth/popup-closed-by-user")
+      message = "Google sign-in was cancelled.";
+
+    $("authError").textContent = message;
+  }
 });
 
 
-saveProfileBtn.addEventListener(
-  "click",
-  saveProfile
-);
+$("googleBtn").onclick = async ()=>{
 
-
-/* =========================================================
-   LOGOUT
-========================================================= */
-
-logoutBtn.addEventListener("click",async()=>{
+  $("authError").textContent = "";
 
   try{
 
-    await signOut(auth);
+    await signInWithPopup(auth,provider);
 
-    closeModal();
+  }catch(err){
 
-    showToast("Logged out");
+    console.error(err);
 
-  }catch(error){
+    if(
+      err.code === "auth/popup-blocked" ||
+      err.code === "auth/operation-not-supported-in-this-environment"
+    ){
 
-    console.error(error);
+      await signInWithRedirect(auth,provider);
+
+    }else{
+
+      $("authError").textContent =
+        err.message || "Google sign-in failed.";
+
+    }
+
+  }
+};
+
+getRedirectResult(auth).catch(console.error);
+
+
+/* AUTH STATE */
+
+onAuthStateChanged(auth,async user=>{
+
+  currentUser = user;
+
+  if(!user){
+
+    $("auth").classList.remove("hidden");
+    $("app").classList.add("hidden");
+
+    return;
+  }
+
+  try{
+
+    const snap =
+      await getDoc(doc(db,"users",user.uid));
+
+    if(!snap.exists()){
+
+      await setupGoogleProfile(user);
+
+    }else{
+
+      currentProfile = snap.data();
+
+    }
+
+    $("auth").classList.add("hidden");
+    $("app").classList.remove("hidden");
+
+    updateGlobalProfileUI();
+
+    startFeedListener();
+    startNotificationsListener();
+    startConversationListener();
+
+    goPage("home");
+
+  }catch(err){
+
+    console.error(err);
+
+    toast("Could not load your profile.");
 
   }
 
 });
 
 
-/* =========================================================
-   UI UPDATE
-========================================================= */
+/* GOOGLE PROFILE SETUP */
 
-function updateAllUI(){
+async function setupGoogleProfile(user){
+
+  const suggested =
+    (user.displayName || "user")
+      .replace(/[^a-zA-Z0-9_]/g,"")
+      .slice(0,18)
+      .toLowerCase() || "user";
+
+  openProfileSetupModal(
+    user,
+    suggested
+  );
+}
+
+
+function openProfileSetupModal(user,suggested){
+
+  $("modalRoot").innerHTML = `
+
+    <div class="modal-wrap">
+
+      <div class="modal">
+
+        <div class="modal-head">
+          <div class="modal-title">
+            Finish your profile
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Username</label>
+          <input id="setupUsername"
+                 value="${esc(suggested)}"
+                 maxlength="20">
+        </div>
+
+        <div class="field">
+          <label>Display name</label>
+          <input id="setupDisplay"
+                 value="${esc(user.displayName || "")}"
+                 maxlength="30">
+        </div>
+
+        <div id="setupError" class="error"></div>
+
+        <button id="setupSave"
+                class="primary">
+          Continue
+        </button>
+
+      </div>
+
+    </div>
+  `;
+
+  $("setupSave").onclick = async ()=>{
+
+    const username =
+      $("setupUsername").value.trim();
+
+    const displayName =
+      $("setupDisplay").value.trim();
+
+    const usernameLower =
+      username.toLowerCase();
+
+    const displayNameLower =
+      displayName.normalize("NFKC").toLowerCase();
+
+    if(!/^[a-zA-Z0-9_]{3,20}$/.test(username)){
+      $("setupError").textContent =
+        "Username must be 3–20 characters.";
+      return;
+    }
+
+    if(displayName.length < 2 || displayName.length > 30){
+      $("setupError").textContent =
+        "Display name must be 2–30 characters.";
+      return;
+    }
+
+    try{
+
+      await runTransaction(db,async transaction=>{
+
+        const usernameRef =
+          doc(db,"usernames",usernameLower);
+
+        const displayRef =
+          doc(db,"displayNames",displayNameLower);
+
+        const [u,d] = await Promise.all([
+          transaction.get(usernameRef),
+          transaction.get(displayRef)
+        ]);
+
+        if(u.exists()) throw new Error("USERNAME_TAKEN");
+        if(d.exists()) throw new Error("DISPLAY_TAKEN");
+
+        transaction.set(usernameRef,{
+          uid:user.uid,
+          username,
+          createdAt:serverTimestamp()
+        });
+
+        transaction.set(displayRef,{
+          uid:user.uid,
+          displayName,
+          createdAt:serverTimestamp()
+        });
+
+        transaction.set(
+          doc(db,"users",user.uid),
+          {
+            uid:user.uid,
+            username,
+            usernameLower,
+            displayName,
+            displayNameLower,
+            bio:"",
+            photoURL:user.photoURL || "",
+            createdAt:serverTimestamp(),
+            followersCount:0,
+            followingCount:0,
+            postsCount:0
+          }
+        );
+
+      });
+
+      await updateProfile(user,{
+        displayName
+      });
+
+      currentProfile =
+        (await getDoc(
+          doc(db,"users",user.uid)
+        )).data();
+
+      $("modalRoot").innerHTML = "";
+
+      updateGlobalProfileUI();
+
+      toast("Profile created");
+
+    }catch(err){
+
+      $("setupError").textContent =
+        err.message === "USERNAME_TAKEN"
+          ? "Username already taken."
+          : err.message === "DISPLAY_TAKEN"
+          ? "Display name already taken."
+          : err.message;
+
+    }
+
+  };
+}
+
+
+/* GLOBAL PROFILE */
+
+function updateGlobalProfileUI(){
 
   if(!currentProfile) return;
 
-  setAvatar(
-    sideAvatar,
-    currentProfile
-  );
+  $("rightName").textContent =
+    currentProfile.displayName || "User";
 
-  setAvatar(
-    composerAvatar,
-    currentProfile
-  );
+  $("rightHandle").textContent =
+    "@" + (currentProfile.username || "user");
 
-  setAvatar(
-    profileAvatar,
-    currentProfile
-  );
+  $("composerAvatar").innerHTML =
+    currentProfile.photoURL
+      ? `<img src="${currentProfile.photoURL}" alt="">`
+      : esc(initials(currentProfile.displayName));
 
-  sideDisplay.textContent =
-    currentProfile.displayName ||
-    "Alteo user";
-
-  sideUsername.textContent =
-    "@" +
-    (currentProfile.username || "");
-
-  profileName.textContent =
-    currentProfile.displayName ||
-    "";
-
-  profileUsername.textContent =
-    "@" +
-    (currentProfile.username || "");
-
-  profileBio.textContent =
-    currentProfile.bio ||
-    "";
-
+  $("rightAvatar").innerHTML =
+    currentProfile.photoURL
+      ? `<img src="${currentProfile.photoURL}" alt="">`
+      : esc(initials(currentProfile.displayName));
 }
 
 
-/* =========================================================
-   NAVIGATION
-========================================================= */
+/* NAVIGATION */
 
-function openPage(page){
+document.querySelectorAll("[data-page]").forEach(button=>{
 
-  const pages = [
-    "home",
-    "search",
-    "profile"
-  ];
+  button.addEventListener("click",()=>{
 
-  pages.forEach(name=>{
-
-    const element =
-      document.getElementById(
-        "page-" + name
-      );
-
-    if(element){
-
-      element.classList.toggle(
-        "hidden",
-        name !== page
-      );
-
-    }
+    goPage(button.dataset.page);
 
   });
-
-  const titles = {
-    home:"Home",
-    search:"Discover",
-    profile:"Profile"
-  };
-
-  pageTitle.textContent =
-    titles[page] || "Alteo";
-
-  document.querySelectorAll(
-    ".nav-btn[data-page], .mobile-nav button[data-page]"
-  ).forEach(button=>{
-
-    button.classList.toggle(
-      "active",
-      button.dataset.page === page
-    );
-
-  });
-
-}
-
-
-document.querySelectorAll(
-  ".nav-btn[data-page], .mobile-nav button[data-page]"
-).forEach(button=>{
-
-  button.addEventListener(
-    "click",
-    ()=>{
-      openPage(button.dataset.page);
-    }
-  );
 
 });
 
 
-document.getElementById(
-  "editProfileBtn"
-).addEventListener(
-  "click",
-  openProfileModal
-);
+function goPage(page,uid=null){
 
+  currentPage = page;
 
-document.getElementById(
-  "sidebarProfile"
-).addEventListener(
-  "click",
-  ()=>{
-    openPage("profile");
+  document.querySelectorAll(".page")
+    .forEach(x=>x.classList.add("hidden"));
+
+  const target = $("page-" + page);
+
+  if(target)
+    target.classList.remove("hidden");
+
+  document.querySelectorAll("[data-page]")
+    .forEach(x=>{
+      x.classList.toggle(
+        "active",
+        x.dataset.page === page
+      );
+    });
+
+  const titles = {
+    home:"Home",
+    discover:"Discover",
+    notifications:"Notifications",
+    messages:"Messages",
+    profile:"Profile",
+    settings:"Settings"
+  };
+
+  $("pageTitle").textContent =
+    titles[page] || "Alteo";
+
+  if(page === "profile"){
+
+    currentProfileViewedUid =
+      uid || currentUser?.uid;
+
+    loadProfile(
+      currentProfileViewedUid
+    );
   }
-);
 
-
-document.getElementById(
-  "settingsBtn"
-).addEventListener(
-  "click",
-  openProfileModal
-);
-
-
-document.getElementById(
-  "mobileSettings"
-).addEventListener(
-  "click",
-  openProfileModal
-);
-
-
-/* =========================================================
-   CREATE POST
-========================================================= */
-
-createPostBtn.addEventListener("click",async()=>{
-
-  if(!currentUser || !currentProfile){
-
-    showToast("Create your profile first.");
-
-    return;
+  if(page === "discover"){
+    $("userSearch").focus();
   }
+}
+
+
+/* POST COUNTER */
+
+$("postText").addEventListener("input",()=>{
+
+  $("postCount").textContent =
+    `${$("postText").value.length}/1000`;
+
+});
+
+
+/* IMAGE COMPRESSION */
+
+async function compressImage(file){
+
+  if(file.size > 8 * 1024 * 1024){
+    throw new Error(
+      "Image must be smaller than 8 MB."
+    );
+  }
+
+  const data =
+    await new Promise((resolve,reject)=>{
+
+      const reader = new FileReader();
+
+      reader.onload =
+        ()=>resolve(reader.result);
+
+      reader.onerror =
+        ()=>reject(new Error("Could not read image."));
+
+      reader.readAsDataURL(file);
+
+    });
+
+  const img =
+    await new Promise((resolve,reject)=>{
+
+      const image = new Image();
+
+      image.onload = ()=>resolve(image);
+
+      image.onerror =
+        ()=>reject(new Error("Invalid image."));
+
+      image.src = data;
+
+    });
+
+  const max = 900;
+
+  let width = img.width;
+  let height = img.height;
+
+  if(width > max || height > max){
+
+    const ratio =
+      Math.min(max/width,max/height);
+
+    width = Math.round(width*ratio);
+    height = Math.round(height*ratio);
+  }
+
+  const canvas =
+    document.createElement("canvas");
+
+  canvas.width = width;
+  canvas.height = height;
+
+  const ctx = canvas.getContext("2d");
+
+  ctx.drawImage(
+    img,
+    0,
+    0,
+    width,
+    height
+  );
+
+  let result =
+    canvas.toDataURL("image/jpeg",.68);
+
+  if(result.length > 700000){
+
+    result =
+      canvas.toDataURL("image/jpeg",.48);
+
+  }
+
+  if(result.length > 900000){
+
+    throw new Error(
+      "That image is too large after compression. Try a smaller image."
+    );
+  }
+
+  return result;
+}
+
+
+/* CREATE POST */
+
+$("postImageInput").addEventListener("change",()=>{
+
+  const file =
+    $("postImageInput").files[0];
+
+  if(file)
+    toast("Image selected");
+
+});
+
+
+$("publishBtn").onclick = async ()=>{
+
+  if(!currentUser) return;
 
   const text =
-    postInput.value.trim();
+    $("postText").value.trim();
 
-  if(!text){
+  const file =
+    $("postImageInput").files[0];
 
-    showToast("Write something first.");
+  if(!text && !file){
 
-    return;
-  }
-
-  if(text.length > 1000){
-
-    showToast("Post is too long.");
+    toast("Write something or add an image.");
 
     return;
   }
-
-  createPostBtn.disabled = true;
-  createPostBtn.textContent = "Posting...";
 
   try{
+
+    $("publishBtn").disabled = true;
+    $("publishBtn").textContent = "Posting...";
+
+    let imageURL = "";
+
+    if(file){
+
+      imageURL =
+        await compressImage(file);
+
+    }
 
     await addDoc(
       collection(db,"posts"),
@@ -2874,297 +2155,924 @@ createPostBtn.addEventListener("click",async()=>{
         username:currentProfile.username,
         displayName:currentProfile.displayName,
         photoURL:currentProfile.photoURL || "",
-        text:text,
-        createdAt:serverTimestamp()
+        text,
+        imageURL,
+        createdAt:serverTimestamp(),
+        likeCount:0,
+        commentCount:0,
+        shareCount:0
       }
     );
 
-    postInput.value = "";
-
-    showToast("Posted");
-
-  }catch(error){
-
-    console.error(error);
-
-    showToast(
-      "Could not create the post."
+    await updateDoc(
+      doc(db,"users",currentUser.uid),
+      {
+        postsCount:increment(1)
+      }
     );
+
+    $("postText").value = "";
+    $("postImageInput").value = "";
+    $("postCount").textContent = "0/1000";
+
+    toast("Posted");
+
+  }catch(err){
+
+    console.error(err);
+    toast(err.message || "Could not create post.");
 
   }finally{
 
-    createPostBtn.disabled = false;
-    createPostBtn.textContent = "Post";
+    $("publishBtn").disabled = false;
+    $("publishBtn").textContent = "Post";
 
   }
+};
 
-});
 
+/* FEED */
 
-/* =========================================================
-   FEED
-========================================================= */
+function startFeedListener(){
 
-function startFeed(){
+  if(unsubFeed)
+    unsubFeed();
 
-  if(unsubscribePosts){
-
-    unsubscribePosts();
-
-    unsubscribePosts = null;
-
-  }
-
-  const postsQuery =
+  const q =
     query(
       collection(db,"posts"),
       orderBy("createdAt","desc"),
       limit(50)
     );
 
-  unsubscribePosts =
+  unsubFeed =
     onSnapshot(
-      postsQuery,
+      q,
       snapshot=>{
 
-        feed.innerHTML = "";
+        const posts =
+          snapshot.docs.map(d=>({
+            id:d.id,
+            ...d.data()
+          }));
 
-        if(snapshot.empty){
-
-          feed.innerHTML = `
-            <div class="empty">
-              Be the first person to post.
-            </div>
-          `;
-
-          return;
-        }
-
-        snapshot.forEach(docSnap=>{
-
-          const post =
-            docSnap.data();
-
-          renderPost(
-            docSnap.id,
-            post
-          );
-
-        });
+        renderFeed(posts);
 
       },
-      error=>{
+      err=>{
 
-        console.error(error);
+        console.error(err);
 
-        feed.innerHTML = `
-          <div class="empty">
-            Couldn't load the feed.
+        toast(
+          "Feed could not load. Check Firestore indexes/rules."
+        );
+
+      }
+    );
+}
+
+
+async function hasLiked(postId){
+
+  if(!currentUser) return false;
+
+  const snap =
+    await getDoc(
+      doc(
+        db,
+        "posts",
+        postId,
+        "likes",
+        currentUser.uid
+      )
+    );
+
+  return snap.exists();
+}
+
+
+async function renderFeed(posts){
+
+  const feed = $("feed");
+
+  if(!posts.length){
+
+    feed.innerHTML = `
+      <div class="card" style="padding:40px;text-align:center">
+        <strong>No posts yet.</strong>
+        <div class="muted" style="margin-top:6px">
+          Be the first person to post.
+        </div>
+      </div>
+    `;
+
+    return;
+  }
+
+  feed.innerHTML = posts.map(post=>{
+
+    const profile = {
+      displayName:post.displayName,
+      username:post.username,
+      photoURL:post.photoURL
+    };
+
+    return `
+      <article class="card post"
+               data-post="${post.id}">
+
+        <div class="post-head">
+
+          <div onclick="window.openProfile('${post.uid}')">
+            ${avatarHTML(profile)}
           </div>
-        `;
+
+          <div class="post-user">
+
+            <div class="post-name"
+                 onclick="window.openProfile('${post.uid}')">
+              ${esc(post.displayName || post.username)}
+            </div>
+
+            <div class="post-handle">
+              @${esc(post.username)}
+              ·
+              ${timeAgo(post.createdAt)}
+            </div>
+
+          </div>
+
+          ${
+            post.uid === currentUser.uid
+            ? `
+              <button class="more-btn"
+                      onclick="window.deletePost('${post.id}')">
+                <svg><use href="#i-trash"></use></svg>
+              </button>
+            `
+            : ""
+          }
+
+        </div>
+
+        ${
+          post.text
+          ? `<div class="post-text">${esc(post.text)}</div>`
+          : ""
+        }
+
+        ${
+          post.imageURL
+          ? `<img class="post-image"
+                  src="${post.imageURL}"
+                  alt="Post image">`
+          : ""
+        }
+
+        <div class="post-actions">
+
+          <button class="action like-btn"
+                  data-id="${post.id}">
+
+            <svg><use href="#i-heart"></use></svg>
+
+            <span class="like-count">
+              ${post.likeCount || 0}
+            </span>
+
+          </button>
+
+          <button class="action"
+                  onclick="window.openComments('${post.id}')">
+
+            <svg><use href="#i-message"></use></svg>
+
+            <span>
+              ${post.commentCount || 0}
+            </span>
+
+          </button>
+
+          <button class="action"
+                  onclick="window.sharePost('${post.id}')">
+
+            <svg><use href="#i-send"></use></svg>
+
+            <span>
+              ${post.shareCount || 0}
+            </span>
+
+          </button>
+
+        </div>
+
+      </article>
+    `;
+
+  }).join("");
+
+  document.querySelectorAll(".like-btn")
+    .forEach(btn=>{
+
+      checkLikeButton(btn);
+
+      btn.onclick = async ()=>{
+
+        await toggleLike(btn.dataset.id);
+
+      };
+
+    });
+
+}
+
+
+async function checkLikeButton(button){
+
+  try{
+
+    const liked =
+      await hasLiked(button.dataset.id);
+
+    if(liked)
+      button.classList.add("liked");
+
+  }catch{}
+}
+
+
+/* REAL LIKES */
+
+async function toggleLike(postId){
+
+  if(!currentUser) return;
+
+  const likeRef =
+    doc(
+      db,
+      "posts",
+      postId,
+      "likes",
+      currentUser.uid
+    );
+
+  const postRef =
+    doc(db,"posts",postId);
+
+  try{
+
+    await runTransaction(
+      db,
+      async transaction=>{
+
+        const likeSnap =
+          await transaction.get(likeRef);
+
+        if(likeSnap.exists()){
+
+          transaction.delete(likeRef);
+
+          transaction.update(
+            postRef,
+            {
+              likeCount:increment(-1)
+            }
+          );
+
+        }else{
+
+          transaction.set(
+            likeRef,
+            {
+              uid:currentUser.uid,
+              createdAt:serverTimestamp()
+            }
+          );
+
+          transaction.update(
+            postRef,
+            {
+              likeCount:increment(1)
+            }
+          );
+
+        }
 
       }
     );
 
+    const postSnap =
+      await getDoc(postRef);
+
+    if(postSnap.exists()){
+
+      const post = postSnap.data();
+
+      if(
+        post.uid !== currentUser.uid
+      ){
+
+        const liked =
+          await getDoc(likeRef);
+
+        if(liked.exists()){
+
+          await createNotification(
+            post.uid,
+            "like",
+            `${currentProfile.displayName} liked your post.`,
+            postId
+          );
+
+        }
+
+      }
+
+    }
+
+  }catch(err){
+
+    console.error(err);
+    toast("Could not update like.");
+
+  }
 }
 
 
-function renderPost(id,post){
+/* COMMENTS */
 
-  const article =
-    document.createElement("article");
+window.openComments = async postId=>{
 
-  article.className = "post";
+  $("modalRoot").innerHTML = `
 
-  const date =
-    post.createdAt?.toDate
-      ? post.createdAt.toDate()
-      : null;
+    <div class="modal-wrap"
+         onclick="if(event.target===this)window.closeModal()">
 
-  const time =
-    date
-      ? formatTime(date)
-      : "now";
+      <div class="modal">
 
-  const avatarHTML =
-    post.photoURL
-      ? `<div class="avatar">
-          <img src="${post.photoURL}" alt="" loading="lazy">
-         </div>`
-      : `<div class="avatar">
-          ${escapeHTML(
-            initials(
-              post.displayName ||
-              post.username
-            )
-          )}
-         </div>`;
+        <div class="modal-head">
 
-  article.innerHTML = `
+          <div class="modal-title">
+            Comments
+          </div>
 
-    <div class="post-head">
+          <button class="close"
+                  onclick="window.closeModal()">
+            <svg><use href="#i-x"></use></svg>
+          </button>
 
-      ${avatarHTML}
-
-      <div class="post-user">
-
-        <div class="post-display">
-          ${escapeHTML(
-            post.displayName ||
-            post.username ||
-            "Alteo user"
-          )}
         </div>
 
-        <div class="post-username">
-          @${escapeHTML(
-            post.username || ""
-          )}
+        <div id="commentsList">
+          Loading...
         </div>
+
+        <form id="commentForm"
+              class="comment-form">
+
+          <input id="commentInput"
+                 maxlength="500"
+                 placeholder="Write a comment..."
+                 required>
+
+          <button class="small-btn">
+            Send
+          </button>
+
+        </form>
 
       </div>
 
-      <div class="post-time">
-        ${time}
-      </div>
-
     </div>
-
-    <div class="post-content">
-      ${escapeHTML(post.text || "")}
-    </div>
-
-    <div class="post-actions">
-
-      <button class="post-action like-btn">
-        <svg><use href="#i-heart"></use></svg>
-        <span>0</span>
-      </button>
-
-      <button class="post-action">
-        <svg><use href="#i-comment"></use></svg>
-        <span>Reply</span>
-      </button>
-
-      <button class="post-action">
-        <svg><use href="#i-send"></use></svg>
-        <span>Share</span>
-      </button>
-
-    </div>
-
   `;
 
-  const likeButton =
-    article.querySelector(".like-btn");
-
-  likeButton.addEventListener(
-    "click",
-    ()=>{
-      likeButton.classList.toggle("liked");
-
-      const span =
-        likeButton.querySelector("span");
-
-      span.textContent =
-        likeButton.classList.contains("liked")
-          ? "1"
-          : "0";
-    }
-  );
-
-  feed.appendChild(article);
-
-}
-
-
-function formatTime(date){
-
-  const seconds =
-    Math.floor(
-      (Date.now() - date.getTime()) / 1000
+  const q =
+    query(
+      collection(
+        db,
+        "posts",
+        postId,
+        "comments"
+      ),
+      orderBy("createdAt","asc"),
+      limit(100)
     );
 
-  if(seconds < 10)
-    return "now";
+  onSnapshot(q,snapshot=>{
 
-  if(seconds < 60)
-    return seconds + "s";
+    const comments =
+      snapshot.docs.map(d=>({
+        id:d.id,
+        ...d.data()
+      }));
 
-  const minutes =
-    Math.floor(seconds / 60);
+    $("commentsList").innerHTML =
+      comments.length
+      ? comments.map(comment=>`
 
-  if(minutes < 60)
-    return minutes + "m";
+        <div class="comment">
 
-  const hours =
-    Math.floor(minutes / 60);
+          ${avatarHTML({
+            displayName:comment.displayName,
+            username:comment.username,
+            photoURL:comment.photoURL
+          },"36")}
 
-  if(hours < 24)
-    return hours + "h";
+          <div class="comment-body">
 
-  const days =
-    Math.floor(hours / 24);
+            <div class="comment-name">
+              ${esc(comment.displayName || comment.username)}
+            </div>
 
-  if(days < 7)
-    return days + "d";
+            <div class="comment-text">
+              ${esc(comment.text)}
+            </div>
 
-  return date.toLocaleDateString();
+            <div class="muted" style="margin-top:4px">
+              ${timeAgo(comment.createdAt)}
+            </div>
+
+          </div>
+
+          ${
+            comment.uid === currentUser.uid
+            ? `
+              <button class="more-btn"
+                      onclick="window.deleteComment('${postId}','${comment.id}')">
+                <svg><use href="#i-trash"></use></svg>
+              </button>
+            `
+            : ""
+          }
+
+        </div>
+
+      `).join("")
+      : `
+        <div class="muted"
+             style="text-align:center;padding:25px">
+          No comments yet.
+        </div>
+      `;
+
+  });
+
+  $("commentForm").onsubmit =
+    async e=>{
+
+      e.preventDefault();
+
+      const input =
+        $("commentInput");
+
+      const text =
+        input.value.trim();
+
+      if(!text) return;
+
+      try{
+
+        await addDoc(
+          collection(
+            db,
+            "posts",
+            postId,
+            "comments"
+          ),
+          {
+            uid:currentUser.uid,
+            username:currentProfile.username,
+            displayName:currentProfile.displayName,
+            photoURL:currentProfile.photoURL || "",
+            text,
+            createdAt:serverTimestamp()
+          }
+        );
+
+        await updateDoc(
+          doc(db,"posts",postId),
+          {
+            commentCount:increment(1)
+          }
+        );
+
+        const postSnap =
+          await getDoc(
+            doc(db,"posts",postId)
+          );
+
+        if(
+          postSnap.exists() &&
+          postSnap.data().uid !== currentUser.uid
+        ){
+
+          await createNotification(
+            postSnap.data().uid,
+            "comment",
+            `${currentProfile.displayName} commented on your post.`,
+            postId
+          );
+
+        }
+
+        input.value = "";
+
+      }catch(err){
+
+        console.error(err);
+        toast("Could not comment.");
+
+      }
+
+    };
+
+};
+
+
+window.deleteComment =
+async(postId,commentId)=>{
+
+  try{
+
+    await deleteDoc(
+      doc(
+        db,
+        "posts",
+        postId,
+        "comments",
+        commentId
+      )
+    );
+
+    await updateDoc(
+      doc(db,"posts",postId),
+      {
+        commentCount:increment(-1)
+      }
+    );
+
+    toast("Comment deleted.");
+
+  }catch(err){
+
+    console.error(err);
+    toast("Could not delete comment.");
+
+  }
+
+};
+
+
+/* SHARING */
+
+window.sharePost = async postId=>{
+
+  try{
+
+    const shareRef =
+      doc(
+        db,
+        "posts",
+        postId,
+        "shares",
+        currentUser.uid
+      );
+
+    const existing =
+      await getDoc(shareRef);
+
+    if(existing.exists()){
+
+      toast("You already shared this post.");
+      return;
+
+    }
+
+    await setDoc(
+      shareRef,
+      {
+        uid:currentUser.uid,
+        createdAt:serverTimestamp()
+      }
+    );
+
+    await updateDoc(
+      doc(db,"posts",postId),
+      {
+        shareCount:increment(1)
+      }
+    );
+
+    const postSnap =
+      await getDoc(
+        doc(db,"posts",postId)
+      );
+
+    if(
+      postSnap.exists() &&
+      postSnap.data().uid !== currentUser.uid
+    ){
+
+      await createNotification(
+        postSnap.data().uid,
+        "share",
+        `${currentProfile.displayName} shared your post.`,
+        postId
+      );
+
+    }
+
+    toast("Post shared.");
+
+  }catch(err){
+
+    console.error(err);
+    toast("Could not share post.");
+
+  }
+
+};
+
+
+/* DELETE POST */
+
+window.deletePost = async postId=>{
+
+  if(!confirm("Delete this post?"))
+    return;
+
+  try{
+
+    const postRef =
+      doc(db,"posts",postId);
+
+    const snap =
+      await getDoc(postRef);
+
+    if(
+      !snap.exists() ||
+      snap.data().uid !== currentUser.uid
+    ) return;
+
+    await deleteDoc(postRef);
+
+    await updateDoc(
+      doc(db,"users",currentUser.uid),
+      {
+        postsCount:increment(-1)
+      }
+    );
+
+    toast("Post deleted.");
+
+  }catch(err){
+
+    console.error(err);
+    toast("Could not delete post.");
+
+  }
+
+};
+
+
+/* NOTIFICATIONS */
+
+async function createNotification(
+  recipientUid,
+  type,
+  text,
+  postId=""
+){
+
+  if(!recipientUid || recipientUid === currentUser.uid)
+    return;
+
+  try{
+
+    await addDoc(
+      collection(db,"notifications"),
+      {
+        recipientUid,
+        senderUid:currentUser.uid,
+        senderName:currentProfile.displayName,
+        senderUsername:currentProfile.username,
+        senderPhotoURL:currentProfile.photoURL || "",
+        type,
+        text,
+        postId,
+        read:false,
+        createdAt:serverTimestamp()
+      }
+    );
+
+  }catch(err){
+
+    console.error("Notification error",err);
+
+  }
 }
 
 
-/* =========================================================
-   SEARCH USERS
-========================================================= */
+function startNotificationsListener(){
 
-let searchTimer = null;
+  if(unsubNotifications)
+    unsubNotifications();
 
-searchInput.addEventListener(
+  const q =
+    query(
+      collection(db,"notifications"),
+      where(
+        "recipientUid",
+        "==",
+        currentUser.uid
+      ),
+      orderBy("createdAt","desc"),
+      limit(50)
+    );
+
+  unsubNotifications =
+    onSnapshot(q,snapshot=>{
+
+      const items =
+        snapshot.docs.map(d=>({
+          id:d.id,
+          ...d.data()
+        }));
+
+      renderNotifications(items);
+
+    },err=>{
+
+      console.error(err);
+
+    });
+
+}
+
+
+function renderNotifications(items){
+
+  const root =
+    $("notificationsList");
+
+  if(!items.length){
+
+    root.innerHTML = `
+      <div class="muted"
+           style="padding:35px;text-align:center">
+        No notifications yet.
+      </div>
+    `;
+
+    return;
+  }
+
+  root.innerHTML =
+    items.map(item=>`
+
+      <div class="notification ${item.read ? "" : "unread"}"
+           onclick="window.openNotification('${item.id}','${item.postId || ""}')">
+
+        ${
+          !item.read
+          ? `<div class="notification-dot"></div>`
+          : `<div style="width:8px"></div>`
+        }
+
+        <div style="flex:1">
+
+          <div>
+            ${esc(item.text)}
+          </div>
+
+          <div class="muted"
+               style="margin-top:4px">
+            ${timeAgo(item.createdAt)}
+          </div>
+
+        </div>
+
+      </div>
+
+    `).join("");
+
+}
+
+
+window.openNotification =
+async(id,postId)=>{
+
+  try{
+
+    await updateDoc(
+      doc(db,"notifications",id),
+      {
+        read:true
+      }
+    );
+
+    if(postId){
+
+      goPage("home");
+
+      setTimeout(()=>{
+
+        document
+          .querySelector(`[data-post="${postId}"]`)
+          ?.scrollIntoView({
+            behavior:"smooth",
+            block:"center"
+          });
+
+      },200);
+
+    }
+
+  }catch(err){
+
+    console.error(err);
+
+  }
+
+};
+
+
+$("markNotificationsRead").onclick =
+async()=>{
+
+  try{
+
+    const q =
+      query(
+        collection(db,"notifications"),
+        where(
+          "recipientUid",
+          "==",
+          currentUser.uid
+        ),
+        where(
+          "read",
+          "==",
+          false
+        ),
+        limit(50)
+      );
+
+    const snapshot =
+      await getDocs(q);
+
+    await Promise.all(
+      snapshot.docs.map(item=>
+        updateDoc(item.ref,{
+          read:true
+        })
+      )
+    );
+
+    toast("Notifications marked as read.");
+
+  }catch(err){
+
+    console.error(err);
+    toast("Could not update notifications.");
+
+  }
+
+};
+
+
+/* SEARCH */
+
+let searchTimer;
+
+$("userSearch").addEventListener(
   "input",
   ()=>{
 
     clearTimeout(searchTimer);
 
-    const value =
-      searchInput.value.trim();
-
-    if(!value){
-
-      searchResults.innerHTML = `
-        <div class="empty">
-          Search for an Alteo user.
-        </div>
-      `;
-
-      return;
-    }
-
     searchTimer =
-      setTimeout(
-        ()=>searchUsers(value),
-        350
-      );
+      setTimeout(searchUsers,350);
 
   }
 );
 
 
-async function searchUsers(value){
+async function searchUsers(){
 
-  searchResults.innerHTML = `
-    <div class="empty">
-      Searching...
-    </div>
-  `;
+  const term =
+    $("userSearch").value
+      .trim()
+      .toLowerCase();
 
-  const normalized =
-    value.toLowerCase();
+  if(!term){
+
+    $("searchResults").innerHTML = "";
+    return;
+
+  }
 
   try{
-
-    /*
-      Prefix search for usernames.
-    */
 
     const usernameQuery =
       query(
@@ -3172,19 +3080,15 @@ async function searchUsers(value){
         where(
           "usernameLower",
           ">=",
-          normalized
+          term
         ),
         where(
           "usernameLower",
           "<=",
-          normalized + "\uf8ff"
+          term + "\uf8ff"
         ),
-        limit(10)
+        limit(15)
       );
-
-    /*
-      Prefix search for display names.
-    */
 
     const displayQuery =
       query(
@@ -3192,129 +3096,72 @@ async function searchUsers(value){
         where(
           "displayNameLower",
           ">=",
-          normalizeDisplayName(value)
+          term
         ),
         where(
           "displayNameLower",
           "<=",
-          normalizeDisplayName(value) + "\uf8ff"
+          term + "\uf8ff"
         ),
-        limit(10)
+        limit(15)
       );
 
-    const [
-      usernameSnap,
-      displaySnap
-    ] = await Promise.all([
-      getDocs(usernameQuery),
-      getDocs(displayQuery)
-    ]);
+    const [a,b] =
+      await Promise.all([
+        getDocs(usernameQuery),
+        getDocs(displayQuery)
+      ]);
 
-    const users = new Map();
+    const map = new Map();
 
-    usernameSnap.forEach(
-      snap=>{
-        users.set(
-          snap.id,
-          snap.data()
-        );
-      }
-    );
+    [...a.docs,...b.docs].forEach(d=>{
+      map.set(d.id,{
+        id:d.id,
+        ...d.data()
+      });
+    });
 
-    displaySnap.forEach(
-      snap=>{
-        users.set(
-          snap.id,
-          snap.data()
-        );
-      }
-    );
+    const users =
+      [...map.values()];
 
-    searchResults.innerHTML = "";
+    $("searchResults").innerHTML =
+      users.length
+      ? users.map(user=>`
 
-    if(users.size === 0){
+        <div class="user-result"
+             onclick="window.openProfile('${user.id}')">
 
-      searchResults.innerHTML = `
-        <div class="empty">
+          ${avatarHTML(user)}
+
+          <div class="user-info">
+
+            <div class="user-display">
+              ${esc(user.displayName)}
+            </div>
+
+            <div class="user-handle">
+              @${esc(user.username)}
+            </div>
+
+          </div>
+
+        </div>
+
+      `).join("")
+      : `
+        <div class="muted"
+             style="padding:20px;text-align:center">
           No users found.
         </div>
       `;
 
-      return;
-    }
+  }catch(err){
 
-    users.forEach(user=>{
+    console.error(err);
 
-      const item =
-        document.createElement("div");
-
-      item.className = "user-result";
-
-      const avatar =
-        document.createElement("div");
-
-      avatar.className = "avatar";
-
-      setAvatar(
-        avatar,
-        user
-      );
-
-      const info =
-        document.createElement("div");
-
-      info.className = "result-info";
-
-      info.innerHTML = `
-        <div class="result-name">
-          ${escapeHTML(
-            user.displayName ||
-            user.username
-          )}
-        </div>
-
-        <div class="result-username">
-          @${escapeHTML(
-            user.username || ""
-          )}
-        </div>
-      `;
-
-      item.appendChild(avatar);
-      item.appendChild(info);
-
-      item.addEventListener(
-        "click",
-        ()=>{
-          /*
-            For now clicking a user
-            takes you to the profile page.
-          */
-          openPage("profile");
-
-          if(user.uid === currentUser?.uid){
-
-            return;
-          }
-
-          showToast(
-            "Profile viewing is ready for the next update."
-          );
-
-        }
-      );
-
-      searchResults.appendChild(item);
-
-    });
-
-  }catch(error){
-
-    console.error(error);
-
-    searchResults.innerHTML = `
-      <div class="empty">
-        Search couldn't be completed.
+    $("searchResults").innerHTML = `
+      <div class="error">
+        Search failed. Firestore may require an index.
       </div>
     `;
 
@@ -3323,154 +3170,1163 @@ async function searchUsers(value){
 }
 
 
-/* =========================================================
-   PROFILE POST COUNT
-========================================================= */
+/* OTHER PROFILES */
 
-async function loadPostCount(){
+window.openProfile = uid=>{
 
-  if(!currentUser) return;
+  if(!uid) return;
+
+  goPage("profile",uid);
+
+};
+
+
+async function loadProfile(uid){
+
+  const profileRoot =
+    $("profileCard");
+
+  const postsRoot =
+    $("profilePosts");
+
+  profileRoot.innerHTML =
+    `<div style="padding:40px;text-align:center">Loading...</div>`;
+
+  postsRoot.innerHTML = "";
 
   try{
+
+    const snap =
+      await getDoc(
+        doc(db,"users",uid)
+      );
+
+    if(!snap.exists()){
+
+      profileRoot.innerHTML =
+        `<div style="padding:30px">User not found.</div>`;
+
+      return;
+
+    }
+
+    const profile = snap.data();
+
+    const isMe =
+      uid === currentUser.uid;
+
+    let following = false;
+
+    if(!isMe){
+
+      const followSnap =
+        await getDoc(
+          doc(
+            db,
+            "users",
+            uid,
+            "followers",
+            currentUser.uid
+          )
+        );
+
+      following = followSnap.exists();
+
+    }
+
+    profileRoot.innerHTML = `
+
+      <div class="profile-cover"></div>
+
+      <div class="profile-info">
+
+        <div class="profile-avatar">
+
+          ${
+            profile.photoURL
+            ? `<img src="${profile.photoURL}" alt="">`
+            : esc(initials(profile.displayName))
+          }
+
+        </div>
+
+        <div class="profile-name">
+          ${esc(profile.displayName)}
+        </div>
+
+        <div class="profile-handle">
+          @${esc(profile.username)}
+        </div>
+
+        ${
+          profile.bio
+          ? `<div class="profile-bio">${esc(profile.bio)}</div>`
+          : ""
+        }
+
+        <div class="stats">
+
+          <div class="stat">
+            <strong>${profile.postsCount || 0}</strong>
+            <span>Posts</span>
+          </div>
+
+          <div class="stat">
+            <strong>${profile.followersCount || 0}</strong>
+            <span>Followers</span>
+          </div>
+
+          <div class="stat">
+            <strong>${profile.followingCount || 0}</strong>
+            <span>Following</span>
+          </div>
+
+        </div>
+
+        <div class="profile-actions">
+
+          ${
+            isMe
+            ? `
+              <button class="outline-btn"
+                      onclick="window.openEditProfile()">
+                Edit profile
+              </button>
+            `
+            : `
+              <button
+                class="outline-btn ${following ? "following" : ""}"
+                onclick="window.toggleFollow('${uid}')">
+
+                ${following ? "Following" : "Follow"}
+
+              </button>
+
+              <button
+                class="outline-btn"
+                onclick="window.startDM('${uid}')">
+
+                Message
+
+              </button>
+            `
+          }
+
+        </div>
+
+      </div>
+    `;
+
 
     const postsQuery =
       query(
         collection(db,"posts"),
-        where(
-          "uid",
-          "==",
-          currentUser.uid
-        ),
-        limit(100)
+        where("uid","==",uid),
+        limit(50)
       );
 
-    const snap =
+    const postSnap =
       await getDocs(postsQuery);
 
-    postCount.textContent =
-      snap.size;
+    const posts =
+      postSnap.docs
+        .map(d=>({
+          id:d.id,
+          ...d.data()
+        }))
+        .sort(
+          (a,b)=>
+            (b.createdAt?.seconds || 0)
+            -
+            (a.createdAt?.seconds || 0)
+        );
 
-  }catch(error){
+    if(!posts.length){
 
-    console.error(error);
-
-  }
-
-}
-
-
-/* =========================================================
-   AUTH STATE
-========================================================= */
-
-onAuthStateChanged(
-  auth,
-  async user=>{
-
-    currentUser = user;
-
-    if(!user){
-
-      currentProfile = null;
-
-      if(unsubscribePosts){
-
-        unsubscribePosts();
-        unsubscribePosts = null;
-
-      }
-
-      appScreen.style.display = "none";
-      authScreen.style.display = "flex";
-
-      loader.style.opacity = "0";
-
-      setTimeout(
-        ()=>loader.style.display = "none",
-        450
-      );
+      postsRoot.innerHTML = `
+        <div class="card"
+             style="padding:30px;text-align:center">
+          <strong>No posts yet.</strong>
+        </div>
+      `;
 
       return;
-    }
-
-    try{
-
-      const exists =
-        await loadProfile(user);
-
-      if(!exists){
-
-        /*
-          New Google user needs to choose
-          their unique username/display name.
-        */
-
-        appScreen.style.display = "none";
-        authScreen.style.display = "none";
-
-        await setupGoogleProfile(user);
-
-      }else{
-
-        profileSetupMode = false;
-
-        authScreen.style.display = "none";
-        appScreen.style.display = "block";
-
-        updateAllUI();
-
-        startFeed();
-
-        loadPostCount();
-
-      }
-
-    }catch(error){
-
-      console.error(error);
-
-      showToast(
-        "Couldn't load your profile."
-      );
-
-    }finally{
-
-      loader.style.opacity = "0";
-
-      setTimeout(
-        ()=>loader.style.display = "none",
-        450
-      );
 
     }
+
+    postsRoot.innerHTML =
+      posts.map(post=>`
+
+        <article class="card post">
+
+          <div class="post-head">
+
+            ${avatarHTML(profile)}
+
+            <div class="post-user">
+
+              <div class="post-name">
+                ${esc(profile.displayName)}
+              </div>
+
+              <div class="post-handle">
+                @${esc(profile.username)}
+                ·
+                ${timeAgo(post.createdAt)}
+              </div>
+
+            </div>
+
+          </div>
+
+          ${
+            post.text
+            ? `<div class="post-text">${esc(post.text)}</div>`
+            : ""
+          }
+
+          ${
+            post.imageURL
+            ? `<img class="post-image"
+                    src="${post.imageURL}"
+                    alt="">`
+            : ""
+          }
+
+          <div class="post-actions">
+
+            <button class="action"
+                    onclick="window.openComments('${post.id}')">
+
+              <svg><use href="#i-message"></use></svg>
+
+              ${post.commentCount || 0}
+
+            </button>
+
+            <button class="action"
+                    onclick="window.sharePost('${post.id}')">
+
+              <svg><use href="#i-send"></use></svg>
+
+              ${post.shareCount || 0}
+
+            </button>
+
+          </div>
+
+        </article>
+
+      `).join("");
+
+  }catch(err){
+
+    console.error(err);
+
+    profileRoot.innerHTML =
+      `<div style="padding:30px">Could not load profile.</div>`;
 
   }
-);
-
-
-/* =========================================================
-   REDIRECT RESULT
-========================================================= */
-
-try{
-
-  await getRedirectResult(auth);
-
-}catch(error){
-
-  console.error(
-    "Google redirect:",
-    error
-  );
 
 }
 
 
-/* =========================================================
-   START
-========================================================= */
+/* FOLLOW SYSTEM */
 
-setAuthMode("login");
+window.toggleFollow = async targetUid=>{
+
+  if(targetUid === currentUser.uid)
+    return;
+
+  const followerRef =
+    doc(
+      db,
+      "users",
+      targetUid,
+      "followers",
+      currentUser.uid
+    );
+
+  const followingRef =
+    doc(
+      db,
+      "users",
+      currentUser.uid,
+      "following",
+      targetUid
+    );
+
+  try{
+
+    await runTransaction(
+      db,
+      async transaction=>{
+
+        const existing =
+          await transaction.get(followerRef);
+
+        if(existing.exists()){
+
+          transaction.delete(followerRef);
+          transaction.delete(followingRef);
+
+          transaction.update(
+            doc(db,"users",targetUid),
+            {
+              followersCount:increment(-1)
+            }
+          );
+
+          transaction.update(
+            doc(db,"users",currentUser.uid),
+            {
+              followingCount:increment(-1)
+            }
+          );
+
+        }else{
+
+          transaction.set(
+            followerRef,
+            {
+              uid:currentUser.uid,
+              createdAt:serverTimestamp()
+            }
+          );
+
+          transaction.set(
+            followingRef,
+            {
+              uid:targetUid,
+              createdAt:serverTimestamp()
+            }
+          );
+
+          transaction.update(
+            doc(db,"users",targetUid),
+            {
+              followersCount:increment(1)
+            }
+          );
+
+          transaction.update(
+            doc(db,"users",currentUser.uid),
+            {
+              followingCount:increment(1)
+            }
+          );
+
+        }
+
+      }
+    );
+
+    const follower =
+      await getDoc(followerRef);
+
+    if(follower.exists()){
+
+      await createNotification(
+        targetUid,
+        "follow",
+        `${currentProfile.displayName} followed you.`
+      );
+
+    }
+
+    loadProfile(targetUid);
+
+  }catch(err){
+
+    console.error(err);
+    toast("Could not update follow.");
+
+  }
+
+};
+
+
+/* PROFILE EDIT */
+
+window.openEditProfile = ()=>{
+
+  if(!currentProfile) return;
+
+  $("modalRoot").innerHTML = `
+
+    <div class="modal-wrap"
+         onclick="if(event.target===this)window.closeModal()">
+
+      <div class="modal">
+
+        <div class="modal-head">
+
+          <div class="modal-title">
+            Edit profile
+          </div>
+
+          <button class="close"
+                  onclick="window.closeModal()">
+            <svg><use href="#i-x"></use></svg>
+          </button>
+
+        </div>
+
+        <div style="display:flex;justify-content:center;margin-bottom:18px">
+
+          <label style="cursor:pointer">
+
+            <div id="editAvatar"
+                 class="profile-avatar"
+                 style="margin:0">
+
+              ${
+                currentProfile.photoURL
+                ? `<img src="${currentProfile.photoURL}" alt="">`
+                : esc(initials(currentProfile.displayName))
+              }
+
+            </div>
+
+            <input id="profilePhotoInput"
+                   type="file"
+                   accept="image/*"
+                   hidden>
+
+          </label>
+
+        </div>
+
+        <div class="field">
+
+          <label>Username</label>
+
+          <input id="editUsername"
+                 maxlength="20"
+                 value="${esc(currentProfile.username)}">
+
+        </div>
+
+        <div class="field">
+
+          <label>Display name</label>
+
+          <input id="editDisplayName"
+                 maxlength="30"
+                 value="${esc(currentProfile.displayName)}">
+
+        </div>
+
+        <div class="field">
+
+          <label>Bio</label>
+
+          <textarea id="editBio"
+                    maxlength="160"
+                    placeholder="Tell people about yourself...">${esc(currentProfile.bio || "")}</textarea>
+
+        </div>
+
+        <div id="editError" class="error"></div>
+
+        <button id="saveProfile"
+                class="primary">
+          Save changes
+        </button>
+
+      </div>
+
+    </div>
+  `;
+
+
+  let newPhoto = null;
+
+  $("profilePhotoInput").onchange =
+    async()=>{
+
+      const file =
+        $("profilePhotoInput").files[0];
+
+      if(!file) return;
+
+      try{
+
+        newPhoto =
+          await compressProfileImage(file);
+
+        $("editAvatar").innerHTML =
+          `<img src="${newPhoto}" alt="">`;
+
+      }catch(err){
+
+        $("editError").textContent =
+          err.message;
+
+      }
+
+    };
+
+
+  $("saveProfile").onclick =
+    async()=>{
+
+      const username =
+        $("editUsername").value.trim();
+
+      const displayName =
+        $("editDisplayName").value.trim();
+
+      const bio =
+        $("editBio").value.trim();
+
+      const usernameLower =
+        username.toLowerCase();
+
+      const displayNameLower =
+        displayName.normalize("NFKC").toLowerCase();
+
+      if(!/^[a-zA-Z0-9_]{3,20}$/.test(username)){
+
+        $("editError").textContent =
+          "Username must be 3–20 characters.";
+
+        return;
+
+      }
+
+      if(displayName.length < 2 || displayName.length > 30){
+
+        $("editError").textContent =
+          "Display name must be 2–30 characters.";
+
+        return;
+
+      }
+
+      try{
+
+        const oldUsername =
+          currentProfile.usernameLower;
+
+        const oldDisplay =
+          currentProfile.displayNameLower;
+
+        await runTransaction(
+          db,
+          async transaction=>{
+
+            if(usernameLower !== oldUsername){
+
+              const newRef =
+                doc(
+                  db,
+                  "usernames",
+                  usernameLower
+                );
+
+              const newSnap =
+                await transaction.get(newRef);
+
+              if(newSnap.exists())
+                throw new Error("USERNAME_TAKEN");
+
+              transaction.delete(
+                doc(
+                  db,
+                  "usernames",
+                  oldUsername
+                )
+              );
+
+              transaction.set(
+                newRef,
+                {
+                  uid:currentUser.uid,
+                  username,
+                  createdAt:serverTimestamp()
+                }
+              );
+
+            }
+
+            if(displayNameLower !== oldDisplay){
+
+              const newRef =
+                doc(
+                  db,
+                  "displayNames",
+                  displayNameLower
+                );
+
+              const newSnap =
+                await transaction.get(newRef);
+
+              if(newSnap.exists())
+                throw new Error("DISPLAY_TAKEN");
+
+              transaction.delete(
+                doc(
+                  db,
+                  "displayNames",
+                  oldDisplay
+                )
+              );
+
+              transaction.set(
+                newRef,
+                {
+                  uid:currentUser.uid,
+                  displayName,
+                  createdAt:serverTimestamp()
+                }
+              );
+
+            }
+
+            transaction.update(
+              doc(
+                db,
+                "users",
+                currentUser.uid
+              ),
+              {
+                username,
+                usernameLower,
+                displayName,
+                displayNameLower,
+                bio,
+                ...(newPhoto
+                  ? {photoURL:newPhoto}
+                  : {})
+              }
+            );
+
+          }
+        );
+
+        await updateProfile(
+          currentUser,
+          {
+            displayName
+          }
+        );
+
+        currentProfile =
+          (
+            await getDoc(
+              doc(
+                db,
+                "users",
+                currentUser.uid
+              )
+            )
+          ).data();
+
+        updateGlobalProfileUI();
+
+        $("modalRoot").innerHTML = "";
+
+        loadProfile(currentUser.uid);
+
+        toast("Profile updated.");
+
+      }catch(err){
+
+        $("editError").textContent =
+          err.message === "USERNAME_TAKEN"
+          ? "Username already taken."
+          : err.message === "DISPLAY_TAKEN"
+          ? "Display name already taken."
+          : err.message;
+
+      }
+
+    };
+
+};
+
+
+async function compressProfileImage(file){
+
+  if(file.size > 8*1024*1024)
+    throw new Error("Image must be smaller than 8 MB.");
+
+  const result =
+    await compressImage(file);
+
+  if(result.length > 500000)
+    throw new Error(
+      "Profile picture is still too large. Choose another image."
+    );
+
+  return result;
+}
+
+
+/* DM */
+
+window.startDM = async targetUid=>{
+
+  if(targetUid === currentUser.uid)
+    return;
+
+  try{
+
+    const conversationId =
+      [
+        currentUser.uid,
+        targetUid
+      ]
+      .sort()
+      .join("_");
+
+    const conversationRef =
+      doc(
+        db,
+        "conversations",
+        conversationId
+      );
+
+    const existing =
+      await getDoc(conversationRef);
+
+    if(!existing.exists()){
+
+      const targetSnap =
+        await getDoc(
+          doc(db,"users",targetUid)
+        );
+
+      if(!targetSnap.exists()){
+        toast("User not found.");
+        return;
+      }
+
+      await setDoc(
+        conversationRef,
+        {
+          members:[
+            currentUser.uid,
+            targetUid
+          ],
+          memberProfiles:{
+            [currentUser.uid]:{
+              displayName:currentProfile.displayName,
+              username:currentProfile.username,
+              photoURL:currentProfile.photoURL || ""
+            },
+            [targetUid]:{
+              displayName:targetSnap.data().displayName,
+              username:targetSnap.data().username,
+              photoURL:targetSnap.data().photoURL || ""
+            }
+          },
+          updatedAt:serverTimestamp(),
+          lastMessage:""
+        }
+      );
+
+    }
+
+    goPage("messages");
+
+    setTimeout(
+      ()=>{
+        selectConversation(conversationId);
+      },
+      250
+    );
+
+  }catch(err){
+
+    console.error(err);
+    toast("Could not start conversation.");
+
+  }
+
+};
+
+
+/* CONVERSATIONS */
+
+function startConversationListener(){
+
+  if(unsubConversations)
+    unsubConversations();
+
+  const q =
+    query(
+      collection(db,"conversations"),
+      where(
+        "members",
+        "array-contains",
+        currentUser.uid
+      ),
+      limit(50)
+    );
+
+  unsubConversations =
+    onSnapshot(
+      q,
+      snapshot=>{
+
+        const conversations =
+          snapshot.docs
+            .map(d=>({
+              id:d.id,
+              ...d.data()
+            }))
+            .sort(
+              (a,b)=>
+                (b.updatedAt?.seconds || 0)
+                -
+                (a.updatedAt?.seconds || 0)
+            );
+
+        renderConversations(
+          conversations
+        );
+
+      },
+      err=>{
+        console.error(err);
+      }
+    );
+
+}
+
+
+function renderConversations(items){
+
+  const root =
+    $("conversationList");
+
+  if(!items.length){
+
+    root.innerHTML = `
+      <div class="muted"
+           style="padding:20px">
+        No conversations.
+      </div>
+    `;
+
+    return;
+
+  }
+
+  root.innerHTML =
+    items.map(item=>{
+
+      const otherUid =
+        item.members.find(
+          uid=>uid !== currentUser.uid
+        );
+
+      const other =
+        item.memberProfiles?.[otherUid]
+        || {
+          displayName:"User",
+          username:"user"
+        };
+
+      return `
+
+        <div class="conversation ${
+          selectedConversation === item.id
+          ? "active"
+          : ""
+        }"
+        onclick="window.selectConversation('${item.id}')">
+
+          ${avatarHTML(other,"38")}
+
+          <div style="min-width:0">
+
+            <strong>
+              ${esc(other.displayName)}
+            </strong>
+
+            <div class="muted"
+                 style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+              ${esc(item.lastMessage || "No messages yet")}
+            </div>
+
+          </div>
+
+        </div>
+
+      `;
+
+    }).join("");
+
+}
+
+
+window.selectConversation =
+conversationId=>{
+
+  selectConversation(conversationId);
+
+};
+
+
+async function selectConversation(conversationId){
+
+  selectedConversation =
+    conversationId;
+
+  try{
+
+    const snap =
+      await getDoc(
+        doc(
+          db,
+          "conversations",
+          conversationId
+        )
+      );
+
+    if(!snap.exists()) return;
+
+    const conversation =
+      snap.data();
+
+    const otherUid =
+      conversation.members.find(
+        uid=>uid !== currentUser.uid
+      );
+
+    const other =
+      conversation.memberProfiles?.[otherUid]
+      || {
+        displayName:"User",
+        username:"user"
+      };
+
+    $("chatHead").innerHTML =
+      `${esc(other.displayName)} <span class="muted">@${esc(other.username)}</span>`;
+
+    $("messageInput").disabled = false;
+    $("messageForm").querySelector("button").disabled = false;
+
+    if(unsubMessages)
+      unsubMessages();
+
+    const q =
+      query(
+        collection(
+          db,
+          "conversations",
+          conversationId,
+          "messages"
+        ),
+        orderBy("createdAt","asc"),
+        limit(200)
+      );
+
+    unsubMessages =
+      onSnapshot(
+        q,
+        snapshot=>{
+
+          const messages =
+            snapshot.docs.map(d=>({
+              id:d.id,
+              ...d.data()
+            }));
+
+          renderMessages(messages);
+
+        }
+      );
+
+    renderConversations([]);
+
+  }catch(err){
+
+    console.error(err);
+
+  }
+
+}
+
+
+function renderMessages(messages){
+
+  const root =
+    $("messagesList");
+
+  if(!messages.length){
+
+    root.innerHTML = `
+      <div class="muted"
+           style="text-align:center;margin:auto">
+        No messages yet.
+      </div>
+    `;
+
+    return;
+
+  }
+
+  root.innerHTML =
+    messages.map(message=>`
+
+      <div class="message ${
+        message.senderUid === currentUser.uid
+        ? "mine"
+        : ""
+      }">
+
+        <div>
+          ${esc(message.text)}
+        </div>
+
+        <div class="message-time">
+          ${timeAgo(message.createdAt)}
+        </div>
+
+      </div>
+
+    `).join("");
+
+  root.scrollTop =
+    root.scrollHeight;
+
+}
+
+
+/* SEND MESSAGE */
+
+$("messageForm").onsubmit =
+async e=>{
+
+  e.preventDefault();
+
+  if(!selectedConversation)
+    return;
+
+  const input =
+    $("messageInput");
+
+  const text =
+    input.value.trim();
+
+  if(!text)
+    return;
+
+  try{
+
+    await addDoc(
+      collection(
+        db,
+        "conversations",
+        selectedConversation,
+        "messages"
+      ),
+      {
+        senderUid:currentUser.uid,
+        senderName:currentProfile.displayName,
+        text,
+        createdAt:serverTimestamp()
+      }
+    );
+
+    await updateDoc(
+      doc(
+        db,
+        "conversations",
+        selectedConversation
+      ),
+      {
+        lastMessage:text,
+        updatedAt:serverTimestamp()
+      }
+    );
+
+    input.value = "";
+
+  }catch(err){
+
+    console.error(err);
+    toast("Could not send message.");
+
+  }
+
+};
+
+
+/* EDIT PROFILE BUTTON */
+
+$("editProfileBtn").onclick =
+()=>window.openEditProfile();
+
+
+/* LOGOUT */
+
+async function logout(){
+
+  try{
+
+    await signOut(auth);
+
+    if(unsubFeed) unsubFeed();
+    if(unsubNotifications) unsubNotifications();
+    if(unsubConversations) unsubConversations();
+    if(unsubMessages) unsubMessages();
+
+    toast("Logged out.");
+
+  }catch(err){
+
+    console.error(err);
+
+  }
+
+}
+
+$("logoutBtn").onclick = logout;
+$("settingsLogout").onclick = logout;
+
+
+/* CLOSE MODAL */
+
+window.closeModal = ()=>{
+
+  $("modalRoot").innerHTML = "";
+
+};
+
+
+/* EXPOSE FUNCTIONS */
+
+window.openProfile =
+window.openProfile;
+
+window.deletePost =
+window.deletePost;
+
+window.openComments =
+window.openComments;
+
+window.sharePost =
+window.sharePost;
+
+window.deleteComment =
+window.deleteComment;
+
+window.toggleFollow =
+window.toggleFollow;
+
+window.startDM =
+window.startDM;
+
+window.openNotification =
+window.openNotification;
+
+
+/* END */
 
 </script>
 
